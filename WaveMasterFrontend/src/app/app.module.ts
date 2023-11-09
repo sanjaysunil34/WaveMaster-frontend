@@ -9,15 +9,19 @@ import { CaptureComponent } from './components/capture/capture.component';
 
 import {MatTabsModule} from '@angular/material/tabs';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { ContentComponent } from './components/content/content.component';
+import { ConfigurationComponent } from './components/configuration/configuration.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     BannerComponent,
     CaptureComponent,
-
     DashboardComponent,
-    
+    FooterComponent,
+    ContentComponent,
+    ConfigurationComponent
   ],
   imports: [
     BrowserModule,
