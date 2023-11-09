@@ -7,10 +7,10 @@
 
             <div class="accordion-item">
 
-                <h5 class="mb-0 accordion-header">
+                <h5 class="mb-0 accordion-header" id="ItemOne">
                     <button class="accordion-button" type="button" (click)="toggleAccordion('collapseOne')"
                         [attr.aria-expanded]="isAccordionOpen('collapseOne')" aria-controls="collapseOne">
-                        Accordion Item 1
+                        PLOT SETTINGS
                     </button>
                 </h5>
                 <div id="collapseOne"
@@ -18,7 +18,7 @@
                     aria-labelledby="headingOne">
                     <div class="accordion-body">
                         <div>
-                            <h3>Axis Scale</h3>
+                            <h4>Axis Scale</h4>
                             <div class="row">
                                 <div class="col">
                                     <h6>X Axis</h6>
@@ -39,7 +39,7 @@
                             </div>
                         </div>
                         <div>
-                            <h3>Data Acquisition rate</h3>
+                            <h4>Data Acquisition Rate</h4>
                             <div class="row">
                                 <div>
                                     <input type="text" class="form-control">
@@ -57,7 +57,7 @@
             <!-- Accordion Item 2 -->
             <div class="accordion-item">
 
-                <h5 class="mb-0 accordion-header">
+                <h5 class="mb-0 accordion-header" id="itemTwo">
                     <button class="accordion-button" type="button" (click)="toggleAccordion('collapseTwo')"
                         [attr.aria-expanded]="isAccordionOpen('collapseTwo')" aria-controls="collapseTwo">
                         Accordion Item 2
@@ -70,11 +70,11 @@
                     <div class="accordion-body">
                         <div>
                             <div class="capture-input">
-                                <h3>Frequency</h3>
+                                <h4>Frequency</h4>
                                 <input type="text" class="form-control" readonly>
                             </div>
                             <div class="capture-input">
-                                <h3>Peak to Peak</h3>
+                                <h4>Peak to Peak</h4>
                                 <input type="text" class="form-control" readonly>
                             </div>
                             <div class="d-flex justify-content-center">
@@ -87,8 +87,8 @@
         </div>
 
         <div class="d-flex justify-content-center m-4">
-            <button class="btn btn-primary" *ngIf="start" (click)="toggleStartStop()">Start</button>
-            <button class="btn btn-primary" *ngIf="!start" (click)="toggleStartStop()">Stop</button>
+            <button class="btn btn-primary" *ngIf="start" (click)="toggleStartStop()">START</button>
+            <button class="btn btn-primary" *ngIf="!start" (click)="toggleStartStop()">STOP</button>
         </div>
     </div>
 </div>
