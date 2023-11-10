@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { Component,AfterViewInit, ElementRef, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+declare const CanvasJS: any;
 
 @Component({
   selector: 'app-capture',
@@ -7,6 +8,18 @@ import { FormBuilder, FormControl } from '@angular/forms';
   styleUrls: ['./capture.component.scss']
 })
 export class CaptureComponent {
+    chartOptions = {
+      title: {
+        text: "Basic Column Chart in Angular"
+      },
+      data: [{
+        type: "column",
+        dataPoints: [
+          
+        ]
+      }]                
+    };
+    
     start: boolean = true
     openAccordion: string = 'collapseOne';
 
@@ -43,5 +56,32 @@ export class CaptureComponent {
       //fetch data from hardware
       this.frequency.setValue('100')
       this.peakToPeak.setValue('5')
+    }
+
+
+    // renderChart() {
+    //   let dataPoints = [{x: new Date(),y:0}]; // Define or fetch your data points here
+  
+    //   const chart = new CanvasJS.Chart("chartContainer", {
+    //     title: {
+    //       text: "Dynamic Line Graph"
+    //     },
+    //     data: [{
+    //       type: "line",
+    //       dataPoints: dataPoints
+    //     }]
+    //   });
+  
+    //   chart.render();
+  
+    //   // Example: Updating the graph with new data
+      
+
+    startDataPlotting(){
+      setInterval(() => {
+         // Replace this with your updated data
+        //this.chartOptions.data[0].dataPoints.push({ x: new Date(), y: Math.random() * 100 })
+        // chart.render();
+      }, 1000);
     }
 }
