@@ -1,0 +1,31 @@
+<div class="test-page">
+    <div class="content-container">
+        <div class="test-page-contents shadow">
+            <form [formGroup]="testForm"
+                (ngSubmit)="onSubmitTestForm()">
+                <div class="test-input-rows row">
+                    <div class="test-inputs col-md-12">
+                        <label for="componentTypeInput" class="test-input-label form-label">COMPONENT</label>
+                        <select type="text" class="form-select test-input-field form-control" id="componentFormControl" formControlName="component"
+                            (change)="handleComponentChange()">
+                            <option class="generate-input-option" value="eeprom">EEPROM</option>
+                            <option class="generate-input-option" value="ledRed">LED RED</option>
+                            <option class="generate-input-option" value="ledGreen">LED GREEN</option>
+                        </select>
+                    </div>
+
+                    <div class="test-inputs col-md-12">
+                        <label for="functionTypeInput" class="test-input-label form-label">FUNCTION</label>
+                        <select type="text" [(ngModel)] ="str" class="form-select test-input-field form-control" id="functionFormControl" formControlName="function">
+                            <option *ngFor="let opt of selectedFuncArr"  class="test-input-option" value={{opt}}>{{opt}}</option>
+                        </select>
+                    </div>
+
+                    <div class="test-button-container">
+                        <button type="submit" class="btn test-submit-button">TEST</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

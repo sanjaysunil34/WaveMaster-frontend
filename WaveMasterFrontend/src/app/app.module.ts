@@ -16,6 +16,7 @@ import { ContentComponent } from './components/content/content.component';
 import { ConfigurationComponent } from './components/configuration/configuration.component';
 import {MatSliderModule} from '@angular/material/slider';
 import { GenerateComponent } from './components/generate/generate.component';
+import { TestComponent } from './components/test/test.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { GenerateComponent } from './components/generate/generate.component';
     ContentComponent,
     ConfigurationComponent,
     GenerateComponent,
+    TestComponent,
   ],
   imports: [
     BrowserModule,
