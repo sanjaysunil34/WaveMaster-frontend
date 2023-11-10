@@ -18,7 +18,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 
 import { GenerateComponent } from './components/generate/generate.component';
-
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -36,12 +36,13 @@ import { GenerateComponent } from './components/generate/generate.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     MatTabsModule,
-
+  
     ReactiveFormsModule,
     MatSelectModule,
     MatSliderModule,
     ReactiveFormsModule,
-    CanvasJSAngularChartsModule
+    CanvasJSAngularChartsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

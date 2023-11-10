@@ -1,25 +1,14 @@
-import { Component,AfterViewInit, ElementRef, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-declare const CanvasJS: any;
+
 
 @Component({
   selector: 'app-capture',
   templateUrl: './capture.component.html',
   styleUrls: ['./capture.component.scss']
 })
-export class CaptureComponent {
-    chartOptions = {
-      title: {
-        text: "Basic Column Chart in Angular"
-      },
-      data: [{
-        type: "column",
-        dataPoints: [
-          
-        ]
-      }]                
-    };
-    
+export class CaptureComponent implements OnDestroy{    
     start: boolean = true
     openAccordion: string = 'collapseOne';
 
@@ -29,7 +18,26 @@ export class CaptureComponent {
 
     frequency = new FormControl('')
     peakToPeak = new FormControl('')
+    dataPoints:any[] = [];
+    timeout:any = null;
+    xValue:number = 1;
+    yValue:number = 10;
+    newDataCount:number = 10;
+    chart: any;
+   
+    chartOptions = {
+      theme: "light2",
+      title: {
+        text: "Live Data"
+      },
+      data: [{
+        type: "line",
+        dataPoints: this.dataPoints
+      }]
+    }
 
+    constructor(private http : HttpClient) {  
+    }
     // Toggle accordion items
     toggleAccordion(accordionId: string): void {
       this.openAccordion = this.openAccordion === accordionId ? this.openAccordion : accordionId;
@@ -40,6 +48,9 @@ export class CaptureComponent {
     }
     toggleStartStop(){
       this.start = !this.start
+      if(this.start == false){
+        this.updateData()
+      }
     }
 
     onXScaleChange(event: any){
@@ -58,30 +69,38 @@ export class CaptureComponent {
       this.peakToPeak.setValue('5')
     }
 
-
-    // renderChart() {
-    //   let dataPoints = [{x: new Date(),y:0}]; // Define or fetch your data points here
-  
-    //   const chart = new CanvasJS.Chart("chartContainer", {
-    //     title: {
-    //       text: "Dynamic Line Graph"
-    //     },
-    //     data: [{
-    //       type: "line",
-    //       dataPoints: dataPoints
-    //     }]
-    //   });
-  
-    //   chart.render();
-  
-    //   // Example: Updating the graph with new data
+    getChartInstance(chart: object) {
+      this.chart = chart;
+          
       
-
-    startDataPlotting(){
-      setInterval(() => {
-         // Replace this with your updated data
-        //this.chartOptions.data[0].dataPoints.push({ x: new Date(), y: Math.random() * 100 })
-        // chart.render();
-      }, 1000);
+    }
+    
+    
+    ngOnDestroy() {
+      clearTimeout(this.timeout);
+    }
+   
+    updateData = () => {
+      this.http.get("https://canvasjs.com/services/data/datapoints.php?xstart="+this.xValue+"&ystart="+this.yValue+"&length="+this.newDataCount+"type=json", { responseType: 'json' }).subscribe(this.addData);
+    }
+   
+    addData = (data:any) => {
+      if(this.newDataCount != 1) {
+        
+        data.forEach( (val:any[]) => {
+          console.log(val)
+          this.dataPoints.push({x: val[0], y: parseInt(val[1])});
+          this.xValue++;
+          this.yValue = parseInt(val[1]);  
+        })
+      } else {
+        //this.dataPoints.shift();
+        this.dataPoints.push({x: data[0][0], y: parseInt(data[0][1])});
+        this.xValue++;
+        this.yValue = parseInt(data[0][1]);  
+      }
+      this.newDataCount = 1;
+      this.chart.render();
+      this.timeout = setTimeout(this.updateData, 1000);
     }
 }
