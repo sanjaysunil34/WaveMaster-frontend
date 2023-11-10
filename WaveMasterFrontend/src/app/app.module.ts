@@ -9,12 +9,12 @@ import { BannerComponent } from './components/banner/banner.component';
 import { CaptureComponent } from './components/capture/capture.component';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTabsModule} from '@angular/material/tabs';
+import {MatSliderModule} from '@angular/material/slider';
 
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ContentComponent } from './components/content/content.component';
 import { ConfigurationComponent } from './components/configuration/configuration.component';
-import {MatSliderModule} from '@angular/material/slider';
 import { GenerateComponent } from './components/generate/generate.component';
 import { TestComponent } from './components/test/test.component';
 
@@ -22,6 +22,9 @@ import { TestComponent } from './components/test/test.component';
   declarations: [
     AppComponent,
     BannerComponent,
+    FooterComponent,
+    ContentComponent,
+    ConfigurationComponent,
     CaptureComponent,
     DashboardComponent,
     FooterComponent,
