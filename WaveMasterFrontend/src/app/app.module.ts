@@ -12,6 +12,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ContentComponent } from './components/content/content.component';
 import { ConfigurationComponent } from './components/configuration/configuration.component';
+import {MatSliderModule} from '@angular/material/slider';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { ConfigurationComponent } from './components/configuration/configuration
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MatTabsModule
+    MatTabsModule,
+    MatSliderModule
   ],
   providers: [],
   bootstrap: [AppComponent]
