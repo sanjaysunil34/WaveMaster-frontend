@@ -1,0 +1,89 @@
+$input-padding: 30px;
+
+
+.config-page{
+    width: 100%;
+    min-height: 80vh;
+    background-color: #EDF2FB;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.content-container{
+    display: flex;
+    justify-content: center;
+}
+
+.config-page-contents{
+    min-height: 60vh;    
+    width: 60vw;
+    background-color: white;
+    border-radius: 25px;
+    //box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    padding-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.connection-input-rows{
+    width: 100%;    
+}
+
+.connection-inputs{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.connection-input-field{
+    width: 60%;
+    border-top: 0;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+    border-color: rgb(173, 173, 173);
+    appearance: menulist;
+    background-image: none;
+    //padding-right: 12px;
+}
+
+
+
+.connection-input-field:focus{    
+    box-shadow: 0 2px 0 0 #86b7fe; 
+    border-color: #86b7fe;    
+}
+
+.connection-input-option{
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.connection-input-label{
+    text-wrap: nowrap;
+    align-self: self-end;
+    padding-right: 20px;
+    padding-left: 20px;
+    text-align: left;
+    width: 100px;
+    margin-bottom: 0;
+}
+
+.config-submit-button-container{
+    display: flex;
+    justify-content: center;
+    padding-top: 4%;
+}
+
+.config-submit-button{
+    background-color: #5375C7;
+    border-radius: 50px;
+    color: white;
+    height: 50px;
+    width: 165px;
+    font-size: 18px;
+    font-weight: 500;
+}

@@ -1,1 +1,52 @@
-<p>develop works!</p>
+<div class="config-page">
+    <div class="content-container">
+        <div class="config-page-contents shadow">
+            <form [formGroup]="connectionForm"
+                (ngSubmit)="onSubmitConnectionForm()">
+                <div class="connection-input-rows row">
+                    <div class="connection-inputs col-md-12">
+                        <label for="portNameInput" class="connection-input-label form-label" >PORT NAME</label>
+                        <input type="text" class="connection-input-field form-control" id="portNameFormControl" formControlName="portName">
+                    </div>
+
+                    <div class="connection-inputs col-md-12">
+                        <label for="baudRateInput" class="connection-input-label form-label" >BAUD RATE</label>
+                        <select type="text" class="form-select connection-input-field form-control" id="baudRateFormControl" formControlName="baudRate">
+                            <option class="connection-input-option" value="1">1</option>
+                        </select>
+                        <!-- <mat-select class="form-select connection-input-field" id="id" formControlName="baudRate">
+                            <mat-option value="true">Yes</mat-option>
+                            <mat-option value="false">No</mat-option>
+                        </mat-select> -->
+                    </div>
+
+                    <div class="connection-inputs col-md-12">
+                        <label for="startBitInput" class="connection-input-label form-label" >START BIT</label>
+                        <input type="text" class="connection-input-field form-control" id="startBitFormControl" formControlName="startBit">
+                    </div>                    
+
+                    <div class="connection-inputs col-md-12">
+                        <label for="stopBitInput" class="connection-input-label form-label" >STOP BIT</label>
+                        <input type="text" class="connection-input-field form-control" id="stopBitFormControl" formControlName="stopBit">
+                    </div>
+
+                    <div class="connection-inputs col-md-12">
+                        <label for="parityInput" class="connection-input-label form-label" >PARITY</label>
+                        <!-- <input type="text" class="connection-input-field form-control" id="parityFormControl" formControlName="parity"> -->
+                        <select type="text" class="form-select connection-input-field form-control" id="parityFormControl" formControlName="parity">
+                            <option class="connection-input-option" value="even">Even</option>
+                            <option class="connection-input-option" value="odd">Odd</option>
+                        </select>
+                    </div>
+
+
+                    <div class="config-submit-button-container">
+                        <button type="submit" class="btn config-submit-button">
+                            CONNECT
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
