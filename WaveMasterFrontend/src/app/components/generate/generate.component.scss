@@ -1,6 +1,6 @@
-.config-page{
+.generate-page{
     width: 100%;
-    min-height: 80vh;
+    min-height: calc(80vh - 48px);
     background-color: #EDF2FB;
     display: flex;
     flex-direction: column;
@@ -12,7 +12,7 @@
     justify-content: center;
 }
 
-.config-page-contents{
+.generate-page-contents{
     min-height: 60vh;    
     width: 60vw;
     background-color: white;
@@ -25,23 +25,27 @@
 }
 
 @media(max-width: 540px){
-    .config-page-contents{
+    .generate-page-contents{
         width: 100vw;
     }
 }
 
-.connection-input-rows{
+.generate-input-rows{
     width: 100%;    
 }
 
-.connection-inputs{
+.generate-inputs{
     width: 100%;
     display: flex;
     justify-content: space-around;
     margin-bottom: 20px;
 }
 
-.connection-input-field{
+.input-padding{
+    margin-bottom: 30px;
+}
+
+.generate-input-field{
     width: 60%;
     border-top: 0;
     border-right: 0;
@@ -53,17 +57,17 @@
     //padding-right: 12px;
 }
 
-.connection-input-field:focus{    
+.generate-input-field:focus{    
     box-shadow: 0 2px 0 0 #86b7fe; 
     border-color: #86b7fe;    
 }
 
-.connection-input-option{
+.generate-input-option{
     padding-top: 20px;
     padding-bottom: 20px;
 }
 
-.connection-input-label{
+.generate-input-label{
     text-wrap: nowrap;
     align-self: self-end;
     padding-right: 20px;
@@ -71,15 +75,58 @@
     text-align: left;
     width: 100px;
     margin-bottom: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-.config-submit-button-container{
+.generate-input-field-slider{
+    display: flex;
+    width: 60%;
+    border-top: 0;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+    border-color: rgb(173, 173, 173);
+    appearance: menulist;
+    background-image: none;
+}
+
+.generate-slider-container{
+    // width: 60%;
+    padding: 0;
+}
+
+.generate-slider{
+    width: 80%;
+}
+
+.generate-button-group{
     display: flex;
     justify-content: center;
+    width: 100%;
+}
+
+.generate-submit-buttons-container{    
+    width: 50%;
     padding-top: 4%;
 }
 
-.config-submit-button{
+@media(min-width: 1220px){
+    .generate-submit-buttons-container{
+        display: flex;
+        justify-content: space-around;
+    }
+}
+
+.generate-single-button-container{
+    display: flex;
+    justify-content: center;    
+    margin-bottom: 10px;
+}
+
+.generate-submit-button{
     background-color: #5375C7;
     border-radius: 50px;
     color: white;
