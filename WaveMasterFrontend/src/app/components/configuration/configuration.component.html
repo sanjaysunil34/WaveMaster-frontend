@@ -1,6 +1,6 @@
 <div class="config-page">
     <div class="content-container">
-        <div class="config-page-contents">
+        <div class="config-page-contents shadow">
             <form [formGroup]="connectionForm"
                 (ngSubmit)="onSubmitConnectionForm()">
                 <div class="connection-input-rows row">
@@ -11,9 +11,13 @@
 
                     <div class="connection-inputs col-md-12">
                         <label for="baudRateInput" class="connection-input-label form-label" >BAUD RATE</label>
-                        <select type="text" class="connection-input-field form-control" id="baudRateFormControl" formControlName="baudRate">
+                        <select type="text" class="form-select connection-input-field form-control" id="baudRateFormControl" formControlName="baudRate">
                             <option class="connection-input-option" value="1">1</option>
                         </select>
+                        <!-- <mat-select class="form-select connection-input-field" id="id" formControlName="baudRate">
+                            <mat-option value="true">Yes</mat-option>
+                            <mat-option value="false">No</mat-option>
+                        </mat-select> -->
                     </div>
 
                     <div class="connection-inputs col-md-12">
@@ -28,7 +32,18 @@
 
                     <div class="connection-inputs col-md-12">
                         <label for="parityInput" class="connection-input-label form-label" >PARITY</label>
-                        <input type="text" class="connection-input-field form-control" id="parityFormControl" formControlName="parity">
+                        <!-- <input type="text" class="connection-input-field form-control" id="parityFormControl" formControlName="parity"> -->
+                        <select type="text" class="form-select connection-input-field form-control" id="parityFormControl" formControlName="parity">
+                            <option class="connection-input-option" value="even">Even</option>
+                            <option class="connection-input-option" value="odd">Odd</option>
+                        </select>
+                    </div>
+
+
+                    <div class="config-submit-button-container">
+                        <button type="submit" class="btn config-submit-button">
+                            CONNECT
+                        </button>
                     </div>
                 </div>
             </form>
