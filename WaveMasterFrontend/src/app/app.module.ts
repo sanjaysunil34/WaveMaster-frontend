@@ -15,6 +15,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { ContentComponent } from './components/content/content.component';
 import { ConfigurationComponent } from './components/configuration/configuration.component';
 import {MatSliderModule} from '@angular/material/slider';
+import { GenerateComponent } from './components/generate/generate.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import {MatSliderModule} from '@angular/material/slider';
     FooterComponent,
     ContentComponent,
     ConfigurationComponent,
+    GenerateComponent,
   ],
   imports: [
     BrowserModule,
