@@ -1,7 +1,9 @@
-<div class="container-fluid">
-    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
-        <mat-tab label="Capture"></mat-tab>
-        <mat-tab label="Second">Generate</mat-tab>
-        <mat-tab label="Third">Test</mat-tab>
-      </mat-tab-group>
+<div class="container-fluid" id="dashboard-div">
+    <mat-tab-group mat-stretch-tabs="true" mat-align-tabs="start">
+        <mat-tab label="Capture">
+            <app-capture></app-capture>
+        </mat-tab>
+        <mat-tab label="Generate">Generate</mat-tab>
+        <mat-tab label="Test">Test</mat-tab>
+    </mat-tab-group>
 </div>
