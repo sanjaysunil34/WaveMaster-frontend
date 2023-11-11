@@ -12,7 +12,7 @@ export class GenerateComponent {
 
   constructor(fb: FormBuilder){
     this.generateForm = fb.group({
-      'portName' : ['', Validators.required]
+      'signalType' : ['sine', Validators.required]
     })
   }
 

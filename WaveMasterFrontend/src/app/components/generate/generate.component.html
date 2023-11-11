@@ -6,13 +6,9 @@
                 <div class="generate-input-rows row">
                     <div class="generate-inputs col-md-12 input-padding">
                         <label for="signalTypeInput" class="generate-input-label form-label">SIGNAL TYPE</label>
-                        <select type="text" class="form-select generate-input-field form-control" id="signalTypeFormControl" formControlName="baudRate">
+                        <select type="text" class="form-select generate-input-field form-control" id="signalTypeFormControl" formControlName="signalType">
                             <option class="generate-input-option" value="sine">Sine Wave</option>
                         </select>
-                        <!-- <mat-select class="form-select connection-input-field" id="id" formControlName="baudRate">
-                            <mat-option value="true">Yes</mat-option>
-                            <mat-option value="false">No</mat-option>
-                        </mat-select> -->
                     </div>
 
                     <div class="generate-inputs col-md-12">
@@ -49,7 +45,7 @@
                                 <button class="btn generate-submit-button">RESET</button>
                             </div>
                             <div class="generate-single-button-container">
-                                <button class="btn generate-submit-button">GENERATE</button>
+                                <button type="submit" class="btn generate-submit-button">GENERATE</button>
                             </div>
                         </div>
                     </div>

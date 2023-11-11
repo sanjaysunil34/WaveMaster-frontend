@@ -1,7 +1,21 @@
 #dashboard-div{
     background-color: #EDF2FB;
     height: 100%;
+    padding-left: 0;
 }
+
+.disconnect-btn{
+    position: absolute;
+    top : 3vh;
+    right: 10px;
+}
+
+@media(max-width: 300px){
+    .disconnect-btn{
+        top: 2vh;
+    }
+}
+
 .mat-mdc-tab-group {
     height: 100%;
 }
