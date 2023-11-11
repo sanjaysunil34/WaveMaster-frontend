@@ -4,6 +4,10 @@
 #capture-div{
     min-height: calc(80vh - 48px);
 }
+#graph{
+    min-height: calc(50vh - 48px);
+    margin-bottom: 15px;
+}
 #data-acquisition-rate,#data-acquisition-rate-slider{
     width: 100%;
 }
