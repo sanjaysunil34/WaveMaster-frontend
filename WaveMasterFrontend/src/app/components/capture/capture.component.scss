@@ -1,7 +1,9 @@
+// h5{
+//     margin: 15px 0;
+// }
 #capture-div{
-    height: calc(80vh - 48px);
+    min-height: calc(80vh - 48px);
 }
-
 #data-acquisition-rate,#data-acquisition-rate-slider{
     width: 100%;
 }
@@ -83,4 +85,7 @@
     background-color: #FF5757 !important;
     border: 1px solid #FF5757 !important;
     
+}
+.capture-div{
+    height: 100%;
 }

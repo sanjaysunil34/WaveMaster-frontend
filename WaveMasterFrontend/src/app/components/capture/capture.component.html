@@ -1,6 +1,6 @@
 <div class="row p-3 m-3" id="capture-div">
     <div class="col-lg-8" id="graph">
-        <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height: '360px'}" 
+        <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height: '100%'}" 
         (chartInstance)="getChartInstance($event)"></canvasjs-chart>
     </div>
     <div class="col-lg-4" id="graph-menu">
@@ -26,8 +26,8 @@
                                     <label for="xaxis" class="capture-input-label form-label" >X-Axis </label>
                                     <select type="text" class="form-select capture-input-field form-control" id="xaxis" (change)="onXScaleChange(xAxisScale)" [formControl]="xAxisScale"
                                     >
-                                        <option class="capture-input-option" value="0.5" selected>0.5x</option>
-                                        <option class="capture-input-option" value="1">1x</option>
+                                        <option class="capture-input-option" value="0.5" >0.5x</option>
+                                        <option class="capture-input-option" value="1" selected>1x</option>
                                         <option class="capture-input-option" value="2">2x</option>
                                     </select>
                                 </div>    
@@ -35,8 +35,8 @@
                                     <label for="yaxis" class="capture-input-label form-label" >Y-Axis </label>
                                     <select type="text" class="form-select capture-input-field form-control" id="yaxis" (change)="onYScaleChange(yAxisScale)" [formControl]="yAxisScale"
                                     >
-                                        <option class="capture-input-option" value="0.5" selected>0.5x</option>
-                                        <option class="capture-input-option" value="1">1x</option>
+                                        <option class="capture-input-option" value="0.5" >0.5x</option>
+                                        <option class="capture-input-option" value="1" selected>1x</option>
                                         <option class="capture-input-option" value="2">2x</option>
                                     </select>
                                 </div>
