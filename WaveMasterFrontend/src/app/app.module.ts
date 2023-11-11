@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule } from '@angular/forms';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -15,8 +13,11 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ContentComponent } from './components/content/content.component';
 import { ConfigurationComponent } from './components/configuration/configuration.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { GenerateComponent } from './components/generate/generate.component';
 import { TestComponent } from './components/test/test.component';
+
 
 @NgModule({
   declarations: [
@@ -40,7 +41,9 @@ import { TestComponent } from './components/test/test.component';
     MatTabsModule,
     ReactiveFormsModule,
     MatSelectModule,
-    MatSliderModule
+    MatSliderModule,
+    ReactiveFormsModule,
+    CanvasJSAngularChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

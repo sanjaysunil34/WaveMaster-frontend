@@ -1,6 +1,6 @@
 <div class="row p-3 m-3" id="capture-div">
     <div class="col-lg-8" id="graph">
-
+        <canvasjs-chart [options]="chartOptions"></canvasjs-chart> 
     </div>
     <div class="col-lg-4" id="graph-menu">
         <div class="accordion" id="accordionExample">
@@ -17,39 +17,36 @@
                     [ngClass]="{'collapse': !isAccordionOpen('collapseOne'), 'show': isAccordionOpen('collapseOne')}"
                     aria-labelledby="headingOne">
                     <div class="accordion-body">
-                        <div>
-                            <h4>Axis Scale</h4>
-                            <div class="row">
-                                <div class="col">
-                                    <h6>X Axis</h6>
-                                    <select class="form-select" aria-label="Default select example">
-                                        <option value="1" selected>One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
+
+                        <div class="capture-input-group">
+                            <h5 >Axis Scale</h5>
+                            <div>
+                                <div class="capture-inputs">
+                                    <label for="xaxis" class="capture-input-label form-label" >X-Axis </label>
+                                    <select type="text" class="form-select capture-input-field form-control" id="xaxis" (change)="onXScaleChange(xAxisScale)" [formControl]="xAxisScale"
+                                    >
+                                        <option class="capture-input-option" value="0.5" selected>0.5x</option>
+                                        <option class="capture-input-option" value="1">1x</option>
+                                        <option class="capture-input-option" value="2">2x</option>
                                     </select>
-                                </div>
-                                <div class="col">
-                                    <h6>Y Axis</h6>
-                                    <select class="form-select" aria-label="Default select example">
-                                        <option value="1" selected>One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
+                                </div>    
+                                <div class="capture-inputs">
+                                    <label for="yaxis" class="capture-input-label form-label" >Y-Axis </label>
+                                    <select type="text" class="form-select capture-input-field form-control" id="yaxis" (change)="onYScaleChange(yAxisScale)" [formControl]="yAxisScale"
+                                    >
+                                        <option class="capture-input-option" value="0.5" selected>0.5x</option>
+                                        <option class="capture-input-option" value="1">1x</option>
+                                        <option class="capture-input-option" value="2">2x</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            <h4>Data Acquisition Rate</h4>
-                            <div class="row">
-                                <div>
-                                    <input type="text" class="form-control">
-                                </div>
-                                <div>
-                                    <mat-slider>
-                                        <input matSliderThumb>
-                                    </mat-slider>
-                                </div>
-                            </div>
+                        <div class="capture-input-group">
+                            <h5>Data Acquisition Rate</h5>
+                            <div class="capture-inputs">
+                                <input type="text" class="capture-input-field form-control" id="data-acquisition-rate" [formControl]="dataAcquisitionRate">
+                            </div> 
+                            
                         </div>
                     </div>
                 </div>
@@ -60,7 +57,7 @@
                 <h5 class="mb-0 accordion-header" id="itemTwo">
                     <button class="accordion-button" type="button" (click)="toggleAccordion('collapseTwo')"
                         [attr.aria-expanded]="isAccordionOpen('collapseTwo')" aria-controls="collapseTwo">
-                        Accordion Item 2
+                        FETCH DATA
                     </button>
                 </h5>
 
@@ -69,16 +66,16 @@
                     aria-labelledby="headingTwo">
                     <div class="accordion-body">
                         <div>
-                            <div class="capture-input">
-                                <h4>Frequency</h4>
-                                <input type="text" class="form-control" readonly>
+                            <div class="capture-inputs">
+                                <label for="frequency" class="capture-input-label form-label" >Frequency</label>
+                                <input type="text" class="capture-input-field form-control" id="frequency" readonly [formControl]="frequency">
+                            </div>    
+                            <div class="capture-inputs">
+                                <label for="peaktopeak" class="capture-input-label form-label" >Peak to Peak</label>
+                                <input type="text" class="capture-input-field form-control" id="peaktopeak" readonly [formControl]="peakToPeak">
                             </div>
-                            <div class="capture-input">
-                                <h4>Peak to Peak</h4>
-                                <input type="text" class="form-control" readonly>
-                            </div>
-                            <div class="d-flex justify-content-center">
-                                <button class="btn btn-primary">Fetch</button>
+                            <div class="d-flex justify-content-center capture-btn-container">
+                                <button class="btn btn-primary" (click)="fetchData()">FETCH</button>
                             </div>
                         </div>
                     </div>
@@ -88,7 +85,7 @@
 
         <div class="d-flex justify-content-center m-4">
             <button class="btn btn-primary" *ngIf="start" (click)="toggleStartStop()">START</button>
-            <button class="btn btn-primary" *ngIf="!start" (click)="toggleStartStop()">STOP</button>
+            <button class="btn btn-danger" *ngIf="!start" (click)="toggleStartStop()">STOP</button>
         </div>
     </div>
 </div>

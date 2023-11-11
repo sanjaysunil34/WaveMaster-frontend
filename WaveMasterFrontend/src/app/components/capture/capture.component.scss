@@ -1,37 +1,85 @@
-h4{
-    margin: 20px 0;
+// h5{
+//     margin: 15px 0;
+// }
+#data-acquisition-rate,#data-acquisition-rate-slider{
+    width: 100%;
 }
-
-.capture-input{
-    margin: 20px 0;
+.capture-inputs{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+.accordion-button{
+    background-color: #5375C7 !important;
+    color: #fff;
+    border-radius: 0 !important;
 }
 .accordion-button::after {
     background-image: initial;
     width: 0;
   }
-  
-  .accordion-button:not(.collapsed)::after {
+.accordion-button:not(.collapsed)::after {
     background-image: initial;
     width: 0;
-  }
-
-.btn{
+}
+.accordion-button:focus{
+    box-shadow: none;
+}
+.btn-primary,.btn-danger{
     width: 165px;
     height: 50px;
     border-radius: 50px;
     background: #5375C7;
-    display: flex;
     padding: 0px 16px;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
-    flex-shrink: 0;
-    border: 1px solid #5375C7;
+    margin: 20px 0;
+    border: 1px solid #5375C7 !important;
     color: #fff;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 500;
 }
-.btn:hover{
-    background: #5376c7d2;
+.btn-primary:active{
+    background: #5376c7c6;
+    border: 1px solid #5376c7c6 !important;
+}
+.capture-input-field{
+    width: 60%;
+    border-top: 0;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+    border-color: rgb(173, 173, 173);
+    appearance: menulist;
+    background-image: none;
+}
+.capture-input-field:focus{    
+    box-shadow: 0 2px 0 0 #86b7fe; 
+    border-color: #86b7fe;    
+}
+.capture-input-label{
+    text-wrap: nowrap;
+    align-self: self-end;
+    padding-right: 20px;
+    padding-left: 20px;
+    text-align: left;
+    width: 100px;
+    margin-bottom: 0;
+}
+.capture-input-field:focus{    
+    box-shadow: 0 2px 0 0 #86b7fe; 
+    border-color: #86b7fe;    
+}
 
+.capture-input-option{
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.capture-input-group{
+    margin-bottom: 30px;
+}
+
+.btn-danger{
+    background-color: #FF5757 !important;
+    border: 1px solid #FF5757 !important;
+    
 }
