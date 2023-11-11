@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { CaptureService } from 'src/app/services/capture-service.service';
 
 
 @Component({
@@ -57,7 +58,7 @@ export class CaptureComponent implements OnDestroy{
       }
     }
 
-    constructor(private http : HttpClient) {  
+    constructor(private http : HttpClient, private captureService: CaptureService) {  
     }
     // Toggle accordion items
     toggleAccordion(accordionId: string): void {
@@ -107,8 +108,12 @@ export class CaptureComponent implements OnDestroy{
 
     fetchData(){
       //fetch data from hardware
+
+      this.captureService.fetchData().subscribe();
+
       this.frequency.setValue('100')
       this.peakToPeak.setValue('5')
+
     }
 
     getChartInstance(chart: object) {
@@ -120,7 +125,11 @@ export class CaptureComponent implements OnDestroy{
     }
    
     updateData = () => {
-      this.http.get("https://canvasjs.com/services/data/datapoints.php?xstart="+this.xValue+"&ystart="+this.yValue+"&length="+this.newDataCount+"type=json", { responseType: 'json' }).subscribe(this.addData);
+      //this.http.get("https://canvasjs.com/services/data/datapoints.php?xstart="+this.xValue+"&ystart="+this.yValue+"&length="+this.newDataCount+"type=json", { responseType: 'json' }).subscribe(this.addData);
+      this.captureService.getGraphData(this.xValue, this.yValue, this.newDataCount).subscribe(data => {
+        console.log(data);        
+        this.addData(data);
+      });
     }
    
     addData = (data:any) => {
