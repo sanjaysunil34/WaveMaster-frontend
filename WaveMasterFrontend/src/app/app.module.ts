@@ -16,6 +16,7 @@ import { ConfigurationComponent } from './components/configuration/configuration
 import { ReactiveFormsModule } from '@angular/forms';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { GenerateComponent } from './components/generate/generate.component';
+import {HttpClientModule} from '@angular/common/http';
 import { TestComponent } from './components/test/test.component';
 
 
@@ -32,7 +33,7 @@ import { TestComponent } from './components/test/test.component';
     ContentComponent,
     ConfigurationComponent,
     GenerateComponent,
-    TestComponent,
+    TestComponent
   ],
   imports: [
     BrowserModule,
@@ -43,7 +44,8 @@ import { TestComponent } from './components/test/test.component';
     MatSelectModule,
     MatSliderModule,
     ReactiveFormsModule,
-    CanvasJSAngularChartsModule
+    CanvasJSAngularChartsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
