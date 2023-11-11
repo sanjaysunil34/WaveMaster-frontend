@@ -12,8 +12,8 @@ export class CaptureComponent implements OnDestroy{
     start: boolean = true
     openAccordion: string = 'collapseOne';
 
-    xAxisScale = new FormControl('0.5')
-    yAxisScale = new FormControl('0.5') 
+    xAxisScale = new FormControl(1)
+    yAxisScale = new FormControl(1) 
     dataAcquisitionRate = new FormControl(1)
 
     frequency = new FormControl('')
@@ -27,13 +27,34 @@ export class CaptureComponent implements OnDestroy{
    
     chartOptions = {
       theme: "light2",
+      zoomEnabled: true,
       title: {
-        text: "Live Data"
+        text: "Signal Data",
+        fontColor: "#5375C7",
+        fontSize: 25
       },
       data: [{
         type: "line",
         dataPoints: this.dataPoints
-      }]
+      }],
+      axisY: {
+        title: "Voltage ( Volt )",
+        minimum: 0, 
+        maximum: 3.3, 
+        interval: 0.1,
+        tickLength: 15,
+        labelFontSize: 13,
+        titleFontSize: 25,
+       
+      },
+      axisX: {
+        title: "Time",
+        gridThickness: 0,
+        titleFontSize: 25,
+        interval: 1,
+        tickLength: 15,
+        labelFontSize: 13,
+      }
     }
 
     constructor(private http : HttpClient) {  
@@ -55,11 +76,32 @@ export class CaptureComponent implements OnDestroy{
 
     onXScaleChange(event: any){
       console.log(this.xAxisScale.value)
+      this.chartOptions.axisX.interval = 1 * event.value;
+      this.chartOptions.axisX.labelFontSize = 13 * event.value;
+      switch(event.value){
+        case "0.5": this.chartOptions.axisX.labelFontSize = 10 ;
+        break;
+        case "1": this.chartOptions.axisX.labelFontSize = 13 ;
+        break;
+        case "2": this.chartOptions.axisX.labelFontSize = 15 ;
+        break;
+      }
       //change x-axis scale
     }
 
     onYScaleChange(event: any){
       console.log(this.yAxisScale.value)
+      this.chartOptions.axisY.interval = 0.1 * event.value;
+      this.chartOptions.axisY.labelFontSize = 13 * event.value;
+      switch(event.value){
+        case "0.5": this.chartOptions.axisY.labelFontSize = 10 ;
+        break;
+        case "1": this.chartOptions.axisY.labelFontSize = 13 ;
+        break;
+        case "2": this.chartOptions.axisY.labelFontSize = 15 ;
+        break;
+      }
+      this.chart.render();
       //change y axis scale
     }
 
@@ -70,11 +112,8 @@ export class CaptureComponent implements OnDestroy{
     }
 
     getChartInstance(chart: object) {
-      this.chart = chart;
-          
-      
+      this.chart = chart;                
     }
-    
     
     ngOnDestroy() {
       clearTimeout(this.timeout);
