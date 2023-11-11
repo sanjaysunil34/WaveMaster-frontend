@@ -8,6 +8,7 @@ import { CaptureComponent } from './components/capture/capture.component';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatSliderModule} from '@angular/material/slider';
+import { FormsModule } from '@angular/forms';
 
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FooterComponent } from './components/footer/footer.component';
@@ -45,7 +46,8 @@ import { TestComponent } from './components/test/test.component';
     MatSliderModule,
     ReactiveFormsModule,
     CanvasJSAngularChartsModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
