@@ -1,13 +1,11 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
-import { PlotData } from '../models/plotData';
-import { SignalData } from '../models/signalData';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CaptureService {
+export class ConnectionService {
   baseUrl: string = "http://localhost:3000"
 
   httpHeader={
@@ -18,26 +16,18 @@ export class CaptureService {
 
   constructor(private httpClient:HttpClient) { }
 
-  getGraphData() : Observable<PlotData> {
-    return this.httpClient.get<PlotData>(this.baseUrl + "/capture/plotdata")
+  getPortName() : Observable<string[]>{
+    return this.httpClient.get<string[]>(this.baseUrl + '/Configuration')
     .pipe(
       catchError(this.httpError)
     );
   }
 
-  getSignalData() : Observable<SignalData> {
-    return this.httpClient.get<SignalData>(this.baseUrl + "/capture/signaldata")
+  connect(object: Object) : Observable<Object>{
+    return  this.httpClient.post<Object>(this.baseUrl + '/Configuration', JSON.stringify(object), this.httpHeader)
     .pipe(
       catchError(this.httpError)
-    )
-  }
-
-  plotCapture(command: string) : any {
-    console.log(command)
-    return this.httpClient.post<any>(this.baseUrl + "/capture/plotcommand",JSON.stringify(command),this.httpHeader)
-    .pipe(
-      catchError(this.httpError)
-    )
+    );
   }
 
   httpError(error: HttpErrorResponse) {
@@ -45,7 +35,7 @@ export class CaptureService {
     if (error.error instanceof ErrorEvent) {
       msg = error.error.message;
     } else {
-      msg = `Error Code:${error.status}\nMessage:${error.message}`;
+      msg = 'Error Code:${error.status}\nMessage:${error.message}';
     }
     console.log(msg);
     return throwError(msg);
