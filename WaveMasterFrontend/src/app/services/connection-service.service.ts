@@ -23,6 +23,13 @@ export class ConnectionService {
     );
   }
 
+  connect(object: Object) : Observable<Object>{
+    return  this.httpClient.post<Object>(this.baseUrl + '/Configuration', JSON.stringify(object), this.httpHeader)
+    .pipe(
+      catchError(this.httpError)
+    );
+  }
+
   httpError(error: HttpErrorResponse) {
     let msg = '';
     if (error.error instanceof ErrorEvent) {
