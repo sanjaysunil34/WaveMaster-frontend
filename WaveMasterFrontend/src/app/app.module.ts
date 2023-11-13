@@ -32,7 +32,6 @@ import { TestComponent } from './components/test/test.component';
     DashboardComponent,
     FooterComponent,
     ContentComponent,
-    ConfigurationComponent,
     GenerateComponent,
     TestComponent
   ],

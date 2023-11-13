@@ -5,7 +5,7 @@ import { Observable, catchError, throwError } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class CaptureService {
+export class ConnectionService {
   baseUrl: string = "http://localhost:3000"
 
   httpHeader={
@@ -16,15 +16,11 @@ export class CaptureService {
 
   constructor(private httpClient:HttpClient) { }
 
-  getGraphData(xValue : any, yValue : any, newDataCount: any) : Observable<[]> {
-    return this.httpClient.get<[]>("https://canvasjs.com/services/data/datapoints.php?xstart="+xValue+"&ystart="+yValue+"&length="+newDataCount+"type=json")
+  getPortName() : Observable<string[]>{
+    return this.httpClient.get<string[]>(this.baseUrl + '/Configuration')
     .pipe(
       catchError(this.httpError)
     );
-  }
-
-  fetchData() : any {
-    return 'Hi'
   }
 
   httpError(error: HttpErrorResponse) {

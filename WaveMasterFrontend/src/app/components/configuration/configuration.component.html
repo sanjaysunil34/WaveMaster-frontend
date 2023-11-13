@@ -6,8 +6,12 @@
                 <div class="connection-input-rows row">
                     <div class="connection-inputs col-md-12">
                         <label for="portNameInput" class="connection-input-label form-label" >PORT NAME</label>
-                        <input type="text" class="connection-input-field form-control" id="portNameFormControl" formControlName="portName">
+                        <!-- <input type="text" class="connection-input-field form-control" id="portNameFormControl" formControlName="portName"> -->
+                        <select type="text" class="form-select connection-input-field form-control" id="portNameFormControl" formControlName="portName">
+                            <option *ngFor="let port of portNames" class="connection-input-option" value={{port}}>{{port}}</option>
+                        </select>                        
                     </div>
+                    <div class="error-text" *ngIf="portNameEmpty">Port Name Required</div>
 
                     <div class="connection-inputs col-md-12">
                         <label for="baudRateInput" class="connection-input-label form-label" >BAUD RATE</label>
