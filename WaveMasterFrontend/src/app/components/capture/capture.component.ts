@@ -74,7 +74,11 @@ export class CaptureComponent implements OnDestroy{
       this.start = !this.start
       if(this.start == false){
         this.updateData()
+      }else{
+        console.log(this.start)
+        clearTimeout(this.timeout);
       }
+      
     }
 
     onXScaleChange(event: any){
@@ -110,9 +114,7 @@ export class CaptureComponent implements OnDestroy{
 
     fetchData(){
       //fetch data from hardware
-
       this.captureService.fetchData().subscribe();
-
       this.frequency.setValue('100')
       this.peakToPeak.setValue('5')
 
@@ -130,12 +132,10 @@ export class CaptureComponent implements OnDestroy{
       //this.http.get("https://canvasjs.com/services/data/datapoints.php?xstart="+this.xValue+"&ystart="+this.yValue+"&length="+this.newDataCount+"type=json", { responseType: 'json' }).subscribe(this.addData);
       this.captureService.getGraphData(this.xValue, this.yValue, this.newDataCount).subscribe(data => {
         //console.log(data);
-        
         const min = 0;
         const max = 3.3;
         const precision = 2;
         const randomNum = (Math.floor(Math.random() * (max * 10 ** precision)) / (10 ** precision)).toFixed(precision);
-
         console.log([[new Date().getTime(), parseFloat(randomNum)]]);        
         this.addData([[new Date().getTime(), parseFloat(randomNum)]]);
         // this.addData(data);
@@ -159,6 +159,13 @@ export class CaptureComponent implements OnDestroy{
       }
       this.newDataCount = 1;
       this.chart.render();
-      this.timeout = setTimeout(this.updateData, 1000);
+      this.timeout = setTimeout(() => {
+        if(this.start == false){
+          this.updateData()
+        }else{
+          console.log(this.start)
+          clearTimeout(this.timeout);
+        }
+      }, 500);
     }
 }
