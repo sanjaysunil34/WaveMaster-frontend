@@ -47,7 +47,7 @@ export class ConfigurationComponent {
       this.connectionParams.stopBit = this.connectionForm.value.stopBit;
       this.connectionParams.baudRate = this.connectionForm.value.baudRate;
       this.connectionParams.dataBit = this.connectionForm.value.dataBit;
-      this.connectionParams.parity = this.connectionForm.value.parit;
+      this.connectionParams.parity = this.connectionForm.value.parity;
 
     
 
@@ -56,6 +56,8 @@ export class ConfigurationComponent {
     }else{
       this.connectionService.connect(this.connectionParams).subscribe(data => {
         this.router.navigate(['dashboard'])    
+      },error => {
+        console.log(error)
       });
     }
     

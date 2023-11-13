@@ -1,4 +1,5 @@
 export class SignalData{
+    signalType: string = "sine"
     frequency: number
     peakToPeak: number
 

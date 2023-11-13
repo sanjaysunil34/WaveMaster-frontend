@@ -1,11 +1,12 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { SignalData } from '../models/signalData';
 import { Observable, catchError, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ConnectionService {
+export class GenerateService {
   baseUrl: string = "http://localhost:3000"
 
   httpHeader={
@@ -16,22 +17,15 @@ export class ConnectionService {
 
   constructor(private httpClient:HttpClient) { }
 
-  getPortName() : Observable<string[]>{
-    return this.httpClient.get<string[]>(this.baseUrl + '/Configuration')
+  generateWave(signalData : SignalData) : Observable<SignalData>{
+    return this.httpClient.post<SignalData>(this.baseUrl + "/generate",JSON.stringify(signalData),this.httpHeader)
     .pipe(
       catchError(this.httpError)
     );
   }
 
-  connect(object: Object) : Observable<Object>{
-    return  this.httpClient.post<Object>(this.baseUrl + '/Configuration/connect', JSON.stringify(object), this.httpHeader)
-    .pipe(
-      catchError(this.httpError)
-    );
-  }
-
-  disconnect() : Observable<Object>{
-    return  this.httpClient.post<Object>(this.baseUrl + '/Configuration/disconnect',{} ,this.httpHeader)
+  restoreWave() : Observable<SignalData>{
+    return this.httpClient.get<SignalData>(this.baseUrl + "/generate")
     .pipe(
       catchError(this.httpError)
     );
