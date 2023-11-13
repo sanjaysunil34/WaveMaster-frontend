@@ -2,6 +2,7 @@ import { formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { PlotData } from 'src/app/models/plotData';
 import { CaptureService } from 'src/app/services/capture-service.service';
 
 
@@ -18,8 +19,8 @@ export class CaptureComponent implements OnDestroy{
     yAxisScale = new FormControl(1) 
     dataAcquisitionRate = new FormControl(1)
 
-    frequency = new FormControl('')
-    peakToPeak = new FormControl('')
+    frequency = new FormControl(0)
+    peakToPeak = new FormControl(0)
     dataPoints:any[] = [];
     timeout:any = null;
     xValue:number = 1;
@@ -73,10 +74,12 @@ export class CaptureComponent implements OnDestroy{
     toggleStartStop(){
       this.start = !this.start
       if(this.start == false){
-        this.updateData()
+        this.captureService.plotCapture("START").subscribe(this.updateData());
+        
       }else{
-        console.log(this.start)
-        clearTimeout(this.timeout);
+        
+        this.captureService.plotCapture("STOP").subscribe(clearTimeout(this.timeout));
+        
       }
       
     }
@@ -114,10 +117,11 @@ export class CaptureComponent implements OnDestroy{
 
     fetchData(){
       //fetch data from hardware
-      this.captureService.fetchData().subscribe();
-      this.frequency.setValue('100')
-      this.peakToPeak.setValue('5')
-
+      this.captureService.getSignalData().subscribe(data => {
+        this.frequency.setValue(data.frequency)
+        this.peakToPeak.setValue(data.peakToPeak)
+      });
+      
     }
 
     getChartInstance(chart: object) {
@@ -129,35 +133,15 @@ export class CaptureComponent implements OnDestroy{
     }
    
     updateData = () => {
-      //this.http.get("https://canvasjs.com/services/data/datapoints.php?xstart="+this.xValue+"&ystart="+this.yValue+"&length="+this.newDataCount+"type=json", { responseType: 'json' }).subscribe(this.addData);
-      this.captureService.getGraphData(this.xValue, this.yValue, this.newDataCount).subscribe(data => {
-        //console.log(data);
-        const min = 0;
-        const max = 3.3;
-        const precision = 2;
-        const randomNum = (Math.floor(Math.random() * (max * 10 ** precision)) / (10 ** precision)).toFixed(precision);
-        console.log([[new Date().getTime(), parseFloat(randomNum)]]);        
-        this.addData([[new Date().getTime(), parseFloat(randomNum)]]);
-        // this.addData(data);
+      this.captureService.getGraphData().subscribe(data => {
+        //console.log(data.voltage,data.timestamp);
+        //console.log(new Date(data.timestamp).getTime())
+        this.addData(data)
       });
     }
    
-    addData = (data:any) => {
-      if(this.newDataCount != 1) {
-        
-        data.forEach( (val:any[]) => {
-          console.log(val)
-          this.dataPoints.push({x: val[0], y: parseFloat(val[1])});
-          this.xValue++;
-          this.yValue = parseFloat(val[1]);  
-        })
-      } else {
-        //this.dataPoints.shift();
-        this.dataPoints.push({x: data[0][0], y: parseFloat(data[0][1])});
-        this.xValue++;
-        this.yValue = parseFloat(data[0][1]);  
-      }
-      this.newDataCount = 1;
+    addData = (data: PlotData) => {
+      this.dataPoints.push({x: new Date(data.timestamp).getTime(), y: data.voltage})
       this.chart.render();
       this.timeout = setTimeout(() => {
         if(this.start == false){
@@ -166,6 +150,6 @@ export class CaptureComponent implements OnDestroy{
           console.log(this.start)
           clearTimeout(this.timeout);
         }
-      }, 500);
+      }, 1000);
     }
 }

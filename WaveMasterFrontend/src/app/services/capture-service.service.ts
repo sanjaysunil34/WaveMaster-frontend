@@ -1,12 +1,14 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
+import { PlotData } from '../models/plotData';
+import { SignalData } from '../models/signalData';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CaptureService {
-
+  baseUrl = "http://localhost:3000"
   httpHeader={
     headers:new HttpHeaders({
       'Content-Type': 'application/json'
@@ -15,15 +17,26 @@ export class CaptureService {
 
   constructor(private httpClient:HttpClient) { }
 
-  getGraphData(xValue : any, yValue : any, newDataCount: any) : Observable<[]> {
-    return this.httpClient.get<[]>("https://canvasjs.com/services/data/datapoints.php?xstart="+xValue+"&ystart="+yValue+"&length="+newDataCount+"type=json")
+  getGraphData() : Observable<PlotData> {
+    return this.httpClient.get<PlotData>(this.baseUrl + "/capture/plotdata")
     .pipe(
       catchError(this.httpError)
     );
   }
 
-  fetchData() : any {
-    return 'Hi'
+  getSignalData() : Observable<SignalData> {
+    return this.httpClient.get<SignalData>(this.baseUrl + "/capture/signaldata")
+    .pipe(
+      catchError(this.httpError)
+    )
+  }
+
+  plotCapture(command: string) : any {
+    console.log(command)
+    return this.httpClient.post<any>(this.baseUrl + "/capture/plotcommand",JSON.stringify(command),this.httpHeader)
+    .pipe(
+      catchError(this.httpError)
+    )
   }
 
   httpError(error: HttpErrorResponse) {
@@ -31,7 +44,7 @@ export class CaptureService {
     if (error.error instanceof ErrorEvent) {
       msg = error.error.message;
     } else {
-      msg = 'Error Code:${error.status}\nMessage:${error.message}';
+      msg = `Error Code:${error.status}\nMessage:${error.message}`;
     }
     console.log(msg);
     return throwError(msg);
