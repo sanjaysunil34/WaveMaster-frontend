@@ -7,4 +7,11 @@ import { Component } from '@angular/core';
 })
 export class BannerComponent {
 
+  isConnected = false;
+
+  constructor(){
+    if(location.pathname != '/'){
+      this.isConnected = true;       
+    }    
+  }
 }

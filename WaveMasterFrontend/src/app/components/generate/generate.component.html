@@ -6,25 +6,21 @@
                 <div class="generate-input-rows row">
                     <div class="generate-inputs col-md-12 input-padding">
                         <label for="signalTypeInput" class="generate-input-label form-label">SIGNAL TYPE</label>
-                        <select type="text" class="form-select generate-input-field form-control" id="signalTypeFormControl" formControlName="baudRate">
+                        <select type="text" class="form-select generate-input-field form-control" id="signalTypeFormControl" formControlName="signalType">
                             <option class="generate-input-option" value="sine">Sine Wave</option>
                         </select>
-                        <!-- <mat-select class="form-select connection-input-field" id="id" formControlName="baudRate">
-                            <mat-option value="true">Yes</mat-option>
-                            <mat-option value="false">No</mat-option>
-                        </mat-select> -->
                     </div>
 
                     <div class="generate-inputs col-md-12">
-                        <label for="periodInput" class="generate-input-label form-label">PERIOD</label>                        
+                        <label for="peaktopeakInput" class="generate-input-label form-label">PEAK TO PEAK</label>                        
                         <div class="generate-input-field-slider row">
                             <div class="generate-slider-container col-sm-12 col-md-6 col-lg-8">
-                                <mat-slider class="generate-slider">
-                                    <input matSliderThumb>
+                                <mat-slider class="generate-slider" min=0 max=3.3 step=0.01>
+                                    <input matSliderThumb [formControl]="peakValue">
                                 </mat-slider>
                             </div>
                             <div class="col-sm-12 col-md-6 col-lg-4">
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" value="{{peakValue.value}} V" (change)="handlePeakChange($event.target)">
                             </div>
                         </div>                            
                     </div>
@@ -33,12 +29,12 @@
                         <label for="frequencyInput" class="generate-input-label form-label">FREQUENCY</label>                        
                         <div class="generate-input-field-slider row">
                             <div class="generate-slider-container col-sm-12 col-md-6 col-lg-8">
-                                <mat-slider class="generate-slider">
-                                    <input matSliderThumb>
+                                <mat-slider class="generate-slider" min=100 max=1000 step=1>
+                                    <input matSliderThumb [formControl]="frequencyValue">
                                 </mat-slider>
                             </div>
                             <div class="col-sm-12 col-md-6 col-lg-4">
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" value="{{frequencyValue.value}} Hz" (change)="handleFrequencyChange($event.target)">
                             </div>
                         </div>                            
                     </div>
@@ -49,7 +45,7 @@
                                 <button class="btn generate-submit-button">RESET</button>
                             </div>
                             <div class="generate-single-button-container">
-                                <button class="btn generate-submit-button">GENERATE</button>
+                                <button type="submit" class="btn generate-submit-button">GENERATE</button>
                             </div>
                         </div>
                     </div>

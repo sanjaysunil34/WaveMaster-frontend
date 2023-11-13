@@ -6,28 +6,38 @@
                 <div class="connection-input-rows row">
                     <div class="connection-inputs col-md-12">
                         <label for="portNameInput" class="connection-input-label form-label" >PORT NAME</label>
-                        <input type="text" class="connection-input-field form-control" id="portNameFormControl" formControlName="portName">
+                        <!-- <input type="text" class="connection-input-field form-control" id="portNameFormControl" formControlName="portName"> -->
+                        <select type="text" class="form-select connection-input-field form-control" id="portNameFormControl" formControlName="portName">
+                            <option *ngFor="let port of portNames" class="connection-input-option" value={{port}}>{{port}}</option>
+                        </select>                        
                     </div>
+                    <div class="error-text" *ngIf="portNameEmpty">Port Name Required</div>
 
                     <div class="connection-inputs col-md-12">
                         <label for="baudRateInput" class="connection-input-label form-label" >BAUD RATE</label>
                         <select type="text" class="form-select connection-input-field form-control" id="baudRateFormControl" formControlName="baudRate">
-                            <option class="connection-input-option" value="1">1</option>
+                            <option *ngFor="let baud of baudRateValues" class="connection-input-option" value={{baud}}>{{baud}}</option>
                         </select>
-                        <!-- <mat-select class="form-select connection-input-field" id="id" formControlName="baudRate">
-                            <mat-option value="true">Yes</mat-option>
-                            <mat-option value="false">No</mat-option>
-                        </mat-select> -->
                     </div>
 
                     <div class="connection-inputs col-md-12">
-                        <label for="startBitInput" class="connection-input-label form-label" >START BIT</label>
-                        <input type="text" class="connection-input-field form-control" id="startBitFormControl" formControlName="startBit">
+                        <label for="startBitInput" class="connection-input-label form-label" >DATA BIT</label>
+                        <select type="text" class="form-select connection-input-field form-control" id="dataBitFormControl" formControlName="dataBit">
+                            <option class="connection-input-option" value="5">5</option>
+                            <option class="connection-input-option" value="6">6</option>
+                            <option class="connection-input-option" value="7">7</option>
+                            <option class="connection-input-option" value="8">8</option>
+                        </select>
                     </div>                    
 
                     <div class="connection-inputs col-md-12">
                         <label for="stopBitInput" class="connection-input-label form-label" >STOP BIT</label>
-                        <input type="text" class="connection-input-field form-control" id="stopBitFormControl" formControlName="stopBit">
+                        <!-- <input type="text" class="connection-input-field form-control" id="stopBitFormControl" formControlName="stopBit"> -->
+                        <select type="text" class="form-select connection-input-field form-control" id="stopBitFormControl" formControlName="stopBit">
+                            <option class="connection-input-option" value="1">1</option>
+                            <option class="connection-input-option" value="1.5">1.5</option>
+                            <option class="connection-input-option" value="2">2</option>
+                        </select>
                     </div>
 
                     <div class="connection-inputs col-md-12">
@@ -35,7 +45,10 @@
                         <!-- <input type="text" class="connection-input-field form-control" id="parityFormControl" formControlName="parity"> -->
                         <select type="text" class="form-select connection-input-field form-control" id="parityFormControl" formControlName="parity">
                             <option class="connection-input-option" value="even">Even</option>
+                            <option class="connection-input-option" value="mark">Mark</option>
+                            <option class="connection-input-option" value="none">None</option>
                             <option class="connection-input-option" value="odd">Odd</option>
+                            <option class="connection-input-option" value="space">Space</option>
                         </select>
                     </div>
 
