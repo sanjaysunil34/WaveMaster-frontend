@@ -13,10 +13,6 @@ export class CaptureService {
     })
   }
 
-  // xValue:number = 1;
-  // yValue:number = 10;
-  // newDataCount:number = 10;
-
   constructor(private httpClient:HttpClient) { }
 
   getGraphData(xValue : any, yValue : any, newDataCount: any) : Observable<[]> {

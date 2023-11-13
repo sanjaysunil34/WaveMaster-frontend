@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
@@ -36,6 +37,7 @@ export class CaptureComponent implements OnDestroy{
       },
       data: [{
         type: "line",
+        xValueType: "dateTime",
         dataPoints: this.dataPoints
       }],
       axisY: {
@@ -52,7 +54,7 @@ export class CaptureComponent implements OnDestroy{
         title: "Time",
         gridThickness: 0,
         titleFontSize: 25,
-        interval: 1,
+        //interval: 1,
         tickLength: 15,
         labelFontSize: 13,
       }
@@ -77,7 +79,7 @@ export class CaptureComponent implements OnDestroy{
 
     onXScaleChange(event: any){
       console.log(this.xAxisScale.value)
-      this.chartOptions.axisX.interval = 1 * event.value;
+      //this.chartOptions.axisX.interval = 1 * event.value;
       this.chartOptions.axisX.labelFontSize = 13 * event.value;
       switch(event.value){
         case "0.5": this.chartOptions.axisX.labelFontSize = 10 ;
@@ -127,8 +129,16 @@ export class CaptureComponent implements OnDestroy{
     updateData = () => {
       //this.http.get("https://canvasjs.com/services/data/datapoints.php?xstart="+this.xValue+"&ystart="+this.yValue+"&length="+this.newDataCount+"type=json", { responseType: 'json' }).subscribe(this.addData);
       this.captureService.getGraphData(this.xValue, this.yValue, this.newDataCount).subscribe(data => {
-        console.log(data);        
-        this.addData(data);
+        //console.log(data);
+        
+        const min = 0;
+        const max = 3.3;
+        const precision = 2;
+        const randomNum = (Math.floor(Math.random() * (max * 10 ** precision)) / (10 ** precision)).toFixed(precision);
+
+        console.log([[new Date().getTime(), parseFloat(randomNum)]]);        
+        this.addData([[new Date().getTime(), parseFloat(randomNum)]]);
+        // this.addData(data);
       });
     }
    
@@ -137,15 +147,15 @@ export class CaptureComponent implements OnDestroy{
         
         data.forEach( (val:any[]) => {
           console.log(val)
-          this.dataPoints.push({x: val[0], y: parseInt(val[1])});
+          this.dataPoints.push({x: val[0], y: parseFloat(val[1])});
           this.xValue++;
-          this.yValue = parseInt(val[1]);  
+          this.yValue = parseFloat(val[1]);  
         })
       } else {
         //this.dataPoints.shift();
-        this.dataPoints.push({x: data[0][0], y: parseInt(data[0][1])});
+        this.dataPoints.push({x: data[0][0], y: parseFloat(data[0][1])});
         this.xValue++;
-        this.yValue = parseInt(data[0][1]);  
+        this.yValue = parseFloat(data[0][1]);  
       }
       this.newDataCount = 1;
       this.chart.render();
