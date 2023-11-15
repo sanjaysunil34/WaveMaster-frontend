@@ -7,11 +7,10 @@
                     <div class="generate-inputs col-md-12 input-padding">
                         <label for="signalTypeInput" class="generate-input-label form-label">SIGNAL TYPE</label>
                         <select type="text" class="form-select generate-input-field form-control" id="signalTypeFormControl" formControlName="signalType">
-                            <option *ngFor="let u of types" [ngClass]="u=='data.signalType'?'selected':''">{{u}}</option>
-                            <!-- <option class="generate-input-option" value="sine" selected>Sine Wave</option>
+                            <option class="generate-input-option" value="sine" selected>Sine Wave</option>
                             <option class="generate-input-option" value="square">Square Wave</option>
                             <option class="generate-input-option" value="triangle">Triangle Wave</option>
-                            <option class="generate-input-option" value="sawtooth">Saw Tooth Wave</option> -->
+                            <option class="generate-input-option" value="sawtooth">Saw Tooth Wave</option>
                         </select>
                     </div>
 
@@ -46,7 +45,7 @@
                     <div class="generate-button-group">
                         <div class="generate-submit-buttons-container">
                             <div class="generate-single-button-container">
-                                <button class="btn generate-submit-button">RESET</button>
+                                <button (click)="resetGenerateForm()" class="btn generate-submit-button">RESET</button>
                             </div>
                             <div class="generate-single-button-container">
                                 <button type="submit" class="btn generate-submit-button">GENERATE</button>

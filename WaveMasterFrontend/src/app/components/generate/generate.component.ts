@@ -8,13 +8,12 @@ import { GenerateService } from 'src/app/services/generate.service';
   templateUrl: './generate.component.html',
   styleUrls: ['./generate.component.scss']
 })
-export class GenerateComponent implements AfterViewInit{
+export class GenerateComponent{
   generateForm: FormGroup;
   submitted = false;
   freqValue = 100;
-  // peakValue = new FormControl(0);
-  // frequencyValue = new FormControl(0);
-  types=["square","sine"]
+  signalTypeReceived = "sine";  
+
   constructor(fb: FormBuilder,private generateService: GenerateService){
     this.generateForm = fb.group({
       'signalType' : ['sine', Validators.required],
@@ -23,22 +22,17 @@ export class GenerateComponent implements AfterViewInit{
     })
     
     this.generateService.restoreWave().subscribe(data => {
-      console.log(data);      
-      
-      this.generateForm.get("signalType")?.setValue( "square" );
-      this.generateForm.controls["signalType"].setValue(data.signalType );
-      console.log(this.generateForm.value)
+      this.generateForm.controls["signalType"].setValue(data.SignalType );
+      this.generateForm.controls["peakValue"].setValue(data.PeakToPeak );
+      this.generateForm.controls["frequencyValue"].setValue(data.Frequency );
     });
   }
 
-  ngAfterViewInit(){
-    
-  }
   onSubmitGenerateForm(){
     console.log(this.generateForm.value);    
   
     var sd = new SignalData(this.generateForm.value.frequencyValue,this.generateForm.value.peakValue)
-    sd.signalType = this.generateForm.value.signalType
+    sd.SignalType = this.generateForm.value.signalType
     this.generateService.generateWave(sd).subscribe();
   }
 
@@ -60,5 +54,11 @@ export class GenerateComponent implements AfterViewInit{
       v.value = 100;
     }
     this.generateForm.value.frequencyValue = parseFloat(v.value);
+  }
+
+  resetGenerateForm(){
+    this.generateForm.controls["signalType"].setValue("sine");
+    this.generateForm.controls["peakValue"].setValue(0);
+    this.generateForm.controls["frequencyValue"].setValue(0);
   }
 }
