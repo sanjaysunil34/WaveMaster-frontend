@@ -32,11 +32,12 @@ export class GenerateService {
   }
 
   httpError(error: HttpErrorResponse) {
+      
     let msg = '';
     if (error.error instanceof ErrorEvent) {
       msg = error.error.message;
     } else {
-      msg = 'Error Code:${error.status}\nMessage:${error.message}';
+      msg = `Error Code : ${error.status}\n${error.error}`;
     }
     console.log(msg);
     return throwError(msg);
