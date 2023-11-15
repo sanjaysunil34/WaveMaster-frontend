@@ -48,11 +48,12 @@ export class GenerateComponent{
 
   handleFrequencyChange(v : any){
     console.log(v.value);
-    if(v.value > 1000){
-      v.value = 1000;
-    }else if(v.value < 100){
+    if(v.value > 100){
       v.value = 100;
+    }else if(v.value < 0){
+      v.value = 0;
     }
+    //y parseFloat
     this.generateForm.value.frequencyValue = parseFloat(v.value);
   }
 
