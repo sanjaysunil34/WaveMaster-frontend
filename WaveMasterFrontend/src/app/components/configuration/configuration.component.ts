@@ -34,14 +34,7 @@ export class ConfigurationComponent {
     });    
   }
 
-  onSubmitConnectionForm(){
-    console.log({
-      portName : this.connectionForm.value.portName,
-      stopBit : this.connectionForm.value.stopBit,
-      baudRate : this.connectionForm.value.baudRate,
-      dataBit : this.connectionForm.value.dataBit,
-      parity : this.connectionForm.value.parity
-    });
+  onSubmitConnectionForm(){    
 
       this.connectionParams.portName = this.connectionForm.value.portName;
       this.connectionParams.stopBit = this.connectionForm.value.stopBit;
@@ -49,6 +42,7 @@ export class ConfigurationComponent {
       this.connectionParams.dataBit = this.connectionForm.value.dataBit;
       this.connectionParams.parity = this.connectionForm.value.parity;
 
+    console.log(this.connectionParams);
     
 
     if(this.connectionForm.value.portName === null){

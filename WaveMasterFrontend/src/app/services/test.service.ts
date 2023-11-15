@@ -16,8 +16,8 @@ export class TestService {
 
   constructor(private httpClient:HttpClient) { }
 
-  testPeripheral(command: string) : Observable<string>{
-    return this.httpClient.post<string>(this.baseUrl + "/test",JSON.stringify(command),this.httpHeader)
+  testComponent(command: string) : Observable<string>{
+    return this.httpClient.post<string>(this.baseUrl + '/test', JSON.stringify(command), this.httpHeader)
     .pipe(
       catchError(this.httpError)
     );
