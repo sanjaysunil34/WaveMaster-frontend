@@ -54,9 +54,9 @@ export class TestComponent {
       }
     }else if(this.testForm.value.component === "eeprom"){
       if(this.testForm.value.function === "read"){
-        this.command = "READ EEPROM;"
+        this.command = "EEPROM READ;"
       }else{
-        this.command = "WRITE EEPROM;"
+        this.command = "EEPROM WRITE test;"
       }
     } else if(this.testForm.value.component === "button1"){
       this.command = "GET BUTTON 1;"
