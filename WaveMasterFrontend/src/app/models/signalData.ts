@@ -1,9 +1,10 @@
 export class SignalData{
-    frequency: number
-    peakToPeak: number
+    SignalType: string = "sine"
+    Frequency: number
+    PeakToPeak: number
 
     constructor(frequency:number,peakToPeak:number){
-        this.frequency = frequency
-        this.peakToPeak = peakToPeak
+        this.Frequency = frequency
+        this.PeakToPeak = peakToPeak
     }
 }

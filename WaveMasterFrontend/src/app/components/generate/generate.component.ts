@@ -1,29 +1,39 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { SignalData } from 'src/app/models/signalData';
+import { GenerateService } from 'src/app/services/generate.service';
 
 @Component({
   selector: 'app-generate',
   templateUrl: './generate.component.html',
   styleUrls: ['./generate.component.scss']
 })
-export class GenerateComponent {
+export class GenerateComponent{
   generateForm: FormGroup;
   submitted = false;
-  peakValue = new FormControl(0);
-  frequencyValue = new FormControl(0);
+  freqValue = 100;
+  signalTypeReceived = "sine";  
 
-  constructor(fb: FormBuilder){
+  constructor(fb: FormBuilder,private generateService: GenerateService){
     this.generateForm = fb.group({
-      'signalType' : ['sine', Validators.required]
+      'signalType' : ['sine', Validators.required],
+      'peakValue': [0,Validators.required],
+      'frequencyValue': [0,Validators.required]
     })
     
-    
+    this.generateService.restoreWave().subscribe(data => {
+      this.generateForm.controls["signalType"].setValue(data.SignalType );
+      this.generateForm.controls["peakValue"].setValue(data.PeakToPeak );
+      this.generateForm.controls["frequencyValue"].setValue(data.Frequency );
+    });
   }
 
   onSubmitGenerateForm(){
-    console.log(this.generateForm.value.signalType);    
-    console.log(this.peakValue.value);
-    console.log(this.frequencyValue.value);
+    console.log(this.generateForm.value);    
+  
+    var sd = new SignalData(this.generateForm.value.frequencyValue,this.generateForm.value.peakValue)
+    sd.SignalType = this.generateForm.value.signalType
+    this.generateService.generateWave(sd).subscribe();
   }
 
   handlePeakChange(v : any){
@@ -33,7 +43,7 @@ export class GenerateComponent {
     }else if(v.value < 0){
       v.value = 0;
     }
-    this.peakValue = new FormControl(parseFloat(v.value));
+    this.generateForm.value.peakValue = parseFloat(v.value);
   }
 
   handleFrequencyChange(v : any){
@@ -43,6 +53,12 @@ export class GenerateComponent {
     }else if(v.value < 100){
       v.value = 100;
     }
-    this.frequencyValue = new FormControl(parseFloat(v.value));
+    this.generateForm.value.frequencyValue = parseFloat(v.value);
+  }
+
+  resetGenerateForm(){
+    this.generateForm.controls["signalType"].setValue("sine");
+    this.generateForm.controls["peakValue"].setValue(0);
+    this.generateForm.controls["frequencyValue"].setValue(0);
   }
 }

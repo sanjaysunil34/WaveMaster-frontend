@@ -50,6 +50,8 @@ export class ConfigurationComponent {
     }else{
       this.connectionService.connect(this.connectionParams).subscribe(data => {
         this.router.navigate(['dashboard'])    
+      },error => {
+        console.log(error)
       });
     }
     
