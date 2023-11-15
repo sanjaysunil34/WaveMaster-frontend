@@ -118,8 +118,8 @@ export class CaptureComponent implements OnDestroy{
     fetchData(){
       //fetch data from hardware
       this.captureService.getSignalData().subscribe(data => {
-        this.frequency.setValue(data.frequency)
-        this.peakToPeak.setValue(data.peakToPeak)
+        this.frequency.setValue(data.Frequency)
+        this.peakToPeak.setValue(data.PeakToPeak)
       });
       
     }
