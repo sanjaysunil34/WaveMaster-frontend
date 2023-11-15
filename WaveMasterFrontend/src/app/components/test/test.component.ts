@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TestService } from 'src/app/services/test.service';
 
 @Component({
   selector: 'app-test',
@@ -12,15 +13,15 @@ export class TestComponent {
 
   functionArr = {
     "eeprom": ['read', 'write'],
-    "ledRed": ['on', 'off'],
-    "ledGreen": ['on', 'off']
+    "led": ['on', 'off'],
+    "button": ['1','2']
   }
 
   str = "read"
 
   selectedFuncArr : any = ['read', 'write'];
 
-  constructor(fb: FormBuilder){
+  constructor(fb: FormBuilder,private testService: TestService){
     this.testForm = fb.group({
       'component' : ['eeprom', Validators.required],
       'function' : ['read', Validators.required]
@@ -35,5 +36,8 @@ export class TestComponent {
 
   onSubmitTestForm(){
     console.log(this.testForm.value.component + '-' + this.testForm.value.function);    
+    this.testService.testPeripheral(this.testForm.value.component + '-' + this.testForm.value.function).subscribe(data => {
+      console.log("command sent")
+    });
   }
 }
