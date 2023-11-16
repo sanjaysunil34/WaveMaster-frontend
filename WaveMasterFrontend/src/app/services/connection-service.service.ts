@@ -43,7 +43,7 @@ export class ConnectionService {
     if (error.error instanceof ErrorEvent) {
       msg = error.message;
     } else {
-      msg = `Error Code : ${error.status}\n${error.error}`;
+      msg = `Error Code : ${error.status}\n${error.error.error}`;
     }
     console.log(msg);
     return throwError(msg);
