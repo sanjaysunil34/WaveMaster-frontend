@@ -148,6 +148,9 @@ export class CaptureComponent implements OnDestroy{
    
     addData = (data: PlotData) => {
       this.dataPoints.push({x: new Date(data.timestamp).getTime(), y: data.voltage})
+      if(this.dataPoints.length > 50){
+        this.dataPoints.shift();
+      }
       this.chart.render();
       this.timeout = setTimeout(() => {
         if(this.start == false){
