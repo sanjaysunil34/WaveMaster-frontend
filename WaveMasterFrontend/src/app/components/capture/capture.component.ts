@@ -58,7 +58,7 @@ export class CaptureComponent implements OnDestroy{
         title: "Time",
         gridThickness: 0,
         titleFontSize: 25,
-        //interval: 1,
+        interval: 1,
         tickLength: 15,
         labelFontSize: 13,
       }
@@ -142,14 +142,19 @@ export class CaptureComponent implements OnDestroy{
         //console.log(data.voltage,data.timestamp);
         //console.log(new Date(data.timestamp).getTime())
         console.log(data);        
-        this.addData(data)
+        //this.addData(data)
       });
     }
    
-    addData = (data: PlotData) => {
-      this.dataPoints.push({x: new Date(data.timestamp).getTime(), y: data.voltage})
+    addData = (data: PlotData[]) => {
+
+      data.forEach(d => {
+        this.dataPoints.push({x: new Date(d.timestamp).getTime(), y: d.voltage})  
+      });
+
+      
       if(this.dataPoints.length > 50){
-        this.dataPoints.shift()
+        this.dataPoints.splice(0,50);
       }
       this.chart.render();
       this.timeout = setTimeout(() => {
@@ -159,7 +164,7 @@ export class CaptureComponent implements OnDestroy{
           console.log(this.start)
           clearTimeout(this.timeout);
         }
-      }, 1000);
+      }, 1);
     }
 
 
