@@ -18,6 +18,8 @@ export class GenerateService {
   constructor(private httpClient:HttpClient) { }
 
   generateWave(signalData : SignalData) : Observable<SignalData>{
+    console.log(signalData);
+    
     return this.httpClient.post<SignalData>(this.baseUrl + "/generate",JSON.stringify(signalData),this.httpHeader)
     .pipe(
       catchError(this.httpError)
@@ -37,7 +39,7 @@ export class GenerateService {
     if (error.error instanceof ErrorEvent) {
       msg = error.error.message;
     } else {
-      msg = `Error Code : ${error.status}\n${error.error}`;
+      msg = `Error Code : ${error.status}\n${error.error.error}`;
     }
     console.log(msg);
     return throwError(msg);

@@ -17,21 +17,21 @@ export class ConnectionService {
   constructor(private httpClient:HttpClient) { }
 
   getPortName() : Observable<string[]>{
-    return this.httpClient.get<string[]>(this.baseUrl + '/Configuration')
+    return this.httpClient.get<string[]>(this.baseUrl + '/configuration')
     .pipe(
       catchError(this.httpError)
     );
   }
 
-  connect(object: Object) : Observable<Object>{
-    return  this.httpClient.post<Object>(this.baseUrl + '/Configuration/connect', JSON.stringify(object), this.httpHeader)
+  connect(object: Object) : Observable<string>{
+    return  this.httpClient.post<string>(this.baseUrl + '/configuration/connect', JSON.stringify(object), this.httpHeader)
     .pipe(
       catchError(this.httpError)
     );
   }
 
   disconnect() : Observable<Object>{
-    return  this.httpClient.post<Object>(this.baseUrl + '/Configuration/disconnect',{} ,this.httpHeader)
+    return  this.httpClient.post<Object>(this.baseUrl + '/configuration/disconnect',{} ,this.httpHeader)
     .pipe(
       catchError(this.httpError)
     );
@@ -41,7 +41,7 @@ export class ConnectionService {
       
     let msg = '';
     if (error.error instanceof ErrorEvent) {
-      msg = error.error.message;
+      msg = error.message;
     } else {
       msg = `Error Code : ${error.status}\n${error.error}`;
     }

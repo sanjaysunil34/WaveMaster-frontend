@@ -25,9 +25,9 @@ export class TestService {
 
   httpError(error: HttpErrorResponse) {
       
-    let msg = '';
+    let msg = '';    
     if (error.error instanceof ErrorEvent) {
-      msg = error.error.message;
+      msg = error.message;
     } else {
       msg = `Error Code : ${error.status}\n${error.error}`;
     }

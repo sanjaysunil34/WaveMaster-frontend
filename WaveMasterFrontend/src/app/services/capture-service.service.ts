@@ -1,8 +1,10 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, Subject, catchError, throwError } from 'rxjs';
 import { PlotData } from '../models/plotData';
 import { SignalData } from '../models/signalData';
+
+import * as signalR from '@microsoft/signalr';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +18,54 @@ export class CaptureService {
     })
   }
 
-  constructor(private httpClient:HttpClient) { }
+  private hubConnection: signalR.HubConnection;
+  private messageSubject: Subject<string> = new Subject<string>();
+
+  constructor(private httpClient:HttpClient) { 
+    this.hubConnection = new signalR.HubConnectionBuilder()
+      .withUrl("http://localhost:3000/plotValue", {skipNegotiation: true, transport: signalR.HttpTransportType.WebSockets})// Replace with your actual backend URL and hub route
+      .configureLogging(signalR.LogLevel.Information)
+      .build();
+
+    
+   }
+
+   private startConnection(): void {
+    this.hubConnection
+      .start()
+      .then(() => {
+        console.log('SignalR connection started');
+        this.registerEvents();
+      })
+      .catch((err) => console.error(`Error while starting connection: ${err}`));
+  }
+
+  public addTransferPlotDataListener = () => {
+    this.startConnection();
+    this.hubConnection.on("transferPlotData", (data) => {
+      console.log(data);      
+    })
+  }
+
+  public stopTransferPlotDataListener = () => {
+    this.hubConnection.off("transferPlotData");
+    this.endConnection();
+  }
+
+  private endConnection() : void {
+    this.hubConnection
+      .stop();
+  }
+
+
+
+
+  private registerEvents(): void {
+    // Define your SignalR hub events here
+    this.hubConnection.on('ReceiveMessage', (message: string) => {
+      this.messageSubject.next(message);
+    });
+  }
 
   getGraphData() : Observable<PlotData> {
     return this.httpClient.get<PlotData>(this.baseUrl + "/capture/plotdata")
@@ -42,11 +91,11 @@ export class CaptureService {
 
   httpError(error: HttpErrorResponse) {
       
-    let msg = '';
-    if (error.error instanceof ErrorEvent) {
+    let msg = '';    
+    if (error.error instanceof ErrorEvent) {      
       msg = error.error.message;
     } else {
-      msg = `Error Code : ${error.status}\n${error.error}`;
+      msg = `Error Code : ${error.status}\n${error.error.error}`;
     }
     console.log(msg);
     return throwError(msg);

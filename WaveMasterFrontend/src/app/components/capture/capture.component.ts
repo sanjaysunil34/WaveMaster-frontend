@@ -19,6 +19,9 @@ export class CaptureComponent implements OnDestroy{
     yAxisScale = new FormControl(1) 
     dataAcquisitionRate = new FormControl(1)
 
+    public messages: string[] = [];
+    public newMessage: string = '';
+
     frequency = new FormControl(0)
     peakToPeak = new FormControl(0)
     dataPoints:any[] = [];
@@ -75,11 +78,12 @@ export class CaptureComponent implements OnDestroy{
       this.start = !this.start
       if(this.start == false){
         this.captureService.plotCapture("START").subscribe(this.updateData());
-        
+        this.captureService.addTransferPlotDataListener();
+        this.startHttpRequest();
       }else{
         
         this.captureService.plotCapture("STOP").subscribe(clearTimeout(this.timeout));
-        
+        this.captureService.stopTransferPlotDataListener();
       }
       
     }
@@ -151,5 +155,13 @@ export class CaptureComponent implements OnDestroy{
           clearTimeout(this.timeout);
         }
       }, 1000);
+    }
+
+
+    private startHttpRequest = () => {
+      this.http.get('http://localhost:3000/plot')
+      .subscribe(res => {
+        console.log(res);        
+      })
     }
 }
