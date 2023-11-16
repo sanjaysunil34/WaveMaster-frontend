@@ -20,6 +20,7 @@ export class CaptureService {
 
   private hubConnection: signalR.HubConnection;
   private messageSubject: Subject<string> = new Subject<string>();
+  private dataSubject = new Subject<any>();
 
   constructor(private httpClient:HttpClient) { 
     this.hubConnection = new signalR.HubConnectionBuilder()
@@ -42,9 +43,14 @@ export class CaptureService {
 
   public addTransferPlotDataListener = () => {
     this.startConnection();
-    this.hubConnection.on("transferPlotData", (data) => {
-      console.log(data);      
+    this.hubConnection.on("transferPlotData", (data) => {   
+      //console.log(data);    
+      this.dataSubject.next(data);  
     })
+  }
+
+  getDataSubject() {
+    return this.dataSubject.asObservable();
   }
 
   public stopTransferPlotDataListener = () => {

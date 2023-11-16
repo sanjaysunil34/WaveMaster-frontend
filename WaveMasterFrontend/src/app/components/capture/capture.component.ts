@@ -77,12 +77,13 @@ export class CaptureComponent implements OnDestroy{
     toggleStartStop(){
       this.start = !this.start
       if(this.start == false){
-        this.captureService.plotCapture("START").subscribe(this.updateData());
+        //this.captureService.plotCapture("START").subscribe(this.updateData());
         this.captureService.addTransferPlotDataListener();
+        this.captureService.getDataSubject().subscribe(data => this.addData(data));
         this.startHttpRequest();
       }else{
         
-        this.captureService.plotCapture("STOP").subscribe(clearTimeout(this.timeout));
+        //this.captureService.plotCapture("STOP").subscribe(clearTimeout(this.timeout));
         this.captureService.stopTransferPlotDataListener();
       }
       
@@ -140,6 +141,7 @@ export class CaptureComponent implements OnDestroy{
       this.captureService.getGraphData().subscribe(data => {
         //console.log(data.voltage,data.timestamp);
         //console.log(new Date(data.timestamp).getTime())
+        console.log(data);        
         this.addData(data)
       });
     }
@@ -149,7 +151,7 @@ export class CaptureComponent implements OnDestroy{
       this.chart.render();
       this.timeout = setTimeout(() => {
         if(this.start == false){
-          this.updateData()
+          //this.updateData()
         }else{
           console.log(this.start)
           clearTimeout(this.timeout);
