@@ -22,6 +22,8 @@ export class GenerateComponent{
     })
     
     this.generateService.restoreWave().subscribe(data => {
+      console.log(data);
+      
       this.generateForm.controls["signalType"].setValue(data.SignalType );
       this.generateForm.controls["peakValue"].setValue(data.PeakToPeak );
       this.generateForm.controls["frequencyValue"].setValue(data.Frequency );
