@@ -1,4 +1,3 @@
-import { formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
@@ -44,11 +43,23 @@ export class CaptureComponent implements OnDestroy{
         xValueType: "dateTime",
         dataPoints: this.dataPoints
       }],
+      toolTip: {
+        contentFormatter: function (e : any) {
+          var content = " ";
+          
+          
+          for (var i = 0; i < e.entries.length; i++) {
+            content += "Timestamp : " + new Date(e.entries[i].dataPoint.x) + "<br/>" + "Voltage : " + e.entries[i].dataPoint.y + " V";
+            content += "<br/>";
+          }
+          return content;
+        }
+      },
       axisY: {
         title: "Voltage ( Volt )",
         minimum: 0, 
-        maximum: 3.3, 
-        interval: 0.1,
+        maximum: 5000, 
+        interval: 500,
         tickLength: 15,
         labelFontSize: 13,
         titleFontSize: 25,
@@ -56,6 +67,7 @@ export class CaptureComponent implements OnDestroy{
       },
       axisX: {
         title: "Time",
+        valueFormatString: "hh:mm:ss:ff",
         gridThickness: 0,
         titleFontSize: 25,
         interval: 1,
@@ -77,13 +89,16 @@ export class CaptureComponent implements OnDestroy{
     toggleStartStop(){
       this.start = !this.start
       if(this.start == false){
-        //this.captureService.plotCapture("START").subscribe(this.updateData());
+        this.captureService.plotCapture("START").subscribe(this.updateData());
         this.captureService.addTransferPlotDataListener();
-        this.captureService.getDataSubject().subscribe(data => this.addData(data));
-        this.startHttpRequest();
+        this.captureService.getDataSubject().subscribe(data => {
+          //console.log(data);          
+          this.addData(data);
+        });
+        //this.startHttpRequest();
       }else{
         
-        //this.captureService.plotCapture("STOP").subscribe(clearTimeout(this.timeout));
+        this.captureService.plotCapture("STOP").subscribe(clearTimeout(this.timeout));
         this.captureService.stopTransferPlotDataListener();
       }
       
@@ -150,6 +165,8 @@ export class CaptureComponent implements OnDestroy{
 
       data.forEach(d => {
         this.dataPoints.push({x: new Date(d.timestamp).getTime(), y: d.voltage})  
+        //console.log(new Date(d.timestamp).getTime());
+        
         if(this.dataPoints.length > 100){
           this.dataPoints.shift();
         }
