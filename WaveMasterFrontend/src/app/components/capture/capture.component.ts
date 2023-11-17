@@ -58,7 +58,7 @@ export class CaptureComponent implements OnDestroy{
         title: "Time",
         gridThickness: 0,
         titleFontSize: 25,
-        //interval: 1,
+        interval: 1,
         tickLength: 15,
         labelFontSize: 13,
       }
@@ -77,12 +77,13 @@ export class CaptureComponent implements OnDestroy{
     toggleStartStop(){
       this.start = !this.start
       if(this.start == false){
-        this.captureService.plotCapture("START").subscribe(this.updateData());
+        //this.captureService.plotCapture("START").subscribe(this.updateData());
         this.captureService.addTransferPlotDataListener();
+        this.captureService.getDataSubject().subscribe(data => this.addData(data));
         this.startHttpRequest();
       }else{
         
-        this.captureService.plotCapture("STOP").subscribe(clearTimeout(this.timeout));
+        //this.captureService.plotCapture("STOP").subscribe(clearTimeout(this.timeout));
         this.captureService.stopTransferPlotDataListener();
       }
       
@@ -140,21 +141,33 @@ export class CaptureComponent implements OnDestroy{
       this.captureService.getGraphData().subscribe(data => {
         //console.log(data.voltage,data.timestamp);
         //console.log(new Date(data.timestamp).getTime())
-        this.addData(data)
+        console.log(data);        
+        //this.addData(data)
       });
     }
    
-    addData = (data: PlotData) => {
-      this.dataPoints.push({x: new Date(data.timestamp).getTime(), y: data.voltage})
+    addData = (data: PlotData[]) => {
+
+      data.forEach(d => {
+        this.dataPoints.push({x: new Date(d.timestamp).getTime(), y: d.voltage})  
+        if(this.dataPoints.length > 100){
+          this.dataPoints.shift();
+        }
+      });
+
+      
+      // if(this.dataPoints.length > 50){
+      //   this.dataPoints.splice(0,50);
+      // }
       this.chart.render();
       this.timeout = setTimeout(() => {
         if(this.start == false){
-          this.updateData()
+          //this.updateData()
         }else{
           console.log(this.start)
           clearTimeout(this.timeout);
         }
-      }, 1000);
+      }, 1);
     }
 
 

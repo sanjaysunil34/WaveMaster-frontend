@@ -42,9 +42,9 @@ export class TestComponent {
     console.log(this.testForm.value.component + '-' + this.testForm.value.function);    
     if(this.testForm.value.component === "ledRed"){
       if(this.testForm.value.function === "on"){
-        this.command = "SET LED ON;"
+        this.command = "SET LED ON\r"
       }else{
-        this.command = "SET LED OFF;"
+        this.command = "SET LED OFF\r"
       }
     }else if(this.testForm.value.component === "ledGreen"){
       if(this.testForm.value.function === "on"){
