@@ -150,12 +150,15 @@ export class CaptureComponent implements OnDestroy{
 
       data.forEach(d => {
         this.dataPoints.push({x: new Date(d.timestamp).getTime(), y: d.voltage})  
+        if(this.dataPoints.length > 100){
+          this.dataPoints.shift();
+        }
       });
 
       
-      if(this.dataPoints.length > 50){
-        this.dataPoints.splice(0,50);
-      }
+      // if(this.dataPoints.length > 50){
+      //   this.dataPoints.splice(0,50);
+      // }
       this.chart.render();
       this.timeout = setTimeout(() => {
         if(this.start == false){
