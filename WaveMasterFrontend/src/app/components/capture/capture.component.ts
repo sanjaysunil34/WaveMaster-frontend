@@ -41,7 +41,8 @@ export class CaptureComponent implements OnDestroy{
       data: [{
         type: "line",
         xValueType: "dateTime",
-        dataPoints: this.dataPoints
+        dataPoints: this.dataPoints,
+        
       }],
       toolTip: {
         contentFormatter: function (e : any) {
@@ -89,10 +90,10 @@ export class CaptureComponent implements OnDestroy{
     toggleStartStop(){
       this.start = !this.start
       if(this.start == false){
-        this.captureService.plotCapture("START").subscribe(this.updateData());
+        //this.captureService.plotCapture("START").subscribe(this.updateData());
         this.captureService.addTransferPlotDataListener();
         this.captureService.getDataSubject().subscribe(data => {
-          //console.log(data);          
+          console.log(data);          
           this.addData(data);
         });
         //this.startHttpRequest();
@@ -120,7 +121,6 @@ export class CaptureComponent implements OnDestroy{
     }
 
     onYScaleChange(event: any){
-      console.log(this.yAxisScale.value)
       this.chartOptions.axisY.interval = 0.1 * event.value;
       this.chartOptions.axisY.labelFontSize = 13 * event.value;
       switch(event.value){
@@ -133,6 +133,12 @@ export class CaptureComponent implements OnDestroy{
       }
       this.chart.render();
       //change y axis scale
+    }
+
+    onRateChange(event : any){
+      console.log(event.value);
+      
+      this.captureService.sendDataAcquisitionRate(event.value).subscribe()
     }
 
     fetchData(){

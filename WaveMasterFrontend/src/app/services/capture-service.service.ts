@@ -95,6 +95,14 @@ export class CaptureService {
     )
   }
 
+  sendDataAcquisitionRate(rate : number) : any {
+       
+    return this.httpClient.post<any>(this.baseUrl + "/capture/rate",JSON.stringify(rate),this.httpHeader)
+    .pipe(
+      catchError(this.httpError)
+    )
+  } 
+
   httpError(error: HttpErrorResponse) {
       
     let msg = '';    
