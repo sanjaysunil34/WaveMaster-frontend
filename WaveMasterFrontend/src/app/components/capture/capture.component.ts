@@ -10,6 +10,7 @@ import { CaptureService } from 'src/app/services/capture-service.service';
   templateUrl: './capture.component.html',
   styleUrls: ['./capture.component.scss']
 })
+
 export class CaptureComponent implements OnDestroy{    
     start: boolean = true
     openAccordion: string = 'collapseOne';
@@ -47,8 +48,6 @@ export class CaptureComponent implements OnDestroy{
       toolTip: {
         contentFormatter: function (e : any) {
           var content = " ";
-          
-          
           for (var i = 0; i < e.entries.length; i++) {
             content += "Timestamp : " + new Date(e.entries[i].dataPoint.x) + "<br/>" + "Voltage : " + e.entries[i].dataPoint.y + " V";
             content += "<br/>";
@@ -77,8 +76,7 @@ export class CaptureComponent implements OnDestroy{
       }
     }
 
-    constructor(private http : HttpClient, private captureService: CaptureService) {  
-    }
+    constructor(private http : HttpClient, private captureService: CaptureService) {  }
     // Toggle accordion items
     toggleAccordion(accordionId: string): void {
       this.openAccordion = this.openAccordion === accordionId ? this.openAccordion : accordionId;
@@ -170,7 +168,7 @@ export class CaptureComponent implements OnDestroy{
     addData = (data: PlotData[]) => {
 
       data.forEach(d => {
-        this.dataPoints.push({x: new Date(d.timestamp).getTime(), y: d.voltage})  
+        this.dataPoints.push({x: new Date(d.time).getTime(), y: d.voltage})  
         //console.log(new Date(d.timestamp).getTime());
         
         if(this.dataPoints.length > 100){
