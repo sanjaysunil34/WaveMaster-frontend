@@ -20,7 +20,8 @@ export class CaptureService {
 
   private hubConnection: signalR.HubConnection;
   private messageSubject: Subject<string> = new Subject<string>();
-  private dataSubject = new Subject<any>();
+  private captureDataSubject = new Subject<any>();
+  private readDataSubject = new Subject<any>();
 
   constructor(private httpClient:HttpClient) { 
     this.hubConnection = new signalR.HubConnectionBuilder()
@@ -31,7 +32,7 @@ export class CaptureService {
     
    }
 
-   private startConnection(): void {
+  public startConnection(): void {
     this.hubConnection
       .start()
       .then(() => {
@@ -41,30 +42,22 @@ export class CaptureService {
       .catch((err) => console.error(`Error while starting connection: ${err}`));
   }
 
-  public addTransferPlotDataListener = () => {
-    this.startConnection();
-    this.hubConnection.on("transferPlotData", (data) => {   
-      //console.log(data);    
-      this.dataSubject.next(data);  
-    })
+  public endConnection() : void {
+    this.hubConnection.stop();
   }
 
-  getDataSubject() {
-    return this.dataSubject.asObservable();
-  }
+  public addTransferPlotDataListener = () => {
+    //this.startConnection();
+    this.hubConnection.on("transferPlotData", (data) => {   
+      //console.log(data);    
+      this.captureDataSubject.next(data);  
+    })
+  }    
 
   public stopTransferPlotDataListener = () => {
     this.hubConnection.off("transferPlotData");
-    this.endConnection();
-  }
-
-  private endConnection() : void {
-    this.hubConnection
-      .stop();
-  }
-
-
-
+    //this.endConnection();
+  }      
 
   private registerEvents(): void {
     // Define your SignalR hub events here
@@ -73,18 +66,8 @@ export class CaptureService {
     });
   }
 
-  getGraphData() : Observable<PlotData> {
-    return this.httpClient.get<PlotData>(this.baseUrl + "/capture/plotdata")
-    .pipe(
-      catchError(this.httpError)
-    );
-  }
-
-  getSignalData() : Observable<SignalData> {
-    return this.httpClient.get<SignalData>(this.baseUrl + "/capture/signaldata")
-    .pipe(
-      catchError(this.httpError)
-    )
+  getCaptureDataSubject() {
+    return this.captureDataSubject.asObservable();
   }
 
   plotCapture(command: string) : any {
@@ -94,6 +77,39 @@ export class CaptureService {
       catchError(this.httpError)
     )
   }
+
+
+
+  getSignalData() : Observable<SignalData> {
+    return this.httpClient.get<SignalData>(this.baseUrl + "/capture/signaldata")
+    .pipe(
+      catchError(this.httpError)      
+    )
+  }  
+
+  public addFetchDataListener = () => {
+    //this.startConnection();
+    this.hubConnection.on("fetchData", (data) => {   
+      //console.log(data);    
+      this.readDataSubject.next(data);  
+    })
+  }  
+
+  public stopFetchDataListener = () => {
+    this.hubConnection.off("fetchData");
+    //this.endConnection();
+  }   
+  
+  getFetchDataSubject() {
+    return this.readDataSubject.asObservable();
+  }
+
+  sendDataAcquisitionRate(rate : number) : any {       
+    return this.httpClient.post<any>(this.baseUrl + "/capture/rate",JSON.stringify(rate),this.httpHeader)
+    .pipe(
+      catchError(this.httpError)
+    )
+  } 
 
   httpError(error: HttpErrorResponse) {
       

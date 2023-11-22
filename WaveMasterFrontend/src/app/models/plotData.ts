@@ -1,9 +1,9 @@
 export class PlotData{
     voltage: number
-    timestamp: Date
+    time: Date
     constructor(voltage: number,timestamp: Date){
         this.voltage = voltage
-        this.timestamp = timestamp
+        this.time = timestamp
     }
 
 }

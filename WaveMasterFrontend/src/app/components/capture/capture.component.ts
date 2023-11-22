@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { PlotData } from 'src/app/models/plotData';
 import { CaptureService } from 'src/app/services/capture-service.service';
 
@@ -10,6 +11,7 @@ import { CaptureService } from 'src/app/services/capture-service.service';
   templateUrl: './capture.component.html',
   styleUrls: ['./capture.component.scss']
 })
+
 export class CaptureComponent implements OnDestroy{    
     start: boolean = true
     openAccordion: string = 'collapseOne';
@@ -44,13 +46,12 @@ export class CaptureComponent implements OnDestroy{
       data: [{
         type: "line",
         xValueType: "dateTime",
-        dataPoints: this.dataPoints
+        dataPoints: this.dataPoints,
+        
       }],
       toolTip: {
         contentFormatter: function (e : any) {
           var content = " ";
-          
-          
           for (var i = 0; i < e.entries.length; i++) {
             content += "Timestamp : " + new Date(e.entries[i].dataPoint.x) + "<br/>" + "Voltage : " + e.entries[i].dataPoint.y + " V";
             content += "<br/>";
@@ -79,8 +80,12 @@ export class CaptureComponent implements OnDestroy{
       }
     }
 
-    constructor(private http : HttpClient, private captureService: CaptureService) {  
-      this.captureEvent = new EventEmitter<boolean>()
+    captureDataSubscription : Subscription = new Subscription();
+    fetchDataSubscription : Subscription = new Subscription();
+
+    constructor(private http : HttpClient, private captureService: CaptureService) { 
+      captureService.startConnection();
+
     }
     // Toggle accordion items
     toggleAccordion(accordionId: string): void {
@@ -90,23 +95,24 @@ export class CaptureComponent implements OnDestroy{
     isAccordionOpen(accordionId: string): boolean {
       return this.openAccordion === accordionId;
     }
+
     toggleStartStop(){
       this.start = !this.start
-      if(this.start == false){
-        //this.captureService.plotCapture("START").subscribe(this.updateData());
-        this.isCaptureOn = true;
-        this.captureEvent.emit(true);
-        this.captureService.addTransferPlotDataListener();
-        this.captureService.getDataSubject().subscribe(data => {
-          //console.log(data);          
+
+      if(this.start == false){        
+        this.captureService.plotCapture("START").subscribe();
+        this.captureService.addTransferPlotDataListener();  
+        this. captureDataSubscription = this.captureService.getCaptureDataSubject().subscribe(data => {
+          console.log(data);          
+
           this.addData(data);
-        });
-        //this.startHttpRequest();
+        });      
       }else{
-        this.isCaptureOn = false;
-        this.captureEvent.emit(false);
-        //this.captureService.plotCapture("STOP").subscribe(clearTimeout(this.timeout));
+
+        this.captureService.plotCapture("STOP").subscribe();
+
         this.captureService.stopTransferPlotDataListener();
+        this.captureDataSubscription.unsubscribe();
       }
       
     }
@@ -123,11 +129,9 @@ export class CaptureComponent implements OnDestroy{
         case "2": this.chartOptions.axisX.labelFontSize = 15 ;
         break;
       }
-      //change x-axis scale
     }
 
     onYScaleChange(event: any){
-      console.log(this.yAxisScale.value)
       this.chartOptions.axisY.interval = 0.1 * event.value;
       this.chartOptions.axisY.labelFontSize = 13 * event.value;
       switch(event.value){
@@ -139,16 +143,24 @@ export class CaptureComponent implements OnDestroy{
         break;
       }
       this.chart.render();
-      //change y axis scale
+    }
+
+    onRateChange(event : any){
+      console.log(event.value);
+      this.captureService.sendDataAcquisitionRate(event.value).subscribe()
     }
 
     fetchData(){
       //fetch data from hardware
-      this.captureService.getSignalData().subscribe(data => {
-        this.frequency.setValue(data.Frequency)
-        this.peakToPeak.setValue(data.PeakToPeak)
+      this.captureService.getSignalData().subscribe();
+      this.captureService.addFetchDataListener();
+      this.fetchDataSubscription = this.captureService.getFetchDataSubject().subscribe(data => {
+        console.log(data);
+        this.captureService.stopFetchDataListener();
+        this.fetchDataSubscription.unsubscribe();
       });
       
+      //this.captureService.stopTransferPlotDataListener();
     }
 
     getChartInstance(chart: object) {
@@ -157,32 +169,23 @@ export class CaptureComponent implements OnDestroy{
     
     ngOnDestroy() {
       clearTimeout(this.timeout);
+      this.captureService.stopTransferPlotDataListener();
+      this.captureService.stopFetchDataListener();
+      this.captureService.endConnection();
+      //this.captureDataSubscription.unsubscribe();
+      //this.fetchDataSubscription.unsubscribe();
     }
-   
-    updateData = () => {
-      this.captureService.getGraphData().subscribe(data => {
-        //console.log(data.voltage,data.timestamp);
-        //console.log(new Date(data.timestamp).getTime())
-        console.log(data);        
-        //this.addData(data)
-      });
-    }
+
    
     addData = (data: PlotData[]) => {
-
       data.forEach(d => {
-        this.dataPoints.push({x: new Date(d.timestamp).getTime(), y: d.voltage})  
-        //console.log(new Date(d.timestamp).getTime());
-        
+        this.dataPoints.push({x: new Date(d.time).getTime(), y: d.voltage})  
+                
         if(this.dataPoints.length > 100){
           this.dataPoints.shift();
         }
       });
 
-      
-      // if(this.dataPoints.length > 50){
-      //   this.dataPoints.splice(0,50);
-      // }
       this.chart.render();
       this.timeout = setTimeout(() => {
         if(this.start == false){
@@ -192,13 +195,5 @@ export class CaptureComponent implements OnDestroy{
           clearTimeout(this.timeout);
         }
       }, 1);
-    }
-
-
-    private startHttpRequest = () => {
-      this.http.get('http://localhost:3000/plot')
-      .subscribe(res => {
-        console.log(res);        
-      })
     }
 }

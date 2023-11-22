@@ -50,7 +50,7 @@
                         <div class="capture-input-group">
                             <h5>Data Acquisition Rate</h5>
                             <div class="capture-inputs">
-                                <input type="text" class="capture-input-field form-control" id="data-acquisition-rate" [formControl]="dataAcquisitionRate">
+                                <input type="text" class="capture-input-field form-control" id="data-acquisition-rate" [formControl]="dataAcquisitionRate" (change)="onRateChange(dataAcquisitionRate)">
                             </div> 
                             
                         </div>
