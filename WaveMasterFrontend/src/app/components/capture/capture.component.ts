@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { PlotData } from 'src/app/models/plotData';
 import { CaptureService } from 'src/app/services/capture-service.service';
 
@@ -76,11 +77,13 @@ export class CaptureComponent implements OnDestroy{
       }
     }
 
+    captureDataSubscription : Subscription = new Subscription();
+    fetchDataSubscription : Subscription = new Subscription();
+
     constructor(private http : HttpClient, private captureService: CaptureService) { 
-      captureService.getDataSubject().subscribe(data => {
-        console.log(data);          
-        this.addData(data);
-      });
+      captureService.startConnection();
+      
+      
     }
     // Toggle accordion items
     toggleAccordion(accordionId: string): void {
@@ -93,13 +96,17 @@ export class CaptureComponent implements OnDestroy{
 
     toggleStartStop(){
       this.start = !this.start
-      if(this.start == false){
+      if(this.start == false){        
         this.captureService.plotCapture("START").subscribe();
-        this.captureService.addTransferPlotDataListener();        
-        //this.startHttpRequest();
+        this.captureService.addTransferPlotDataListener();  
+        this. captureDataSubscription = this.captureService.getCaptureDataSubject().subscribe(data => {
+          console.log(data);          
+          this.addData(data);
+        });      
       }else{
         this.captureService.plotCapture("STOP").subscribe();
         this.captureService.stopTransferPlotDataListener();
+        this.captureDataSubscription.unsubscribe();
       }
       
     }
@@ -142,11 +149,15 @@ export class CaptureComponent implements OnDestroy{
 
     fetchData(){
       //fetch data from hardware
-      this.captureService.getSignalData().subscribe(data => {
-        this.frequency.setValue(data.Frequency)
-        this.peakToPeak.setValue(data.PeakToPeak)
+      this.captureService.getSignalData().subscribe();
+      this.captureService.addFetchDataListener();
+      this.fetchDataSubscription = this.captureService.getFetchDataSubject().subscribe(data => {
+        console.log(data);
+        this.captureService.stopFetchDataListener();
+        this.fetchDataSubscription.unsubscribe();
       });
       
+      //this.captureService.stopTransferPlotDataListener();
     }
 
     getChartInstance(chart: object) {
@@ -155,16 +166,13 @@ export class CaptureComponent implements OnDestroy{
     
     ngOnDestroy() {
       clearTimeout(this.timeout);
+      this.captureService.stopTransferPlotDataListener();
+      this.captureService.stopFetchDataListener();
+      this.captureService.endConnection();
+      //this.captureDataSubscription.unsubscribe();
+      //this.fetchDataSubscription.unsubscribe();
     }
-   
-    updateData = () => {
-      this.captureService.getGraphData().subscribe(data => {
-        //console.log(data.voltage,data.timestamp);
-        //console.log(new Date(data.timestamp).getTime())
-        console.log(data);        
-        //this.addData(data)
-      });
-    }
+
    
     addData = (data: PlotData[]) => {
 
@@ -177,10 +185,6 @@ export class CaptureComponent implements OnDestroy{
         }
       });
 
-      
-      // if(this.dataPoints.length > 50){
-      //   this.dataPoints.splice(0,50);
-      // }
       this.chart.render();
       this.timeout = setTimeout(() => {
         if(this.start == false){
@@ -190,13 +194,5 @@ export class CaptureComponent implements OnDestroy{
           clearTimeout(this.timeout);
         }
       }, 1);
-    }
-
-
-    private startHttpRequest = () => {
-      this.http.get('http://localhost:3000/plot')
-      .subscribe(res => {
-        console.log(res);        
-      })
     }
 }
