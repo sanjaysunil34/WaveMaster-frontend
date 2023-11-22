@@ -96,12 +96,10 @@ export class CaptureComponent implements OnDestroy{
       if(this.start == false){
         this.captureService.plotCapture("START").subscribe();
         this.captureService.addTransferPlotDataListener();        
-        //this.startHttpRequest();
       }else{
         this.captureService.plotCapture("STOP").subscribe();
         this.captureService.stopTransferPlotDataListener();
-      }
-      
+      }  
     }
 
     onXScaleChange(event: any){
@@ -116,7 +114,6 @@ export class CaptureComponent implements OnDestroy{
         case "2": this.chartOptions.axisX.labelFontSize = 15 ;
         break;
       }
-      //change x-axis scale
     }
 
     onYScaleChange(event: any){
@@ -131,12 +128,10 @@ export class CaptureComponent implements OnDestroy{
         break;
       }
       this.chart.render();
-      //change y axis scale
     }
 
     onRateChange(event : any){
       console.log(event.value);
-      
       this.captureService.sendDataAcquisitionRate(event.value).subscribe()
     }
 
@@ -167,20 +162,14 @@ export class CaptureComponent implements OnDestroy{
     }
    
     addData = (data: PlotData[]) => {
-
       data.forEach(d => {
         this.dataPoints.push({x: new Date(d.time).getTime(), y: d.voltage})  
-        //console.log(new Date(d.timestamp).getTime());
-        
+                
         if(this.dataPoints.length > 100){
           this.dataPoints.shift();
         }
       });
 
-      
-      // if(this.dataPoints.length > 50){
-      //   this.dataPoints.splice(0,50);
-      // }
       this.chart.render();
       this.timeout = setTimeout(() => {
         if(this.start == false){
@@ -190,13 +179,5 @@ export class CaptureComponent implements OnDestroy{
           clearTimeout(this.timeout);
         }
       }, 1);
-    }
-
-
-    private startHttpRequest = () => {
-      this.http.get('http://localhost:3000/plot')
-      .subscribe(res => {
-        console.log(res);        
-      })
     }
 }

@@ -44,11 +44,12 @@
 
                     <div class="generate-button-group">
                         <div class="generate-submit-buttons-container">
-                            <div class="generate-single-button-container">
-                                <button (click)="resetGenerateForm()" class="btn generate-submit-button">RESET</button>
+
+                            <div class="generate-single-button-container" *ngIf="show">
+                                <button (click)="stopGenerate()" class="btn generate-submit-button btn-danger">STOP</button>
                             </div>
-                            <div class="generate-single-button-container">
-                                <button type="submit" class="btn generate-submit-button">GENERATE</button>
+                            <div class="generate-single-button-container" *ngIf="!show">
+                                <button type="submit" class="btn generate-submit-button">START</button>
                             </div>
                         </div>
                     </div>
