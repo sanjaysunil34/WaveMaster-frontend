@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { PlotData } from 'src/app/models/plotData';
 import { CaptureService } from 'src/app/services/capture-service.service';
@@ -13,10 +13,13 @@ import { CaptureService } from 'src/app/services/capture-service.service';
 export class CaptureComponent implements OnDestroy{    
     start: boolean = true
     openAccordion: string = 'collapseOne';
+    isCaptureOn : boolean = false;
 
     xAxisScale = new FormControl(1)
     yAxisScale = new FormControl(1) 
     dataAcquisitionRate = new FormControl(1)
+
+    @Output() captureEvent: EventEmitter<boolean>
 
     public messages: string[] = [];
     public newMessage: string = '';
@@ -77,6 +80,7 @@ export class CaptureComponent implements OnDestroy{
     }
 
     constructor(private http : HttpClient, private captureService: CaptureService) {  
+      this.captureEvent = new EventEmitter<boolean>()
     }
     // Toggle accordion items
     toggleAccordion(accordionId: string): void {
@@ -89,7 +93,9 @@ export class CaptureComponent implements OnDestroy{
     toggleStartStop(){
       this.start = !this.start
       if(this.start == false){
-        this.captureService.plotCapture("START").subscribe(this.updateData());
+        //this.captureService.plotCapture("START").subscribe(this.updateData());
+        this.isCaptureOn = true;
+        this.captureEvent.emit(true);
         this.captureService.addTransferPlotDataListener();
         this.captureService.getDataSubject().subscribe(data => {
           //console.log(data);          
@@ -97,8 +103,9 @@ export class CaptureComponent implements OnDestroy{
         });
         //this.startHttpRequest();
       }else{
-        
-        this.captureService.plotCapture("STOP").subscribe(clearTimeout(this.timeout));
+        this.isCaptureOn = false;
+        this.captureEvent.emit(false);
+        //this.captureService.plotCapture("STOP").subscribe(clearTimeout(this.timeout));
         this.captureService.stopTransferPlotDataListener();
       }
       
