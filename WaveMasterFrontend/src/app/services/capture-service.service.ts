@@ -59,8 +59,7 @@ export class CaptureService {
   }
 
   private endConnection() : void {
-    this.hubConnection
-      .stop();
+    this.hubConnection.stop();
   }
 
 

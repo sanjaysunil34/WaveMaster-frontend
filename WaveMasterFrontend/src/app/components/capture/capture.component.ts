@@ -76,7 +76,12 @@ export class CaptureComponent implements OnDestroy{
       }
     }
 
-    constructor(private http : HttpClient, private captureService: CaptureService) {  }
+    constructor(private http : HttpClient, private captureService: CaptureService) { 
+      captureService.getDataSubject().subscribe(data => {
+        console.log(data);          
+        this.addData(data);
+      });
+    }
     // Toggle accordion items
     toggleAccordion(accordionId: string): void {
       this.openAccordion = this.openAccordion === accordionId ? this.openAccordion : accordionId;
@@ -85,19 +90,15 @@ export class CaptureComponent implements OnDestroy{
     isAccordionOpen(accordionId: string): boolean {
       return this.openAccordion === accordionId;
     }
+
     toggleStartStop(){
       this.start = !this.start
       if(this.start == false){
-        //this.captureService.plotCapture("START").subscribe(this.updateData());
-        this.captureService.addTransferPlotDataListener();
-        this.captureService.getDataSubject().subscribe(data => {
-          console.log(data);          
-          this.addData(data);
-        });
+        this.captureService.plotCapture("START").subscribe();
+        this.captureService.addTransferPlotDataListener();        
         //this.startHttpRequest();
       }else{
-        
-        this.captureService.plotCapture("STOP").subscribe(clearTimeout(this.timeout));
+        this.captureService.plotCapture("STOP").subscribe();
         this.captureService.stopTransferPlotDataListener();
       }
       
