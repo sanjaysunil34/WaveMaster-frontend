@@ -20,7 +20,15 @@ export class GenerateService {
   generateWave(signalData : SignalData) : Observable<SignalData>{
     console.log(signalData);
     
-    return this.httpClient.post<SignalData>(this.baseUrl + "/generate",JSON.stringify(signalData),this.httpHeader)
+    return this.httpClient.post<SignalData>(this.baseUrl + "/generate/start",JSON.stringify(signalData),this.httpHeader)
+    .pipe(
+      catchError(this.httpError)
+    );
+  }
+
+  stopGenerateWave() : Observable<Object>{
+       
+    return this.httpClient.post<Object>(this.baseUrl + "/generate/stop",{},this.httpHeader)
     .pipe(
       catchError(this.httpError)
     );
