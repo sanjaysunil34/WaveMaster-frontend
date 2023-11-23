@@ -19,7 +19,7 @@ import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { GenerateComponent } from './components/generate/generate.component';
 import {HttpClientModule} from '@angular/common/http';
 import { TestComponent } from './components/test/test.component';
-
+import {MatToolbarModule} from '@angular/material/toolbar';
 
 @NgModule({
   declarations: [
@@ -46,7 +46,8 @@ import { TestComponent } from './components/test/test.component';
     ReactiveFormsModule,
     CanvasJSAngularChartsModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    MatToolbarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

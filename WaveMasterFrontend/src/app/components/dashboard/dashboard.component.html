@@ -1,13 +1,14 @@
 <div class="container-fluid" id="dashboard-div">
-    <mat-tab-group mat-stretch-tabs="true" mat-align-tabs="start">
-        <mat-tab label="Capture">            
+    <mat-tab-group mat-stretch-tabs="true" mat-align-tabs="start" #tabgroup>
+        <mat-tab label="Capture" [disabled]="isGenerateOn">    
+                   
             <app-capture (captureEvent)="captureToggler($event)"></app-capture>
         </mat-tab>
         <mat-tab label="Generate" [disabled]="isCaptureOn">
-            <app-generate/>
+            <app-generate (generateEvent)="generateToggler($event)"/>
         </mat-tab>
-        <mat-tab label="Test" [disabled]="isCaptureOn">
-            <app-test/>
+        <mat-tab label="Test" [disabled]="isCaptureOn || isGenerateOn">
+            <app-test/>     
         </mat-tab>
     </mat-tab-group>
     <button (click)="disconnect()" class="btn btn-danger disconnect-btn">Disconnect</button>

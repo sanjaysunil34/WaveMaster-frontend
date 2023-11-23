@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { SignalData } from 'src/app/models/signalData';
 import { GenerateService } from 'src/app/services/generate.service';
@@ -14,10 +14,9 @@ export class GenerateComponent{
   freqValue = 100;
   signalTypeReceived = "sine";  
   show : boolean = false
+  @Output() generateEvent: EventEmitter<boolean> = new EventEmitter()
 
   constructor(fb: FormBuilder,private generateService: GenerateService){
-
-    
     this.generateForm = fb.group({
       'signalType' : ['sine', Validators.required],
       'peakValue': [0,Validators.required],
@@ -36,6 +35,7 @@ export class GenerateComponent{
   onSubmitGenerateForm(){
     console.log(this.generateForm.value);    
     this.show = !this.show;
+    this.generateEvent.emit(true)
     var sd = new SignalData(this.generateForm.value.frequencyValue,this.generateForm.value.peakValue)
     sd.SignalType = this.generateForm.value.signalType
     this.generateService.generateWave(sd).subscribe();
@@ -43,6 +43,7 @@ export class GenerateComponent{
 
   stopGenerate(){
     this.show = !this.show;
+    this.generateEvent.emit(false)
     this.generateService.stopGenerateWave().subscribe();
   }
 
