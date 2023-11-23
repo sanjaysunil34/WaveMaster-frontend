@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { PlotData } from 'src/app/models/plotData';
@@ -15,10 +15,13 @@ import { CaptureService } from 'src/app/services/capture-service.service';
 export class CaptureComponent implements OnDestroy{    
     start: boolean = true
     openAccordion: string = 'collapseOne';
+    isCaptureOn : boolean = false;
 
     xAxisScale = new FormControl(1)
     yAxisScale = new FormControl(1) 
     dataAcquisitionRate = new FormControl(1)
+
+    @Output() captureEvent: EventEmitter<boolean>
 
     public messages: string[] = [];
     public newMessage: string = '';
@@ -83,8 +86,7 @@ export class CaptureComponent implements OnDestroy{
 
     constructor(private http : HttpClient, private captureService: CaptureService) { 
       captureService.startConnection();
-      
-      
+
     }
     // Toggle accordion items
     toggleAccordion(accordionId: string): void {
@@ -97,11 +99,13 @@ export class CaptureComponent implements OnDestroy{
 
     toggleStartStop(){
       this.start = !this.start
+
       if(this.start == false){        
         this.captureService.plotCapture("START").subscribe();
         this.captureService.addTransferPlotDataListener();  
         this. captureDataSubscription = this.captureService.getCaptureDataSubject().subscribe(data => {
           console.log(data);          
+
           this.addData(data);
         });      
         this.captureControlDataSubscription = this.captureService.getCaptureControlDataSubject().subscribe(data => {
@@ -115,7 +119,9 @@ export class CaptureComponent implements OnDestroy{
           }
         })
       }else{
+
         this.captureService.plotCapture("STOP").subscribe();
+
         this.captureService.stopTransferPlotDataListener();
         this.captureDataSubscription.unsubscribe();
         this.captureControlDataSubscription.unsubscribe();
