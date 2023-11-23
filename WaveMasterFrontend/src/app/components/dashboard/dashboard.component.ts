@@ -16,6 +16,7 @@ export class DashboardComponent {
 
   disconnect(){
     this.connectionService.disconnect().subscribe(data => {
+      localStorage.removeItem("connectionStatus");
       this.router.navigate(['/']);
     })    
   }

@@ -49,7 +49,8 @@ export class ConfigurationComponent {
       this.portNameEmpty = true;
     }else{
       this.connectionService.connect(this.connectionParams).subscribe(data => {
-        this.router.navigate(['dashboard'])    
+        localStorage.setItem("connectionStatus", "connected")
+        location.reload();
       },error => {
         console.log(error)
       });
