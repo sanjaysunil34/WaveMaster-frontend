@@ -79,6 +79,7 @@ export class CaptureComponent implements OnDestroy{
 
     captureDataSubscription : Subscription = new Subscription();
     fetchDataSubscription : Subscription = new Subscription();
+    captureControlDataSubscription : Subscription = new Subscription();
 
     constructor(private http : HttpClient, private captureService: CaptureService) { 
       captureService.startConnection();
@@ -103,10 +104,21 @@ export class CaptureComponent implements OnDestroy{
           console.log(data);          
           this.addData(data);
         });      
+        this.captureControlDataSubscription = this.captureService.getCaptureControlDataSubject().subscribe(data => {
+          console.log(data);
+          if(data == "STOP CAPTURE"){
+            this.start = !this.start;
+            //this.captureService.plotCapture("STOP").subscribe();
+            this.captureService.stopTransferPlotDataListener();
+            this.captureDataSubscription.unsubscribe();
+            this.captureControlDataSubscription.unsubscribe();
+          }
+        })
       }else{
         this.captureService.plotCapture("STOP").subscribe();
         this.captureService.stopTransferPlotDataListener();
         this.captureDataSubscription.unsubscribe();
+        this.captureControlDataSubscription.unsubscribe();
       }
       
     }
