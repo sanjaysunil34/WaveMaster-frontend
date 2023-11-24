@@ -21,7 +21,7 @@ export class CaptureComponent implements OnDestroy{
     yAxisScale = new FormControl(1) 
     dataAcquisitionRate = new FormControl(1)
 
-    @Output() captureEvent: EventEmitter<boolean>
+    @Output() captureEvent: EventEmitter<boolean> = new EventEmitter()
 
     public messages: string[] = [];
     public newMessage: string = '';
@@ -101,11 +101,11 @@ export class CaptureComponent implements OnDestroy{
       this.start = !this.start
 
       if(this.start == false){        
+        this.isCaptureOn = true;
         this.captureService.plotCapture("START").subscribe();
         this.captureService.addTransferPlotDataListener();  
         this. captureDataSubscription = this.captureService.getCaptureDataSubject().subscribe(data => {
-          console.log(data);          
-
+          console.log(data);                    
           this.addData(data);
         });      
         this.captureControlDataSubscription = this.captureService.getCaptureControlDataSubject().subscribe(data => {
@@ -113,6 +113,7 @@ export class CaptureComponent implements OnDestroy{
           if(data == "STOP CAPTURE"){
             this.start = !this.start;
             //this.captureService.plotCapture("STOP").subscribe();
+            this.isCaptureOn = false;
             this.captureService.stopTransferPlotDataListener();
             this.captureDataSubscription.unsubscribe();
             this.captureControlDataSubscription.unsubscribe();
@@ -120,6 +121,7 @@ export class CaptureComponent implements OnDestroy{
         })
       }else{
 
+        this.isCaptureOn = false;
         this.captureService.plotCapture("STOP").subscribe();
 
         this.captureService.stopTransferPlotDataListener();
