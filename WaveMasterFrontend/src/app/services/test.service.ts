@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { Observable, Subject, catchError, throwError } from 'rxjs';
 import { ConnectionService } from './connection-service.service';
+import { httpError } from '../helpers/HttpError';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class TestService {
   testComponent(command: string) : Observable<string>{
     return this.httpClient.post<string>(this.baseUrl + '/test', JSON.stringify(command), this.httpHeader)
     .pipe(
-      catchError(this.httpError)
+      catchError(err => httpError(err))
     );
   }
 
@@ -40,15 +41,15 @@ export class TestService {
     return this.testDataSubject.asObservable();
   }
 
-  httpError(error: HttpErrorResponse) {
+  // httpError(error: HttpErrorResponse) {
       
-    let msg = '';    
-    if (error.error instanceof ErrorEvent) {
-      msg = error.message;
-    } else {
-      msg = `Error Code : ${error.status}\n${error.error}`;
-    }
-    console.log(msg);
-    return throwError(msg);
-  }
+  //   let msg = '';    
+  //   if (error.error instanceof ErrorEvent) {
+  //     msg = error.message;
+  //   } else {
+  //     msg = `Error Code : ${error.status}\n${error.error}`;
+  //   }
+  //   console.log(msg);
+  //   return throwError(msg);
+  // }
 }
