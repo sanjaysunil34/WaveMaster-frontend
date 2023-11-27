@@ -28,6 +28,7 @@ export class ConfigurationComponent {
     })
 
     connectionService.getPortName().subscribe(data => {
+      console.log(data)
       data.forEach(d => {
         this.portNames.push(d);
       });

@@ -105,7 +105,7 @@ export class CaptureComponent implements OnDestroy{
         this.captureService.plotCapture("START").subscribe();
         this.captureService.addTransferPlotDataListener();  
         this. captureDataSubscription = this.captureService.getCaptureDataSubject().subscribe(data => {
-          console.log(data);                    
+          //console.log(data);                    
           this.addData(data);
         });      
         this.captureControlDataSubscription = this.captureService.getCaptureControlDataSubject().subscribe(data => {
@@ -169,14 +169,12 @@ export class CaptureComponent implements OnDestroy{
       this.captureService.getSignalData().subscribe();
       this.captureService.addFetchDataListener();
       this.fetchDataSubscription = this.captureService.getFetchDataSubject().subscribe(data => {
-        console.log(data);
+        data = data.substring(data.indexOf("DATA"));
         this.frequency.setValue( parseFloat(data.split(";")[0].replace("DATA","")))
         this.peakToPeak.setValue( parseFloat(data.split(";")[1].replace("DATA","")))
         this.captureService.stopFetchDataListener();
         this.fetchDataSubscription.unsubscribe();
       });
-      
-      
     }
 
     getChartInstance(chart: object) {

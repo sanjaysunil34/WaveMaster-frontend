@@ -37,8 +37,7 @@ export class ConnectionService {
     );
   }
 
-  httpError(error: HttpErrorResponse) {
-      
+  httpError(error: HttpErrorResponse) { 
     let msg = '';
     if (error.error instanceof ErrorEvent) {
       msg = error.message;
