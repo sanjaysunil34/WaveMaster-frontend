@@ -62,8 +62,8 @@ export class CaptureComponent implements OnDestroy{
       axisY: {
         title: "Voltage ( Volt )",
         minimum: 0, 
-        maximum: 5000, 
-        interval: 500,
+        maximum: 3.3, 
+        interval: 0.1,
         tickLength: 15,
         labelFontSize: 13,
         titleFontSize: 25,
