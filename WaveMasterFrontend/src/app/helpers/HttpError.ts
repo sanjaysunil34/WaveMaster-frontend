@@ -11,6 +11,6 @@ export const httpError = (error: HttpErrorResponse) => {
     //   msg = `Error Code : ${error.status}\n${error.error.error}`;
     // }
     msg = `Error Code : ${error.status}\n${error.message}`;
-    console.log(msg);
+    //console.log(msg);
     return throwError(msg);
 }
