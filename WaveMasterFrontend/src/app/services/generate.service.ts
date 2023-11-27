@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { SignalData } from '../models/signalData';
 import { Observable, catchError, throwError } from 'rxjs';
+import { httpError } from '../helpers/HttpError';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class GenerateService {
     
     return this.httpClient.post<SignalData>(this.baseUrl + "/generate/start",JSON.stringify(signalData),this.httpHeader)
     .pipe(
-      catchError(this.httpError)
+      catchError(httpError)
     );
   }
 
@@ -30,26 +31,14 @@ export class GenerateService {
        
     return this.httpClient.post<Object>(this.baseUrl + "/generate/stop",{},this.httpHeader)
     .pipe(
-      catchError(this.httpError)
+      catchError(httpError)
     );
   }
 
   restoreWave() : Observable<SignalData>{
     return this.httpClient.get<SignalData>(this.baseUrl + "/generate")
     .pipe(
-      catchError(this.httpError)
+      catchError(httpError)
     );
-  }
-
-  httpError(error: HttpErrorResponse) {
-      
-    let msg = '';
-    if (error.error instanceof ErrorEvent) {
-      msg = error.error.message;
-    } else {
-      msg = `Error Code : ${error.status}\n${error.error.error}`;
-    }
-    console.log(msg);
-    return throwError(msg);
   }
 }

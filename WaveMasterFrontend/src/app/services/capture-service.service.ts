@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject, catchError, throwError } from 'rxjs';
 import { SignalData } from '../models/signalData';
 import { ConnectionService } from './connection-service.service';
+import { httpError } from '../helpers/HttpError';
 
 @Injectable({
   providedIn: 'root'
@@ -50,7 +51,7 @@ export class CaptureService {
     console.log(command)
     return this.httpClient.post<any>(this.baseUrl + "/capture/plotcommand",JSON.stringify(command),this.httpHeader)
     .pipe(
-      catchError(this.httpError)
+      catchError(err => (err))
     )
   }
 
@@ -59,7 +60,7 @@ export class CaptureService {
   getSignalData() : Observable<SignalData> {
     return this.httpClient.get<SignalData>(this.baseUrl + "/capture/signaldata")
     .pipe(
-      catchError(this.httpError)      
+      catchError(err => httpError(err))      
     )
   }  
 
@@ -80,19 +81,7 @@ export class CaptureService {
   sendDataAcquisitionRate(rate : number) : any {       
     return this.httpClient.post<any>(this.baseUrl + "/capture/rate",JSON.stringify(rate),this.httpHeader)
     .pipe(
-      catchError(this.httpError)
+      catchError(err => httpError(err))
     )
   } 
-
-  httpError(error: HttpErrorResponse) {
-      
-    let msg = '';    
-    if (error.error instanceof ErrorEvent) {      
-      msg = error.error.message;
-    } else {
-      msg = `Error Code : ${error.status}\n${error.error.error}`;
-    }
-    console.log(msg);
-    return throwError(msg);
-  }
 }

@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { Observable, Subject, catchError, throwError } from 'rxjs';
 import * as signalR from '@microsoft/signalr';
+import { httpError } from '../helpers/HttpError';
 
 @Injectable({
   providedIn: 'root'
@@ -28,21 +29,21 @@ export class ConnectionService {
   getPortName() : Observable<string[]>{
     return this.httpClient.get<string[]>(this.baseUrl + '/configuration')
     .pipe(
-      catchError(this.httpError)
+      catchError(err => httpError(err))
     );
   }
 
   connect(object: Object) : Observable<string>{
     return  this.httpClient.post<string>(this.baseUrl + '/configuration/connect', JSON.stringify(object), this.httpHeader)
     .pipe(
-      catchError(this.httpError)
+      catchError(err => httpError(err))
     );
   }
 
   disconnect() : Observable<Object>{
     return  this.httpClient.post<Object>(this.baseUrl + '/configuration/disconnect',{} ,this.httpHeader)
     .pipe(
-      catchError(this.httpError)
+      catchError(err => httpError(err))
     );
   }
 
@@ -65,17 +66,5 @@ export class ConnectionService {
     this.hubConnection.on('ReceiveMessage', (message: string) => {
       this.messageSubject.next(message);
     });
-  }
-
-  httpError(error: HttpErrorResponse) {
-      
-    let msg = '';
-    if (error.error instanceof ErrorEvent) {
-      msg = error.message;
-    } else {
-      msg = `Error Code : ${error.status}\n${error.error.error}`;
-    }
-    console.log(msg);
-    return throwError(msg);
   }
 }

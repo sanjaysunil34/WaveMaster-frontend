@@ -127,7 +127,7 @@ export class CaptureComponent implements OnDestroy{
         this.captureDataSubscription.unsubscribe();
         this.captureControlDataSubscription.unsubscribe();
       }
-      
+      this.captureEvent.emit(this.isCaptureOn);
     }
 
     onXScaleChange(event: any){

@@ -3,7 +3,7 @@
         <mat-tab label="Capture">            
             <app-capture (captureEvent)="captureToggler($event)"></app-capture>
         </mat-tab>
-        <mat-tab label="Generate" [disabled]="isCaptureOn">
+        <mat-tab label="Generate">
             <app-generate/>
         </mat-tab>
         <mat-tab label="Test" [disabled]="isCaptureOn">
