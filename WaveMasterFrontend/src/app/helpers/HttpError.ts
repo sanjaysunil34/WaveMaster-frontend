@@ -4,7 +4,7 @@ import { throwError } from "rxjs";
 export const httpError = (error: HttpErrorResponse) => {
       
     let msg = '';
-    console.log(error);    
+    //console.log(error);    
     // if (error.error instanceof ErrorEvent) {
     //   msg = error.message;
     // } else {
