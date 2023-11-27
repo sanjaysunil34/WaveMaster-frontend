@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { TestService } from 'src/app/services/test.service';
 
 @Component({
@@ -24,6 +25,8 @@ export class TestComponent {
   str = "read"
 
   selectedFuncArr : any = ['read', 'write'];
+
+  testDataSubscription : Subscription = new Subscription();
 
   constructor(fb: FormBuilder, private testService: TestService){
     this.testForm = fb.group({
@@ -66,5 +69,11 @@ export class TestComponent {
     }
 
     this.testService.testComponent(this.command).subscribe();
+    this.testService.addTestDataListener();  
+    this.testDataSubscription = this.testService.getTestDataSubject().subscribe(data => {
+      console.log(data);                    
+      this.testService.stopTestDataListener();
+      this.testDataSubscription.unsubscribe();
+    }); 
   }
 }
