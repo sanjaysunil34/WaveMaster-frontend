@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
@@ -185,15 +186,12 @@ export class CaptureComponent implements OnDestroy{
       clearTimeout(this.timeout);
       this.captureService.stopTransferPlotDataListener();
       this.captureService.stopFetchDataListener();
-      // this.captureService.endConnection();
-      //this.captureDataSubscription.unsubscribe();
-      //this.fetchDataSubscription.unsubscribe();
     }
 
     
     addData = (data: PlotData[]) => {
       data.forEach(d => {
-        this.dataPoints.push({label: new Date(d.time).toDateString(), y: d.voltage,x: ++this.i})  
+        this.dataPoints.push({label: formatDate(new Date(d.time), "hh:mm:ss:SS", 'en-us'), y: d.voltage,x: ++this.i})  
                 
         if(this.dataPoints.length > 100){
           this.dataPoints.shift();
