@@ -85,7 +85,6 @@ export class CaptureComponent implements OnDestroy{
     captureControlDataSubscription : Subscription = new Subscription();
 
     constructor(private http : HttpClient, private captureService: CaptureService) { 
-      // captureService.startConnection();
     }
     // Toggle accordion items
     toggleAccordion(accordionId: string): void {
