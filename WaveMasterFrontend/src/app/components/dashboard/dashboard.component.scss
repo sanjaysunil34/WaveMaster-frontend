@@ -7,7 +7,7 @@
 .disconnect-btn{
     position: absolute;
     top : 3vh;
-    right: 10px;
+    right: 80px;
 }
 
 @media(max-width: 300px){
@@ -16,6 +16,11 @@
     }
 }
 
+@media(max-width: 500px){
+    .disconnect-btn{
+        right: 10px;
+    }
+}
 .mat-mdc-tab-group {
     height: 100%;
 }
