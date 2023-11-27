@@ -1,10 +1,8 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject, catchError, throwError } from 'rxjs';
-import { PlotData } from '../models/plotData';
 import { SignalData } from '../models/signalData';
-
-import * as signalR from '@microsoft/signalr';
+import { ConnectionService } from './connection-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,57 +16,27 @@ export class CaptureService {
     })
   }
 
-  private hubConnection: signalR.HubConnection;
-  private messageSubject: Subject<string> = new Subject<string>();
+  
+  
   private captureDataSubject = new Subject<any>();
   private captureControlDataSubject = new Subject<any>();
   private readDataSubject = new Subject<any>();
 
-  constructor(private httpClient:HttpClient) { 
-    this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl("http://localhost:3000/plotValue", {skipNegotiation: true, transport: signalR.HttpTransportType.WebSockets})// Replace with your actual backend URL and hub route
-      .configureLogging(signalR.LogLevel.Information)
-      .build();
-
-    
-   }
-
-  public startConnection(): void {
-    this.hubConnection
-      .start()
-      .then(() => {
-        console.log('SignalR connection started');
-        this.registerEvents();
-      })
-      .catch((err) => console.error(`Error while starting connection: ${err}`));
-  }
-
-  public endConnection() : void {
-    this.hubConnection.stop();
-  }
+  constructor(private httpClient:HttpClient, private connectionService: ConnectionService) { }
 
   public addTransferPlotDataListener = () => {
-    //this.startConnection();
-    this.hubConnection.on("transferPlotData", (data) => {   
+    this.connectionService.hubConnection.on("transferPlotData", (data) => {   
       this.captureDataSubject.next(data);  
     })
-    this.hubConnection.on("captureControl", (data) => {
+    this.connectionService.hubConnection.on("captureControl", (data) => {
       this.captureControlDataSubject.next(data); 
     })
   }    
 
   public stopTransferPlotDataListener = () => {
-    this.hubConnection.off("captureControl");
-    this.hubConnection.off("transferPlotData");    
-    //this.endConnection();
+    this.connectionService.hubConnection.off("captureControl");
+    this.connectionService.hubConnection.off("transferPlotData");    
   }      
-
-  private registerEvents(): void {
-    // Define your SignalR hub events here
-    this.hubConnection.on('ReceiveMessage', (message: string) => {
-      this.messageSubject.next(message);
-    });
-  }
 
   getCaptureDataSubject() {
     return this.captureDataSubject.asObservable();
@@ -96,16 +64,13 @@ export class CaptureService {
   }  
 
   public addFetchDataListener = () => {
-    //this.startConnection();
-    this.hubConnection.on("fetchData", (data) => {   
-      //console.log(data);    
+    this.connectionService.hubConnection.on("fetchData", (data) => {   
       this.readDataSubject.next(data);  
     })
   }  
 
   public stopFetchDataListener = () => {
-    this.hubConnection.off("fetchData");
-    //this.endConnection();
+    this.connectionService.hubConnection.off("fetchData");
   }   
   
   getFetchDataSubject() {
