@@ -3,25 +3,19 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject, catchError, throwError } from 'rxjs';
 import { ConnectionService } from './connection-service.service';
 import { httpError } from '../helpers/HttpError';
+import { BaseUrl, HttpHeader } from '../config/config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TestService {
-  baseUrl: string = "http://localhost:3000"
-
-  httpHeader={
-    headers:new HttpHeaders({
-      'Content-Type': 'application/json',      
-    })
-  }
 
   private testDataSubject = new Subject<any>();
 
   constructor(private httpClient:HttpClient, private connectionService: ConnectionService) { }
 
   testComponent(command: string) : Observable<string>{
-    return this.httpClient.post<string>(this.baseUrl + '/test', JSON.stringify(command), this.httpHeader)
+    return this.httpClient.post<string>(BaseUrl + '/test', JSON.stringify(command), HttpHeader())
     .pipe(
       catchError(err => httpError(err))
     );
@@ -41,15 +35,4 @@ export class TestService {
     return this.testDataSubject.asObservable();
   }
 
-  // httpError(error: HttpErrorResponse) {
-      
-  //   let msg = '';    
-  //   if (error.error instanceof ErrorEvent) {
-  //     msg = error.message;
-  //   } else {
-  //     msg = `Error Code : ${error.status}\n${error.error}`;
-  //   }
-  //   console.log(msg);
-  //   return throwError(msg);
-  // }
 }

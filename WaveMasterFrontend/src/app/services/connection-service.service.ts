@@ -3,18 +3,12 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject, catchError, throwError } from 'rxjs';
 import * as signalR from '@microsoft/signalr';
 import { httpError } from '../helpers/HttpError';
+import { BaseUrl, HttpHeader } from '../config/config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConnectionService {
-  baseUrl: string = "http://localhost:3000"
-
-  httpHeader={
-    headers:new HttpHeaders({
-      'Content-Type': 'application/json',      
-    })
-  }
 
   public hubConnection: signalR.HubConnection;
   private messageSubject: Subject<string> = new Subject<string>();
@@ -27,21 +21,21 @@ export class ConnectionService {
   }
 
   getPortName() : Observable<string[]>{
-    return this.httpClient.get<string[]>(this.baseUrl + '/configuration')
+    return this.httpClient.get<string[]>(BaseUrl + '/configuration')
     .pipe(
       catchError(err => httpError(err))
     );
   }
 
   connect(object: Object) : Observable<string>{
-    return  this.httpClient.post<string>(this.baseUrl + '/configuration/connect', JSON.stringify(object), this.httpHeader)
+    return  this.httpClient.post<string>(BaseUrl + '/configuration/connect', JSON.stringify(object), HttpHeader())
     .pipe(
       catchError(err => httpError(err))
     );
   }
 
   disconnect() : Observable<Object>{
-    return  this.httpClient.post<Object>(this.baseUrl + '/configuration/disconnect',{} ,this.httpHeader)
+    return  this.httpClient.post<Object>(BaseUrl + '/configuration/disconnect',{} ,HttpHeader())
     .pipe(
       catchError(err => httpError(err))
     );
