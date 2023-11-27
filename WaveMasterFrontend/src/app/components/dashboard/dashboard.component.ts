@@ -25,6 +25,8 @@ export class DashboardComponent implements OnDestroy {
 
   captureToggler(event: any) {
     this.isCaptureOn = event;   
+    console.log(event);
+    
   }  
 
   ngOnDestroy() {
