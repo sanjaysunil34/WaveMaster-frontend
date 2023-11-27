@@ -4,10 +4,12 @@ import { ConfigurationComponent } from './components/configuration/configuration
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { connectionGuard } from './guards/connectionGuard';
 import { redirectGuard } from './guards/redirectGuard';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 const routes: Routes = [
   {path: '', component: ConfigurationComponent, canActivate:[redirectGuard]},
-  {path: 'dashboard',component: DashboardComponent, canActivate:[connectionGuard()]}
+  {path: 'dashboard',component: DashboardComponent, canActivate:[connectionGuard()]},
+  {path: '**', component: PageNotFoundComponent}
 ];
 
 @NgModule({

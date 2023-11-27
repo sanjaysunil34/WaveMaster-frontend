@@ -1,3 +1,4 @@
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -33,7 +34,8 @@ import { TestComponent } from './components/test/test.component';
     FooterComponent,
     ContentComponent,
     GenerateComponent,
-    TestComponent
+    TestComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
