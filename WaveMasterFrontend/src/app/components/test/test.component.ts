@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { TestService } from 'src/app/services/test.service';
 
@@ -11,8 +11,9 @@ import { TestService } from 'src/app/services/test.service';
 export class TestComponent {
   testForm: FormGroup;
   submitted = false;
-
+  status: FormControl = new FormControl('')
   command : string = "";
+  message : string = "";
 
   functionArr = {
     "eeprom": ['read', 'write'],
@@ -32,7 +33,7 @@ export class TestComponent {
     this.testForm = fb.group({
       'component' : ['eeprom', Validators.required],
       'function' : ['read', Validators.required],
-      'status': ['']
+      
     })
   }
 
@@ -45,33 +46,40 @@ export class TestComponent {
   onSubmitTestForm(){
     console.log(this.testForm.value.component + '-' + this.testForm.value.function);    
     if(this.testForm.value.component === "ledRed"){
+      this.message = "LED RED is turned ";
       if(this.testForm.value.function === "on"){
         this.command = "SET LED ON;"
       }else{
         this.command = "SET LED OFF;"
       }
     }else if(this.testForm.value.component === "ledGreen"){
+      this.message = "LED GREEN is turned ";
       if(this.testForm.value.function === "on"){
         this.command = "SET LED ON;"
       }else{
         this.command = "SET LED OFF;"
       }
     }else if(this.testForm.value.component === "eeprom"){
+      this.message = "EEPROM is ";
       if(this.testForm.value.function === "read"){
         this.command = "READ EEPROM;"
       }else{
         this.command = "WRITE EEPROM;"
       }
     } else if(this.testForm.value.component === "button1"){
+      this.message = "BUTTON 1 is ";
       this.command = "GET BUTTON 1;"
     } else if(this.testForm.value.component === "button2"){
+      this.message = "BUTTON 2 is ";
       this.command = "GET BUTTON 2;"
     }
 
     this.testService.testComponent(this.command).subscribe();
     this.testService.addTestDataListener();  
     this.testDataSubscription = this.testService.getTestDataSubject().subscribe(data => {
-      console.log(data);                    
+      console.log(data);    
+      this.status.setValue(this.message + data);
+      
       this.testService.stopTestDataListener();
       this.testDataSubscription.unsubscribe();
     }); 

@@ -168,6 +168,8 @@ export class CaptureComponent implements OnDestroy{
       this.captureService.addFetchDataListener();
       this.fetchDataSubscription = this.captureService.getFetchDataSubject().subscribe(data => {
         data = data.substring(data.indexOf("DATA"));
+        console.log(data);
+        
         this.frequency.setValue( parseFloat(data.split(";")[0].replace("DATA","")))
         this.peakToPeak.setValue( parseFloat(data.split(";")[1].replace("DATA","")))
         this.captureService.stopFetchDataListener();
