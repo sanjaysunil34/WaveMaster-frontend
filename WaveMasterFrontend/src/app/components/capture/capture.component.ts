@@ -16,7 +16,7 @@ export class CaptureComponent implements OnDestroy{
     start: boolean = true
     openAccordion: string = 'collapseOne';
     isCaptureOn : boolean = false;
-
+    i=0;
     xAxisScale = new FormControl(1)
     yAxisScale = new FormControl(1) 
     dataAcquisitionRate = new FormControl(1)
@@ -170,11 +170,13 @@ export class CaptureComponent implements OnDestroy{
       this.captureService.addFetchDataListener();
       this.fetchDataSubscription = this.captureService.getFetchDataSubject().subscribe(data => {
         console.log(data);
+        this.frequency.setValue( parseFloat(data.split(";")[0].replace("DATA","")))
+        this.peakToPeak.setValue( parseFloat(data.split(";")[1].replace("DATA","")))
         this.captureService.stopFetchDataListener();
         this.fetchDataSubscription.unsubscribe();
       });
       
-      //this.captureService.stopTransferPlotDataListener();
+      
     }
 
     getChartInstance(chart: object) {
@@ -190,10 +192,10 @@ export class CaptureComponent implements OnDestroy{
       //this.fetchDataSubscription.unsubscribe();
     }
 
-   
+    
     addData = (data: PlotData[]) => {
       data.forEach(d => {
-        this.dataPoints.push({x: new Date(d.time).getTime(), y: d.voltage})  
+        this.dataPoints.push({label: new Date(d.time).toDateString(), y: d.voltage,x: ++this.i})  
                 
         if(this.dataPoints.length > 100){
           this.dataPoints.shift();

@@ -28,7 +28,8 @@ export class TestComponent {
   constructor(fb: FormBuilder, private testService: TestService){
     this.testForm = fb.group({
       'component' : ['eeprom', Validators.required],
-      'function' : ['read', Validators.required]
+      'function' : ['read', Validators.required],
+      'status': ['']
     })
   }
 
