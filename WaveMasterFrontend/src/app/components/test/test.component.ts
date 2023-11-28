@@ -10,7 +10,7 @@ import { TestService } from 'src/app/services/test.service';
 })
 export class TestComponent {
   testForm: FormGroup;
-  submitted = false;
+  //submitted = false;
   status: FormControl = new FormControl('')
   command : string = "";
   message : string = "";
@@ -43,35 +43,28 @@ export class TestComponent {
   }
 
   onSubmitTestForm(){
-    console.log(this.testForm.value.component + '-' + this.testForm.value.function);    
-    if(this.testForm.value.component === "ledRed"){
-      this.message = "LED RED is turned ";
-      if(this.testForm.value.function === "on"){
-        this.command = "LED ON 1;"
-      }else{
-        this.command = "LED OFF 1;"
-      }
-    }else if(this.testForm.value.component === "ledGreen"){
-      this.message = "LED GREEN is turned ";
-      if(this.testForm.value.function === "on"){
-        this.command = "LED ON 2;"
-      }else{
-        this.command = "LED OFF 2;"
-      }
-    }else if(this.testForm.value.component === "eeprom"){
-      this.message = "EEPROM is ";
-      if(this.testForm.value.function === "read"){
-        this.command = "EEPROM;"
-      }else{
-        this.command = "EEPROM;"
-      }
-    } else if(this.testForm.value.component === "button1"){
-      this.message = "BUTTON 1 is ";
-      this.command = "BUTTON 1;"
-    } else if(this.testForm.value.component === "button2"){
-      this.message = "BUTTON 2 is ";
-      this.command = "BUTTON 2;"
-    }
+    switch(this.testForm.value.component){
+      case "ledRed" : 
+        this.message = "LED RED is turned ";
+        this.command = `LED ${this.testForm.value.function.toUpperCase()} 1;`;
+        break;
+      case "ledGreen": 
+        this.message = "LED GREEN is turned ";
+        this.command = `LED ${this.testForm.value.function.toUpperCase()} 2;`
+        break;
+      case "eeprom":
+        this.message = "EEPROM is ";
+        this.command = "EEPROM;";
+        break;
+      case "button1":
+        this.message = "BUTTON 1 is ";
+        this.command = "BUTTON 1;"
+        break;
+      case "button2":
+        this.message = "BUTTON 2 is ";
+        this.command = "BUTTON 2;"
+        break;
+    }   
 
     this.testService.testComponent(this.command).subscribe();
     this.testService.addTestDataListener();  
