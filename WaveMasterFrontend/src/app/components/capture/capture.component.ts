@@ -137,9 +137,9 @@ export class CaptureComponent implements OnDestroy {
   handleStop(){
     this.isCaptureOn = false;
     this.captureService.plotCapture("STOP").subscribe();
-    this.captureService.stopPlotDataListener();
+    //this.captureService.stopPlotDataListener();
     this.captureDataSubscription.unsubscribe();
-    this.captureControlDataSubscription.unsubscribe();
+    //this.captureControlDataSubscription.unsubscribe();
   }
 
   //On click handler for start/stop button
