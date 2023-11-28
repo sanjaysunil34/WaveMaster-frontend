@@ -40,7 +40,6 @@ export class CaptureService {
   }
 
   plotCapture(command: string) : any {
-    console.log(command)
     return this.httpClient.post<any>(BaseUrl + "/capture/plotcommand",JSON.stringify(command),HttpHeader())
     .pipe(
       catchError(err => (err))

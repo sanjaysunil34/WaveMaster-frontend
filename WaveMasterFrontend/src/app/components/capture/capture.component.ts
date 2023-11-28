@@ -103,15 +103,13 @@ export class CaptureComponent implements OnDestroy{
         this.isCaptureOn = true;
         this.captureService.plotCapture("START").subscribe();
         this.captureService.addPlotDataListener();  
-        this. captureDataSubscription = this.captureService.getPlotDataSubject().subscribe(data => {
-          //console.log(data);                    
+        this. captureDataSubscription = this.captureService.getPlotDataSubject().subscribe(data => {                  
           this.addData(data);
         });      
         this.captureControlDataSubscription = this.captureService.getCaptureControlDataSubject().subscribe(data => {
           console.log(data);
           if(data == "STOP CAPTURE"){
             this.start = !this.start;
-            //this.captureService.plotCapture("STOP").subscribe();
             this.isCaptureOn = false;
             this.captureService.stopPlotDataListener();
             this.captureDataSubscription.unsubscribe();
@@ -119,10 +117,8 @@ export class CaptureComponent implements OnDestroy{
           }
         })
       }else{
-
         this.isCaptureOn = false;
         this.captureService.plotCapture("STOP").subscribe();
-
         this.captureService.stopPlotDataListener();
         this.captureDataSubscription.unsubscribe();
         this.captureControlDataSubscription.unsubscribe();
@@ -131,8 +127,6 @@ export class CaptureComponent implements OnDestroy{
     }
 
     onXScaleChange(event: any){
-      console.log(this.xAxisScale.value)
-      //this.chartOptions.axisX.interval = 1 * event.value;
       this.chartOptions.axisX.labelFontSize = 13 * event.value;
       switch(event.value){
         case "0.5": this.chartOptions.axisX.labelFontSize = 10 ;
@@ -183,7 +177,6 @@ export class CaptureComponent implements OnDestroy{
     }
     
     ngOnDestroy() {
-      clearTimeout(this.timeout);
       this.captureService.stopPlotDataListener();
       this.captureService.stopFetchDataListener();
     }
@@ -199,13 +192,5 @@ export class CaptureComponent implements OnDestroy{
       });
 
       this.chart.render();
-      this.timeout = setTimeout(() => {
-        if(this.start == false){
-          //this.updateData()
-        }else{
-          console.log(this.start)
-          clearTimeout(this.timeout);
-        }
-      }, 1);
     }
 }

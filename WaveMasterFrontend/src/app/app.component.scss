@@ -8,13 +8,14 @@
     width: 100% !important;
 }
 
-.app.contents-container{
-    min-height: 84vh;
+.app-contents-container{
+    min-height: 84vh !important;
     padding: 0px;
     background-color: #EDF2FB;
 }
 
 .app-contents{
+    min-height: 84vh !important;
     padding-right: 0px !important;
 }
 
