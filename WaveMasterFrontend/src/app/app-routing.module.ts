@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
 import { ConfigurationComponent } from './components/configuration/configuration.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { ConnectionGuard } from './guards/connectionGuard';
-import { RedirectGuard } from './guards/redirectGuard';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+
+import { ConnectionGuard } from './guards/connection-guard';
+import { RedirectGuard } from './guards/redirect-guard';
 
 const routes: Routes = [
   {path: '', component: ConfigurationComponent, canActivate:[RedirectGuard]},

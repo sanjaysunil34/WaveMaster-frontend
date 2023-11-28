@@ -38,7 +38,7 @@ export class ConfigurationComponent {
       this.portNameEmpty = true;
     }else{
       this.portNameEmpty = false;
-      this.connectionService.connect(connectionParams).subscribe(() => {
+      this.connectionService.connectSerialPort(connectionParams).subscribe(() => {
         localStorage.setItem("connectionStatus", "connected")
         location.reload();
       },error => {        

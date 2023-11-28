@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { SignalData } from 'src/app/models/signalData';
+import { SignalData } from 'src/app/models/signal-data';
 import { GenerateService } from 'src/app/services/generate.service';
 
 @Component({

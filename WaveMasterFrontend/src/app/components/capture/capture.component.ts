@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { PlotData } from 'src/app/models/plotData';
+import { PlotData } from 'src/app/models/plot-data';
 import { CaptureService } from 'src/app/services/capture.service';
 
 @Component({
@@ -87,9 +87,28 @@ export class CaptureComponent implements OnDestroy {
   fetchDataSubscription: Subscription = new Subscription();
   captureControlDataSubscription: Subscription = new Subscription();
 
-  constructor(private captureService: CaptureService) {}
+  constructor(private captureService: CaptureService) {
+    captureService.addCaptureCommandsListener();
+    this.captureControlDataSubscription = captureService.getCaptureControlDataSubject().subscribe(data => {
+      console.log(data);
+      if (data == "START CAPTURE") {
+        this.isCaptureOn = true;        
+        this.captureService.addPlotDataListener();
+        this.captureDataSubscription = this.captureService.getPlotDataSubject().subscribe(data => {
+          this.addData(data);
+        });
+      } else if (data == "STOP CAPTURE") {
+        this.isCaptureOn = false;
+        this.captureService.stopPlotDataListener();
+        this.captureDataSubscription.unsubscribe();
+      }
+      this.captureEvent.emit(this.isCaptureOn);
+    })
+  }
 
   ngOnDestroy() {
+    this.captureControlDataSubscription.unsubscribe();
+    this.captureService.stopCaptureCommandsListener();
     this.captureService.stopPlotDataListener();
     this.captureService.stopFetchDataListener();
   }
@@ -115,42 +134,22 @@ export class CaptureComponent implements OnDestroy {
     this.chart.render();
   }
 
-  handleStart(){
-    this.isCaptureOn = true;
+  handleStart() {
     this.captureService.plotCapture("START").subscribe();
-    this.captureService.addPlotDataListener();
-    this.captureDataSubscription = this.captureService.getPlotDataSubject().subscribe(data => {
-      this.addData(data);
-    });
-    this.captureControlDataSubscription = this.captureService.getCaptureControlDataSubject().subscribe(data => {
-      console.log(data);
-      if (data == "STOP CAPTURE") {
-        this.start = !this.start;
-        this.isCaptureOn = false;
-        this.captureService.stopPlotDataListener();
-        this.captureDataSubscription.unsubscribe();
-        this.captureControlDataSubscription.unsubscribe();
-      }
-    })
   }
 
-  handleStop(){
-    this.isCaptureOn = false;
+  handleStop() {
     this.captureService.plotCapture("STOP").subscribe();
-    this.captureService.stopPlotDataListener();
-    this.captureDataSubscription.unsubscribe();
-    this.captureControlDataSubscription.unsubscribe();
   }
 
   //On click handler for start/stop button
   toggleStartStop() {
     this.start = !this.start
-    if(!this.start){
+    if (!this.start) {
       this.handleStart()
-    }else{
+    } else {
       this.handleStop()
     }
-    this.captureEvent.emit(this.isCaptureOn);
   }
 
   //plot scale control
@@ -186,7 +185,7 @@ export class CaptureComponent implements OnDestroy {
     this.captureService.sendDataAcquisitionRate(event.value).subscribe()
   }
 
-  handleSignalData(data : string){
+  handleSignalData(data: string) {
     data = data.substring(data.indexOf("DATA"));
     this.frequency.setValue(parseFloat(data.split(";")[0].replace("DATA", "")))
     this.peakToPeak.setValue(parseFloat(data.split(";")[1].replace("DATA", "")) * (3.3 / 4096))
@@ -195,7 +194,7 @@ export class CaptureComponent implements OnDestroy {
   fetchSignalData() {
     this.captureService.getSignalData().subscribe();
     this.captureService.addFetchDataListener();
-    this.fetchDataSubscription = this.captureService.getFetchDataSubject().subscribe(data => {     
+    this.fetchDataSubscription = this.captureService.getFetchDataSubject().subscribe(data => {
       this.handleSignalData(data)
       this.captureService.stopFetchDataListener();
       this.fetchDataSubscription.unsubscribe();
@@ -204,5 +203,6 @@ export class CaptureComponent implements OnDestroy {
 
   getChartInstance(chart: object) {
     this.chart = chart;
-  }
+  }  
+
 }
