@@ -19,7 +19,7 @@ export class DashboardComponent implements OnDestroy {
   }
 
   disconnect(){
-    this.connectionService.disconnect().subscribe(data => {
+    this.connectionService.disconnectSerialPort().subscribe(data => {
       localStorage.removeItem("connectionStatus");
       this.router.navigate(['/']);
     })    

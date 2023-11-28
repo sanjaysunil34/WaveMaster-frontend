@@ -2,8 +2,8 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { Observable, Subject, catchError, throwError } from 'rxjs';
 import * as signalR from '@microsoft/signalr';
-import { HttpError } from '../helpers/HttpError';
-import { BaseUrl, HttpHeader } from '../config/config';
+import { httpError } from '../helpers/http-error';
+import { BaseUrl, httpHeader } from '../config/config';
 
 @Injectable({
   providedIn: 'root'
@@ -23,21 +23,21 @@ export class ConnectionService {
   getPortName() : Observable<string[]>{
     return this.httpClient.get<string[]>(BaseUrl + '/configuration')
     .pipe(
-      catchError(err => HttpError(err))
+      catchError(err => httpError(err))
     );
   }
 
-  connect(object: Object) : Observable<string>{
-    return this.httpClient.post<string>(BaseUrl + '/configuration/connect', JSON.stringify(object), HttpHeader())
+  connectSerialPort(object: Object) : Observable<string>{
+    return this.httpClient.post<string>(BaseUrl + '/configuration/connect', JSON.stringify(object), httpHeader())
     .pipe(
-      catchError(err => HttpError(err))
+      catchError(err => httpError(err))
     );
   }
 
-  disconnect() : Observable<Object>{
-    return  this.httpClient.post<Object>(BaseUrl + '/configuration/disconnect',{} ,HttpHeader())
+  disconnectSerialPort() : Observable<Object>{
+    return  this.httpClient.post<Object>(BaseUrl + '/configuration/disconnect',{} ,httpHeader())
     .pipe(
-      catchError(err => HttpError(err))
+      catchError(err => httpError(err))
     );
   }
 

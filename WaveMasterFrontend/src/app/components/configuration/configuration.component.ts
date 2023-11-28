@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators  } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ConnectionParams } from 'src/app/models/connectionParams';
+import { ConnectionParams } from 'src/app/models/connection-params';
 import { ConnectionService } from 'src/app/services/connection.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { ConnectionService } from 'src/app/services/connection.service';
 })
 export class ConfigurationComponent {
   connectionForm: FormGroup;
-  submitted = false;
+  //submitted = false;
   portNameEmpty = false;
   connectionParams : ConnectionParams = new ConnectionParams("", 0, 0, 0, "");
   errorMessage : string = "";
@@ -50,7 +50,8 @@ export class ConfigurationComponent {
     if(this.connectionForm.value.portName === null){
       this.portNameEmpty = true;
     }else{
-      this.connectionService.connect(this.connectionParams).subscribe(data => {
+      this.portNameEmpty = false;
+      this.connectionService.connectSerialPort(this.connectionParams).subscribe(data => {
         localStorage.setItem("connectionStatus", "connected")
         location.reload();
       },error => {

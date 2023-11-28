@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { PlotData } from 'src/app/models/plotData';
+import { PlotData } from 'src/app/models/plot-data';
 import { CaptureService } from 'src/app/services/capture.service';
 
 

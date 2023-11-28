@@ -1,10 +1,10 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject, catchError, throwError } from 'rxjs';
-import { SignalData } from '../models/signalData';
+import { SignalData } from '../models/signal-data';
 import { ConnectionService } from './connection.service';
-import { HttpError } from '../helpers/HttpError';
-import { BaseUrl, HttpHeader } from '../config/config';
+import { httpError } from '../helpers/http-error';
+import { BaseUrl, httpHeader } from '../config/config';
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +40,7 @@ export class CaptureService {
   }
 
   plotCapture(command: string) : any {
-    return this.httpClient.post<any>(BaseUrl + "/capture/plotcommand",JSON.stringify(command),HttpHeader())
+    return this.httpClient.post<any>(BaseUrl + "/capture/plotcommand",JSON.stringify(command),httpHeader())
     .pipe(
       catchError(err => (err))
     )
@@ -49,7 +49,7 @@ export class CaptureService {
   getSignalData() : Observable<SignalData> {
     return this.httpClient.get<SignalData>(BaseUrl + "/capture/signaldata")
     .pipe(
-      catchError(err => HttpError(err))      
+      catchError(err => httpError(err))      
     )
   }  
 
@@ -68,9 +68,9 @@ export class CaptureService {
   }
 
   sendDataAcquisitionRate(rate : number) : any {       
-    return this.httpClient.post<any>(BaseUrl + "/capture/rate",JSON.stringify(rate),HttpHeader())
+    return this.httpClient.post<any>(BaseUrl + "/capture/rate",JSON.stringify(rate),httpHeader())
     .pipe(
-      catchError(err => HttpError(err))
+      catchError(err => httpError(err))
     )
   } 
 }
