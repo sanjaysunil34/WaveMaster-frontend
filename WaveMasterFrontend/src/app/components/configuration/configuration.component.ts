@@ -23,7 +23,7 @@ export class ConfigurationComponent {
     this.connectionForm = fb.group({
       'portName' : [this.portNames[0], Validators.required],
       'stopBit' : [ 1, Validators.required],
-      'baudRate' : [ 9600 , Validators.required],
+      'baudRate' : [ 115200 , Validators.required],
       'dataBit' : [ 8 , Validators.required],
       'parity' : [ "none" , Validators.required]
     })
