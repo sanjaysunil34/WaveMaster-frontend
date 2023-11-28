@@ -1,8 +1,8 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject, catchError, throwError } from 'rxjs';
-import { ConnectionService } from './connection-service.service';
-import { httpError } from '../helpers/HttpError';
+import { ConnectionService } from './connection.service';
+import { HttpError } from '../helpers/HttpError';
 import { BaseUrl, HttpHeader } from '../config/config';
 
 @Injectable({
@@ -17,7 +17,7 @@ export class TestService {
   testComponent(command: string) : Observable<string>{
     return this.httpClient.post<string>(BaseUrl + '/test', JSON.stringify(command), HttpHeader())
     .pipe(
-      catchError(err => httpError(err))
+      catchError(err => HttpError(err))
     );
   }
 

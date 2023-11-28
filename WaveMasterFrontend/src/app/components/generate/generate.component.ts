@@ -33,8 +33,7 @@ export class GenerateComponent{
     });
   }
 
-  onSubmitGenerateForm(){
-    console.log(this.generateForm.value);    
+  onSubmitGenerateForm(){  
     this.show = !this.show;
     var sd = new SignalData(this.generateForm.value.frequencyValue,this.generateForm.value.peakValue)
     sd.signalType = this.generateForm.value.signalType
@@ -63,9 +62,6 @@ export class GenerateComponent{
     }else if(v.value < 0){
       v.value = 0;
     }
-    //y parseFloat
     this.generateForm.value.frequencyValue = parseFloat(v.value);
   }
-
-  
 }

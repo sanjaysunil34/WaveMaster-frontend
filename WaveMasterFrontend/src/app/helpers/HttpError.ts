@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { throwError } from "rxjs";
 
-export const httpError = (error: HttpErrorResponse) => {
+export const HttpError = (error: HttpErrorResponse) => {
       
     let msg = '';
     if(error.error){
