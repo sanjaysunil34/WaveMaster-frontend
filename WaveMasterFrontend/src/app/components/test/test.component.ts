@@ -32,8 +32,7 @@ export class TestComponent {
   constructor(fb: FormBuilder, private testService: TestService){
     this.testForm = fb.group({
       'component' : ['eeprom', Validators.required],
-      'function' : ['read', Validators.required],
-      
+      'function' : ['read', Validators.required],    
     })
   }
 
@@ -76,10 +75,8 @@ export class TestComponent {
 
     this.testService.testComponent(this.command).subscribe();
     this.testService.addTestDataListener();  
-    this.testDataSubscription = this.testService.getTestDataSubject().subscribe(data => {
-      console.log(data);    
-      this.status.setValue(this.message + data);
-      
+    this.testDataSubscription = this.testService.getTestDataSubject().subscribe(data => {   
+      this.status.setValue(this.message + data);     
       this.testService.stopTestDataListener();
       this.testDataSubscription.unsubscribe();
     }); 

@@ -6,7 +6,6 @@
                 <div class="connection-input-rows row">
                     <div class="connection-inputs col-md-12">
                         <label for="portNameInput" class="connection-input-label form-label" >PORT NAME</label>
-                        <!-- <input type="text" class="connection-input-field form-control" id="portNameFormControl" formControlName="portName"> -->
                         <select type="text" class="form-select connection-input-field form-control" id="portNameFormControl" formControlName="portName">
                             <option *ngFor="let port of portNames" class="connection-input-option" value={{port}}>{{port}}</option>
                         </select>                        
@@ -32,7 +31,6 @@
 
                     <div class="connection-inputs col-md-12">
                         <label for="stopBitInput" class="connection-input-label form-label" >STOP BIT</label>
-                        <!-- <input type="text" class="connection-input-field form-control" id="stopBitFormControl" formControlName="stopBit"> -->
                         <select type="text" class="form-select connection-input-field form-control" id="stopBitFormControl" formControlName="stopBit">
                             <option class="connection-input-option" value="1">1</option>
                             <option class="connection-input-option" value="1.5">1.5</option>
@@ -42,7 +40,6 @@
 
                     <div class="connection-inputs col-md-12">
                         <label for="parityInput" class="connection-input-label form-label" >PARITY</label>
-                        <!-- <input type="text" class="connection-input-field form-control" id="parityFormControl" formControlName="parity"> -->
                         <select type="text" class="form-select connection-input-field form-control" id="parityFormControl" formControlName="parity">
                             <option class="connection-input-option" value="even">Even</option>
                             <option class="connection-input-option" value="mark">Mark</option>

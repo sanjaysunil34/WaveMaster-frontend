@@ -10,7 +10,6 @@ import { ConnectionService } from 'src/app/services/connection.service';
 export class DashboardComponent implements OnDestroy {
 
   isCaptureOn : boolean = false;
-  private unloadFlag = false;
 
   constructor(private router: Router,private connectionService: ConnectionService){
     connectionService.startHubConnection();

@@ -17,7 +17,7 @@ export class CaptureComponent implements OnDestroy{
     start: boolean = true
     openAccordion: string = 'collapseOne';
     isCaptureOn : boolean = false;
-    i=0;
+    xAxisIncrement=0;
     xAxisScale = new FormControl(1)
     yAxisScale = new FormControl(1) 
     dataAcquisitionRate = new FormControl(1)
@@ -191,7 +191,7 @@ export class CaptureComponent implements OnDestroy{
     
     addData = (data: PlotData[]) => {
       data.forEach(d => {
-        this.dataPoints.push({label: formatDate(new Date(d.time), "hh:mm:ss:SS", 'en-us'), y: d.voltage,x: ++this.i})  
+        this.dataPoints.push({label: formatDate(new Date(d.time), "hh:mm:ss:SS", 'en-us'), y: d.voltage,x: ++this.xAxisIncrement})  
                 
         if(this.dataPoints.length > 100){
           this.dataPoints.shift();

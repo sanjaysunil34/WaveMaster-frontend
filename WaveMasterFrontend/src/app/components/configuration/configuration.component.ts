@@ -37,11 +37,11 @@ export class ConfigurationComponent {
 
   onSubmitConnectionForm(){    
 
-      this.connectionParams.portName = this.connectionForm.value.portName;
-      this.connectionParams.stopBit = this.connectionForm.value.stopBit;
-      this.connectionParams.baudRate = this.connectionForm.value.baudRate;
-      this.connectionParams.dataBit = this.connectionForm.value.dataBit;
-      this.connectionParams.parity = this.connectionForm.value.parity;
+    this.connectionParams.portName = this.connectionForm.value.portName;
+    this.connectionParams.stopBit = this.connectionForm.value.stopBit;
+    this.connectionParams.baudRate = this.connectionForm.value.baudRate;
+    this.connectionParams.dataBit = this.connectionForm.value.dataBit;
+    this.connectionParams.parity = this.connectionForm.value.parity;
 
     console.log(this.connectionParams);
     
@@ -55,9 +55,6 @@ export class ConfigurationComponent {
       },error => {
         console.log(error)
       });
-    }
-    
-    
+    }    
   }
-
 }

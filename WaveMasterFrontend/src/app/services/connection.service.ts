@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { Observable, Subject, catchError, throwError } from 'rxjs';
 import * as signalR from '@microsoft/signalr';
-import { httpError } from '../helpers/HttpError';
+import { HttpError } from '../helpers/HttpError';
 import { BaseUrl, HttpHeader } from '../config/config';
 
 @Injectable({
@@ -23,21 +23,21 @@ export class ConnectionService {
   getPortName() : Observable<string[]>{
     return this.httpClient.get<string[]>(BaseUrl + '/configuration')
     .pipe(
-      catchError(err => httpError(err))
+      catchError(err => HttpError(err))
     );
   }
 
   connect(object: Object) : Observable<string>{
     return  this.httpClient.post<string>(BaseUrl + '/configuration/connect', JSON.stringify(object), HttpHeader())
     .pipe(
-      catchError(err => httpError(err))
+      catchError(err => HttpError(err))
     );
   }
 
   disconnect() : Observable<Object>{
     return  this.httpClient.post<Object>(BaseUrl + '/configuration/disconnect',{} ,HttpHeader())
     .pipe(
-      catchError(err => httpError(err))
+      catchError(err => HttpError(err))
     );
   }
 
