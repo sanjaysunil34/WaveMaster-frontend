@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SignalData } from 'src/app/models/signalData';
+import { SignalData } from 'src/app/models/signal-data';
 import { GenerateService } from 'src/app/services/generate.service';
 
 @Component({
