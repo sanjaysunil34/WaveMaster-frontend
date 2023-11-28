@@ -25,16 +25,13 @@ export class GenerateComponent{
     })
     
     this.generateService.restoreWave().subscribe(data => {
-      console.log(data);
-      
       this.generateForm.controls["signalType"].setValue(data.SignalType );
       this.generateForm.controls["peakValue"].setValue(data.PeakToPeak );
       this.generateForm.controls["frequencyValue"].setValue(data.Frequency );
     });
   }
 
-  onSubmitGenerateForm(){
-    console.log(this.generateForm.value);    
+  onSubmitGenerateForm(){  
     this.show = !this.show;
     var sd = new SignalData(this.generateForm.value.frequencyValue,this.generateForm.value.peakValue)
     sd.SignalType = this.generateForm.value.signalType
@@ -63,9 +60,6 @@ export class GenerateComponent{
     }else if(v.value < 0){
       v.value = 0;
     }
-    //y parseFloat
     this.generateForm.value.frequencyValue = parseFloat(v.value);
   }
-
-  
 }

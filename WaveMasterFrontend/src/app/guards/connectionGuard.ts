@@ -1,6 +1,6 @@
 import { CanActivateFn } from "@angular/router";
 
-export function connectionGuard(): CanActivateFn {
+export function ConnectionGuard(): CanActivateFn {
     let status = localStorage.getItem("connectionStatus")
 
     return () => {
