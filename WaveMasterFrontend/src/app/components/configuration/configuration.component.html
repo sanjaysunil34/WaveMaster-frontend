@@ -53,8 +53,13 @@
                     <div class="config-submit-button-container">
                         <button type="submit" class="btn config-submit-button">
                             CONNECT
-                        </button>
+                        </button>                        
                     </div>
+                    <div class="connection-error-container" *ngIf="errorMessage.length != 0">
+                        <div class="connection-error-message">
+                            {{errorMessage}}
+                        </div>
+                    </div>                    
                 </div>
             </form>
         </div>

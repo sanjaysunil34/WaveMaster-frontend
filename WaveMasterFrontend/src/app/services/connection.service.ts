@@ -28,7 +28,7 @@ export class ConnectionService {
   }
 
   connect(object: Object) : Observable<string>{
-    return  this.httpClient.post<string>(BaseUrl + '/configuration/connect', JSON.stringify(object), HttpHeader())
+    return this.httpClient.post<string>(BaseUrl + '/configuration/connect', JSON.stringify(object), HttpHeader())
     .pipe(
       catchError(err => HttpError(err))
     );
