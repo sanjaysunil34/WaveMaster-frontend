@@ -87,34 +87,41 @@ export class CaptureComponent implements OnDestroy {
   fetchDataSubscription: Subscription = new Subscription();
   captureControlDataSubscription: Subscription = new Subscription();
 
-    constructor(private captureService: CaptureService) { 
-      this.captureControlDataSubscription = this.captureService.getCaptureControlDataSubject().subscribe(data => {
-        console.log(data);
-        if(data == "START CAPTURE"){
-          this.start = !this.start;
-          this.isCaptureOn = true;
-          this.captureService.plotCapture("START").subscribe();
-          this.captureService.addPlotDataListener();  
-          this. captureDataSubscription = this.captureService.getPlotDataSubject().subscribe(data => {                  
-            this.addData(data);
-          });  
-        }else if(data == "STOP CAPTURE"){
-          this.start = !this.start;
-          this.isCaptureOn = false;
-          this.captureService.stopPlotDataListener();
-          this.captureDataSubscription.unsubscribe();
-          this.captureControlDataSubscription.unsubscribe();
-        }
-      })
-    }
-    // Toggle accordion items
-    toggleAccordion(accordionId: string): void {
-      this.openAccordion = this.openAccordion === accordionId ? this.openAccordion : accordionId;
-    }
-    // Check if an accordion item is open
-    isAccordionOpen(accordionId: string): boolean {
-      return this.openAccordion === accordionId;
-    }
+  constructor(private captureService: CaptureService) {
+    this.captureControlDataSubscription = this.captureService.getCaptureControlDataSubject().subscribe(data => {
+      console.log(data);
+      if (data == "START CAPTURE") {
+        this.start = !this.start;
+        this.isCaptureOn = true;
+        this.captureService.plotCapture("START").subscribe();
+        this.captureService.addPlotDataListener();
+        this.captureDataSubscription = this.captureService.getPlotDataSubject().subscribe(data => {
+          this.addData(data);
+        });
+      } else if (data == "STOP CAPTURE") {
+        this.start = !this.start;
+        this.isCaptureOn = false;
+        this.captureService.stopPlotDataListener();
+        this.captureDataSubscription.unsubscribe();
+        this.captureControlDataSubscription.unsubscribe();
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.captureControlDataSubscription.unsubscribe();
+    this.captureService.stopPlotDataListener();
+    this.captureService.stopFetchDataListener();
+  }
+  
+  // Toggle accordion items
+  toggleAccordion(accordionId: string): void {
+    this.openAccordion = this.openAccordion === accordionId ? this.openAccordion : accordionId;
+  }
+  // Check if an accordion item is open
+  isAccordionOpen(accordionId: string): boolean {
+    return this.openAccordion === accordionId;
+  }
 
   addData = (data: PlotData[]) => {
     data.forEach(d => {
@@ -128,7 +135,7 @@ export class CaptureComponent implements OnDestroy {
     this.chart.render();
   }
 
-  handleStart(){
+  handleStart() {
     this.isCaptureOn = true;
     this.captureService.plotCapture("START").subscribe();
     this.captureService.addPlotDataListener();
@@ -147,7 +154,7 @@ export class CaptureComponent implements OnDestroy {
     })
   }
 
-  handleStop(){
+  handleStop() {
     this.isCaptureOn = false;
     this.captureService.plotCapture("STOP").subscribe();
     this.captureService.stopPlotDataListener();
@@ -158,9 +165,9 @@ export class CaptureComponent implements OnDestroy {
   //On click handler for start/stop button
   toggleStartStop() {
     this.start = !this.start
-    if(!this.start){
+    if (!this.start) {
       this.handleStart()
-    }else{
+    } else {
       this.handleStop()
     }
     this.captureEvent.emit(this.isCaptureOn);
@@ -199,7 +206,7 @@ export class CaptureComponent implements OnDestroy {
     this.captureService.sendDataAcquisitionRate(event.value).subscribe()
   }
 
-  handleSignalData(data : string){
+  handleSignalData(data: string) {
     data = data.substring(data.indexOf("DATA"));
     this.frequency.setValue(parseFloat(data.split(";")[0].replace("DATA", "")))
     this.peakToPeak.setValue(parseFloat(data.split(";")[1].replace("DATA", "")) * (3.3 / 4096))
@@ -208,21 +215,15 @@ export class CaptureComponent implements OnDestroy {
   fetchSignalData() {
     this.captureService.getSignalData().subscribe();
     this.captureService.addFetchDataListener();
-    this.fetchDataSubscription = this.captureService.getFetchDataSubject().subscribe(data => {     
+    this.fetchDataSubscription = this.captureService.getFetchDataSubject().subscribe(data => {
       this.handleSignalData(data)
       this.captureService.stopFetchDataListener();
       this.fetchDataSubscription.unsubscribe();
     });
   }
 
-    getChartInstance(chart: object) {
-      this.chart = chart;                
-    }
-    
-    ngOnDestroy() {
-      this.captureControlDataSubscription.unsubscribe();
-      this.captureService.stopPlotDataListener();
-      this.captureService.stopFetchDataListener();      
-    }
+  getChartInstance(chart: object) {
+    this.chart = chart;
+  }  
 
 }
