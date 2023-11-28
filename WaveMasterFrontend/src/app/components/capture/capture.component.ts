@@ -186,15 +186,17 @@ export class CaptureComponent implements OnDestroy {
     this.captureService.sendDataAcquisitionRate(event.value).subscribe()
   }
 
+  handleSignalData(data : string){
+    data = data.substring(data.indexOf("DATA"));
+    this.frequency.setValue(parseFloat(data.split(";")[0].replace("DATA", "")))
+    this.peakToPeak.setValue(parseFloat(data.split(";")[1].replace("DATA", "")) * (3.3 / 4096))
+  }
   //fetch plot data from hardware
   fetchSignalData() {
     this.captureService.getSignalData().subscribe();
     this.captureService.addFetchDataListener();
-    this.fetchDataSubscription = this.captureService.getFetchDataSubject().subscribe(data => {
-      data = data.substring(data.indexOf("DATA"));
-      this.frequency.setValue(parseFloat(data.split(";")[0].replace("DATA", "")))
-      this.peakToPeak.setValue(parseFloat(data.split(";")[1].replace("DATA", "")) * (3.3 / 4096))
-
+    this.fetchDataSubscription = this.captureService.getFetchDataSubject().subscribe(data => {     
+      this.handleSignalData(data)
       this.captureService.stopFetchDataListener();
       this.fetchDataSubscription.unsubscribe();
     });
