@@ -5,12 +5,7 @@ import { Component } from '@angular/core';
   templateUrl: './banner.component.html',
   styleUrls: ['./banner.component.scss']
 })
+
 export class BannerComponent {
-  isConnected = false;
-  
-  constructor(){
-    if(location.pathname != '/'){
-      this.isConnected = true;       
-    }    
-  }
+  constructor(){}  
 }

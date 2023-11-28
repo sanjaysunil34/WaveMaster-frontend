@@ -1,5 +1,4 @@
 import { formatDate } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -24,7 +23,7 @@ export class CaptureComponent implements OnDestroy {
   //status of capturing
   isCaptureOn: boolean = false;
 
-  //graph controls
+  //chart controls
   xAxisIncrement = 0;
   xAxisScale = new FormControl(1)
   yAxisScale = new FormControl(1)
@@ -34,7 +33,7 @@ export class CaptureComponent implements OnDestroy {
   frequency = new FormControl(0)
   peakToPeak = new FormControl(0)
 
-  //plot parameters
+  //chart parameters
   dataPoints: any[] = [];
   chart: any;
   chartOptions = {
@@ -81,8 +80,8 @@ export class CaptureComponent implements OnDestroy {
       labelFontSize: 13,
     }
   }
-
-  //hub connection 
+  
+  //subscription details
   captureDataSubscription: Subscription = new Subscription();
   fetchDataSubscription: Subscription = new Subscription();
   captureControlDataSubscription: Subscription = new Subscription();
@@ -113,19 +112,31 @@ export class CaptureComponent implements OnDestroy {
     this.captureService.stopFetchDataListener();
   }
 
-  // Toggle accordion items
+  /**
+   * sets the openAccordion variable to the id of accordian which is open
+   * @param accordionId name of the accordian
+   */
   toggleAccordion(accordionId: string): void {
     this.openAccordion = this.openAccordion === accordionId ? this.openAccordion : accordionId;
   }
-  // Check if an accordion item is open
+
+  /**
+   * Check if an accordion item is open
+   * @param accordionId name of the accordian
+   * @returns if open returns true, otherwise returns false
+   */
   isAccordionOpen(accordionId: string): boolean {
     return this.openAccordion === accordionId;
   }
 
+  /**
+   * format each of the PlotData objects and pushes into the chart dataPoints array and re-render the chart.
+   * It also handles shifting the chart if number of points rendered is greater than hundred.
+   * @param data list of PlotData objects
+   */
   addData = (data: PlotData[]) => {
     data.forEach(d => {
       this.dataPoints.push({ label: formatDate(new Date(d.time), "hh:mm:ss:SS", 'en-us'), y: d.voltage, x: ++this.xAxisIncrement })
-
       if (this.dataPoints.length > 100) {
         this.dataPoints.shift();
       }
@@ -134,15 +145,23 @@ export class CaptureComponent implements OnDestroy {
     this.chart.render();
   }
 
+  /**
+   * sends START command 
+   */
   handleStart() {
     this.captureService.plotCapture("START").subscribe();
   }
 
+  /**
+   * sends STOP command
+   */
   handleStop() {
     this.captureService.plotCapture("STOP").subscribe();
   }
 
-  //On click handler for start/stop button
+  /**
+   * handles start and stop of capture
+   */
   toggleStartStop() {
     this.start = !this.start
     if (!this.start) {
@@ -152,7 +171,6 @@ export class CaptureComponent implements OnDestroy {
     }
   }
 
-  //plot scale control
   onXScaleChange(event: any) {
     this.chartOptions.axisX.labelFontSize = 13 * event.value;
     switch (event.value) {
@@ -165,7 +183,7 @@ export class CaptureComponent implements OnDestroy {
     }
     this.chart.render();
   }
-
+  
   onYScaleChange(event: any) {
     this.chartOptions.axisY.interval = 0.1 * event.value;
     this.chartOptions.axisY.labelFontSize = 13 * event.value;
@@ -185,12 +203,19 @@ export class CaptureComponent implements OnDestroy {
     this.captureService.sendDataAcquisitionRate(event.value).subscribe()
   }
 
+  /**
+   * Extracts values of frequency and peak to peak from the response received and updates ui
+   * @param data string containing frequency and peak to peak value in the format DATA{frequency};DATA{peaktopeak};
+   */
   handleSignalData(data: string) {
     data = data.substring(data.indexOf("DATA"));
     this.frequency.setValue(parseFloat(data.split(";")[0].replace("DATA", "")))
     this.peakToPeak.setValue(parseFloat(data.split(";")[1].replace("DATA", "")) * (3.3 / 4096))
   }
-  //fetch plot data from hardware
+  
+  /**
+   * Request frequency and peak to peak of the captured signal and update the ui
+   */
   fetchSignalData() {
     this.captureService.getSignalData().subscribe();
     this.captureService.addFetchDataListener();
@@ -201,6 +226,11 @@ export class CaptureComponent implements OnDestroy {
     });
   }
 
+  /**
+   * Assigns a chart instance to the comeponents chart property.
+   * Gets invoked when the chartInstance event is fired. 
+   * @param chart The object instance to be assigned
+   */
   getChartInstance(chart: object) {
     this.chart = chart;
   }  
