@@ -1,6 +1,6 @@
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { ConnectionService } from 'src/app/services/connection-service.service';
+import { ConnectionService } from 'src/app/services/connection.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,7 +13,7 @@ export class DashboardComponent implements OnDestroy {
   private unloadFlag = false;
 
   constructor(private router: Router,private connectionService: ConnectionService){
-    connectionService.startConnection();
+    connectionService.startHubConnection();
   }
 
   disconnect(){
@@ -28,6 +28,6 @@ export class DashboardComponent implements OnDestroy {
   }  
 
   ngOnDestroy() {
-    this.connectionService.endConnection();
+    this.connectionService.endHubConnection();
   }
 }

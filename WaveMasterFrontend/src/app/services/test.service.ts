@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject, catchError, throwError } from 'rxjs';
-import { ConnectionService } from './connection-service.service';
+import { ConnectionService } from './connection.service';
 import { httpError } from '../helpers/HttpError';
 import { BaseUrl, HttpHeader } from '../config/config';
 

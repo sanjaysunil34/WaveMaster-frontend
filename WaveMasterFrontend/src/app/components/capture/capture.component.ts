@@ -4,7 +4,7 @@ import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { PlotData } from 'src/app/models/plotData';
-import { CaptureService } from 'src/app/services/capture-service.service';
+import { CaptureService } from 'src/app/services/capture.service';
 
 
 @Component({
@@ -102,8 +102,8 @@ export class CaptureComponent implements OnDestroy{
       if(this.start == false){        
         this.isCaptureOn = true;
         this.captureService.plotCapture("START").subscribe();
-        this.captureService.addTransferPlotDataListener();  
-        this. captureDataSubscription = this.captureService.getCaptureDataSubject().subscribe(data => {
+        this.captureService.addPlotDataListener();  
+        this. captureDataSubscription = this.captureService.getPlotDataSubject().subscribe(data => {
           //console.log(data);                    
           this.addData(data);
         });      
@@ -113,7 +113,7 @@ export class CaptureComponent implements OnDestroy{
             this.start = !this.start;
             //this.captureService.plotCapture("STOP").subscribe();
             this.isCaptureOn = false;
-            this.captureService.stopTransferPlotDataListener();
+            this.captureService.stopPlotDataListener();
             this.captureDataSubscription.unsubscribe();
             this.captureControlDataSubscription.unsubscribe();
           }
@@ -123,7 +123,7 @@ export class CaptureComponent implements OnDestroy{
         this.isCaptureOn = false;
         this.captureService.plotCapture("STOP").subscribe();
 
-        this.captureService.stopTransferPlotDataListener();
+        this.captureService.stopPlotDataListener();
         this.captureDataSubscription.unsubscribe();
         this.captureControlDataSubscription.unsubscribe();
       }
@@ -184,7 +184,7 @@ export class CaptureComponent implements OnDestroy{
     
     ngOnDestroy() {
       clearTimeout(this.timeout);
-      this.captureService.stopTransferPlotDataListener();
+      this.captureService.stopPlotDataListener();
       this.captureService.stopFetchDataListener();
     }
 

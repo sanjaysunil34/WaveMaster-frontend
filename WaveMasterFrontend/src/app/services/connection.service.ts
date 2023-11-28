@@ -41,7 +41,7 @@ export class ConnectionService {
     );
   }
 
-  public startConnection(): void {
+  public startHubConnection(): void {
     this.hubConnection
       .start()
       .then(() => {
@@ -51,7 +51,7 @@ export class ConnectionService {
       .catch((err) => console.error(`Error while starting connection: ${err}`));
   }
 
-  public endConnection() : void {
+  public endHubConnection() : void {
     this.hubConnection.stop();
   }
 

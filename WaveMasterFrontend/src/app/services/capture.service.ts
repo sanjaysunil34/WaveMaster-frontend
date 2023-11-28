@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { Observable, Subject, catchError, throwError } from 'rxjs';
 import { SignalData } from '../models/signalData';
-import { ConnectionService } from './connection-service.service';
+import { ConnectionService } from './connection.service';
 import { httpError } from '../helpers/HttpError';
 import { BaseUrl, HttpHeader } from '../config/config';
 
@@ -11,15 +11,13 @@ import { BaseUrl, HttpHeader } from '../config/config';
 })
 export class CaptureService {
 
-  
-  
   private captureDataSubject = new Subject<any>();
   private captureControlDataSubject = new Subject<any>();
   private readDataSubject = new Subject<any>();
 
   constructor(private httpClient:HttpClient, private connectionService: ConnectionService) { }
 
-  public addTransferPlotDataListener = () => {
+  public addPlotDataListener = () => {
     this.connectionService.hubConnection.on("transferPlotData", (data) => {   
       this.captureDataSubject.next(data);  
     })
@@ -28,12 +26,12 @@ export class CaptureService {
     })
   }    
 
-  public stopTransferPlotDataListener = () => {
+  public stopPlotDataListener = () => {
     this.connectionService.hubConnection.off("captureControl");
     this.connectionService.hubConnection.off("transferPlotData");    
   }      
 
-  getCaptureDataSubject() {
+  getPlotDataSubject() {
     return this.captureDataSubject.asObservable();
   }
 
@@ -48,8 +46,6 @@ export class CaptureService {
       catchError(err => (err))
     )
   }
-
-
 
   getSignalData() : Observable<SignalData> {
     return this.httpClient.get<SignalData>(BaseUrl + "/capture/signaldata")
