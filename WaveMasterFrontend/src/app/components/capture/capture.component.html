@@ -1,7 +1,7 @@
 <div class="row p-3 m-3" id="capture-div">
     <div class="col-lg-8 col-12" id="graph">
-        <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height: '100%'}" 
-        (chartInstance)="getChartInstance($event)"></canvasjs-chart>
+        <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height: '100%'}"
+            (chartInstance)="getChartInstance($event)"></canvasjs-chart>
         <div class="graph-spinner-container" *ngIf="isCaptureOn && dataPoints.length == 0">
             <div class="spinner-border graph-spinner" role="status">
                 <span class="sr-only"></span>
@@ -25,22 +25,22 @@
                     <div class="accordion-body">
 
                         <div class="capture-input-group">
-                            <h5 >Axis Scale</h5>
+                            <h5>Axis Scale</h5>
                             <div>
                                 <div class="capture-inputs">
-                                    <label for="xaxis" class="capture-input-label form-label" >X-Axis </label>
-                                    <select type="text" class="form-select capture-input-field form-control" id="xaxis" (change)="onXScaleChange(xAxisScale)" [formControl]="xAxisScale"
-                                    >
-                                        <option class="capture-input-option" value="0.5" >0.5x</option>
+                                    <label for="xaxis" class="capture-input-label form-label">X-Axis </label>
+                                    <select type="text" class="form-select capture-input-field form-control" id="xaxis"
+                                        (change)="onXScaleChange(xAxisScale)" [formControl]="xAxisScale">
+                                        <option class="capture-input-option" value="0.5">0.5x</option>
                                         <option class="capture-input-option" value="1" selected>1x</option>
                                         <option class="capture-input-option" value="2">2x</option>
                                     </select>
-                                </div>    
+                                </div>
                                 <div class="capture-inputs">
-                                    <label for="yaxis" class="capture-input-label form-label" >Y-Axis </label>
-                                    <select type="text" class="form-select capture-input-field form-control" id="yaxis" (change)="onYScaleChange(yAxisScale)" [formControl]="yAxisScale"
-                                    >
-                                        <option class="capture-input-option" value="0.5" >0.5x</option>
+                                    <label for="yaxis" class="capture-input-label form-label">Y-Axis </label>
+                                    <select type="text" class="form-select capture-input-field form-control" id="yaxis"
+                                        (change)="onYScaleChange(yAxisScale)" [formControl]="yAxisScale">
+                                        <option class="capture-input-option" value="0.5">0.5x</option>
                                         <option class="capture-input-option" value="1" selected>1x</option>
                                         <option class="capture-input-option" value="2">2x</option>
                                     </select>
@@ -50,9 +50,10 @@
                         <div class="capture-input-group">
                             <h5>Data Acquisition Rate</h5>
                             <div class="capture-inputs">
-                                <input type="text" class="capture-input-field form-control" id="data-acquisition-rate" [formControl]="dataAcquisitionRate" (change)="onRateChange(dataAcquisitionRate)">
-                            </div> 
-                            
+                                <input type="text" class="capture-input-field form-control" id="data-acquisition-rate"
+                                    [formControl]="dataAcquisitionRate" (change)="onRateChange(dataAcquisitionRate)">
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -73,15 +74,17 @@
                     <div class="accordion-body">
                         <div>
                             <div class="capture-inputs">
-                                <label for="frequency" class="capture-input-label form-label" >Frequency</label>
-                                <input type="text" class="capture-input-field form-control" id="frequency" readonly [formControl]="frequency">
-                            </div>    
+                                <label for="frequency" class="capture-input-label form-label">Frequency</label>
+                                <input type="text" class="capture-input-field form-control" id="frequency" readonly
+                                    [formControl]="frequency">
+                            </div>
                             <div class="capture-inputs">
-                                <label for="peaktopeak" class="capture-input-label form-label" >Peak to Peak</label>
-                                <input type="text" class="capture-input-field form-control" id="peaktopeak" readonly [formControl]="peakToPeak">
+                                <label for="peaktopeak" class="capture-input-label form-label">Peak to Peak</label>
+                                <input type="text" class="capture-input-field form-control" id="peaktopeak" readonly
+                                    [formControl]="peakToPeak">
                             </div>
                             <div class="d-flex justify-content-center capture-btn-container">
-                                <button class="btn btn-primary" (click)="fetchData()">FETCH</button>
+                                <button class="btn btn-primary" (click)="fetchSignalData()">FETCH</button>
                             </div>
                         </div>
                     </div>
@@ -90,8 +93,7 @@
         </div>
 
         <div class="d-flex justify-content-center m-4">
-            <button class="btn btn-primary" *ngIf="start" (click)="toggleStartStop()">START</button>
-            <button class="btn btn-danger" *ngIf="!start" (click)="toggleStartStop()">STOP</button>
+            <button class="btn btn-primary" [ngClass]="start ? 'btn-primary' : 'btn-danger'" (click)="toggleStartStop()">{{start ? "START" : "STOP"}}</button>
         </div>
     </div>
 </div>
