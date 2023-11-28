@@ -14,6 +14,7 @@ export class ConfigurationComponent {
   submitted = false;
   portNameEmpty = false;
   connectionParams : ConnectionParams = new ConnectionParams("", 0, 0, 0, "");
+  errorMessage : string = "";
 
   baudRateValues = [110, 300, 600, 1200, 2400, 4800, 9600, 14400, 19200, 28800, 38400, 56000, 57600, 115200, 230400]
   portNames : string[] = [];
@@ -53,6 +54,7 @@ export class ConfigurationComponent {
         localStorage.setItem("connectionStatus", "connected")
         location.reload();
       },error => {
+        this.errorMessage = error
         console.log(error)
       });
     }    
