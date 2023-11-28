@@ -1,5 +1,5 @@
 <div class="container-fluid" id="dashboard-div">
-    <mat-tab-group mat-stretch-tabs="true" mat-align-tabs="start">
+    <mat-tab-group mat-stretch-tabs="true" mat-align-tabs="start" (selectedTabChange)="onTabSelected($event)">
         <mat-tab label="Capture">            
             <app-capture (captureEvent)="captureToggler($event)"></app-capture>
         </mat-tab>

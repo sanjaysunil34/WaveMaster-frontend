@@ -29,7 +29,7 @@ export class TestComponent {
 
   testDataSubscription : Subscription = new Subscription();
 
-  constructor(fb: FormBuilder, private testService: TestService){
+  constructor(fb: FormBuilder, private testService: TestService){ 
     this.testForm = fb.group({
       'component' : ['eeprom', Validators.required],
       'function' : ['read', Validators.required],    
