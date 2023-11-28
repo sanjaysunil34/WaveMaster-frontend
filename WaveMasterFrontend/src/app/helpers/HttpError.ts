@@ -12,7 +12,7 @@ export const HttpError = (error: HttpErrorResponse) => {
     //   msg = `Error Code : ${error.status}\n${error.error.error}`;
     // }
     msg = error.error.message;
-    console.log(error);
+    console.log(msg);
 
     return throwError(msg);
 }

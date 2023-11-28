@@ -47,30 +47,30 @@ export class TestComponent {
     if(this.testForm.value.component === "ledRed"){
       this.message = "LED RED is turned ";
       if(this.testForm.value.function === "on"){
-        this.command = "SET LED ON;"
+        this.command = "LED ON 1;"
       }else{
-        this.command = "SET LED OFF;"
+        this.command = "LED OFF 1;"
       }
     }else if(this.testForm.value.component === "ledGreen"){
       this.message = "LED GREEN is turned ";
       if(this.testForm.value.function === "on"){
-        this.command = "SET LED ON;"
+        this.command = "LED ON 2;"
       }else{
-        this.command = "SET LED OFF;"
+        this.command = "LED OFF 2;"
       }
     }else if(this.testForm.value.component === "eeprom"){
       this.message = "EEPROM is ";
       if(this.testForm.value.function === "read"){
-        this.command = "READ EEPROM;"
+        this.command = "EEPROM;"
       }else{
-        this.command = "WRITE EEPROM;"
+        this.command = "EEPROM;"
       }
     } else if(this.testForm.value.component === "button1"){
       this.message = "BUTTON 1 is ";
-      this.command = "GET BUTTON 1;"
+      this.command = "BUTTON 1;"
     } else if(this.testForm.value.component === "button2"){
       this.message = "BUTTON 2 is ";
-      this.command = "GET BUTTON 2;"
+      this.command = "BUTTON 2;"
     }
 
     this.testService.testComponent(this.command).subscribe();
