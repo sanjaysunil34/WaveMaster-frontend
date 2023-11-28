@@ -34,7 +34,7 @@ export class ConfigurationComponent {
       });
     });    
   }
-
+  
   onSubmitConnectionForm(){    
 
       this.connectionParams.portName = this.connectionForm.value.portName;
