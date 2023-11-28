@@ -88,32 +88,31 @@ export class CaptureComponent implements OnDestroy {
   captureControlDataSubscription: Subscription = new Subscription();
 
   constructor(private captureService: CaptureService) {
-    this.captureControlDataSubscription = this.captureService.getCaptureControlDataSubject().subscribe(data => {
+    captureService.addCaptureCommandsListener();
+    this.captureControlDataSubscription = captureService.getCaptureControlDataSubject().subscribe(data => {
       console.log(data);
       if (data == "START CAPTURE") {
-        this.start = !this.start;
-        this.isCaptureOn = true;
-        this.captureService.plotCapture("START").subscribe();
+        this.isCaptureOn = true;        
         this.captureService.addPlotDataListener();
         this.captureDataSubscription = this.captureService.getPlotDataSubject().subscribe(data => {
           this.addData(data);
         });
       } else if (data == "STOP CAPTURE") {
-        this.start = !this.start;
         this.isCaptureOn = false;
         this.captureService.stopPlotDataListener();
         this.captureDataSubscription.unsubscribe();
-        this.captureControlDataSubscription.unsubscribe();
       }
+      this.captureEvent.emit(this.isCaptureOn);
     })
   }
 
   ngOnDestroy() {
     this.captureControlDataSubscription.unsubscribe();
+    this.captureService.stopCaptureCommandsListener();
     this.captureService.stopPlotDataListener();
     this.captureService.stopFetchDataListener();
   }
-  
+
   // Toggle accordion items
   toggleAccordion(accordionId: string): void {
     this.openAccordion = this.openAccordion === accordionId ? this.openAccordion : accordionId;
@@ -136,30 +135,11 @@ export class CaptureComponent implements OnDestroy {
   }
 
   handleStart() {
-    this.isCaptureOn = true;
     this.captureService.plotCapture("START").subscribe();
-    this.captureService.addPlotDataListener();
-    this.captureDataSubscription = this.captureService.getPlotDataSubject().subscribe(data => {
-      this.addData(data);
-    });
-    this.captureControlDataSubscription = this.captureService.getCaptureControlDataSubject().subscribe(data => {
-      console.log(data);
-      if (data == "STOP CAPTURE") {
-        this.start = !this.start;
-        this.isCaptureOn = false;
-        this.captureService.stopPlotDataListener();
-        this.captureDataSubscription.unsubscribe();
-        this.captureControlDataSubscription.unsubscribe();
-      }
-    })
   }
 
   handleStop() {
-    this.isCaptureOn = false;
     this.captureService.plotCapture("STOP").subscribe();
-    this.captureService.stopPlotDataListener();
-    this.captureDataSubscription.unsubscribe();
-    this.captureControlDataSubscription.unsubscribe();
   }
 
   //On click handler for start/stop button
@@ -170,7 +150,6 @@ export class CaptureComponent implements OnDestroy {
     } else {
       this.handleStop()
     }
-    this.captureEvent.emit(this.isCaptureOn);
   }
 
   //plot scale control

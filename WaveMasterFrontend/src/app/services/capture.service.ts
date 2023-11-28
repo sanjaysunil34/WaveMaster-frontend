@@ -21,18 +21,24 @@ export class CaptureService {
     this.connectionService.hubConnection.on("transferPlotData", (data) => {   
       this.captureDataSubject.next(data);  
     })
+  }    
+
+  public stopPlotDataListener = () => {
+    this.connectionService.hubConnection.off("transferPlotData");    
+  }    
+
+  getPlotDataSubject() {
+    return this.captureDataSubject.asObservable();
+  }
+
+  public addCaptureCommandsListener = () => {
     this.connectionService.hubConnection.on("captureControl", (data) => {
       this.captureControlDataSubject.next(data); 
     })
   }    
 
-  public stopPlotDataListener = () => {
+  public stopCaptureCommandsListener = () => {
     this.connectionService.hubConnection.off("captureControl");
-    this.connectionService.hubConnection.off("transferPlotData");    
-  }      
-
-  getPlotDataSubject() {
-    return this.captureDataSubject.asObservable();
   }
 
   getCaptureControlDataSubject() {
