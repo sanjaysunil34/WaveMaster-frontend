@@ -45,6 +45,8 @@ export class DashboardComponent implements OnDestroy {
    * @param event - Event received from capture controller when the state of capture function is changed.
    */
   captureToggler(event: any) {
+    console.log(event);
+    
     this.isCaptureOn = event;       
   }  
 

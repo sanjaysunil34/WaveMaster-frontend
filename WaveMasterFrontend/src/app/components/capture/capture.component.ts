@@ -66,9 +66,10 @@ export class CaptureComponent implements OnDestroy {
       maximum: 3.3,
       interval: 0.1,
       tickLength: 15,
+      tickColor: "#dcebf2",
       labelFontSize: 13,
       titleFontSize: 25,
-
+      gridColor: "#dcebf2"
     },
     axisX: {
       title: "Time",
@@ -92,13 +93,18 @@ export class CaptureComponent implements OnDestroy {
     this.captureControlDataSubscription = captureService.getCaptureControlDataSubject().subscribe(data => {
       console.log(data);
       if (data == "START CAPTURE") {
+        this.start = !this.start
         this.isCaptureOn = true;        
         this.captureService.addPlotDataListener();
+        console.log("hello");
+        this.captureService.plotCapture( "BOARD_START").subscribe();
         this.captureDataSubscription = this.captureService.getPlotDataSubject().subscribe(data => {
           this.addData(data);
         });
       } else if (data == "STOP CAPTURE") {
+        this.start = !this.start
         this.isCaptureOn = false;
+        this.captureService.plotCapture( "BOARD_STOP").subscribe();
         this.captureService.stopPlotDataListener();
         this.captureDataSubscription.unsubscribe();
       }
@@ -136,23 +142,25 @@ export class CaptureComponent implements OnDestroy {
    * @param data list of PlotData objects
    */
   addData = (data: PlotData[]) => {
+    console.log("Hii");
+    
     data.forEach(d => {
-      if(d.time.getMilliseconds() % this.dataAcquisitionRate.value === 0)
-        this.dataPoints.push({ label: formatDate(new Date(d.time), "hh:mm:ss:SS", 'en-us'), y: d.voltage, x: ++this.xAxisIncrement })
+      //if(new Date(d.time).getMilliseconds() % this.dataAcquisitionRate.value === 0){
+        this.dataPoints.push({ label: formatDate(new Date(d.time), "hh:mm:ss:SS", 'en-us'), y: d.voltage, x: this.xAxisIncrement + this.dataAcquisitionRate.value})
+        this.xAxisIncrement += this.dataAcquisitionRate.value
         if (this.dataPoints.length > 100) {
           this.dataPoints.shift();
         }
+      //}
     });
-
     this.chart.render();
   }
 
   /**
    * handles start and stop of capture
    */
-  toggleStartStop() {
-    this.start = !this.start
-    this.captureService.plotCapture( this.start ?  "STOP" : "START").subscribe();
+  captureButtonHandler() {    
+    this.captureService.plotCapture( !this.start ?  "STOP" : "START").subscribe();
   }
 
   onXScaleChange(event: any) {
@@ -168,7 +176,7 @@ export class CaptureComponent implements OnDestroy {
   }
   
   onYScaleChange(event: any) {
-    this.chartOptions.axisY.interval = 0.1 * event.value;
+    this.chartOptions.axisY.interval = 0.1 * parseFloat(event.value);
     switch (event.value) {
       case "0.5": this.chartOptions.axisY.labelFontSize = 10;
         break;

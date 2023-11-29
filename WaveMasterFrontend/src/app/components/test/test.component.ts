@@ -23,7 +23,9 @@ export class TestComponent {
     "ledRed": ['on', 'off'],
     "ledGreen": ['on', 'off'],
     "button1": ['get'],
-    "button2": ['get']
+    "button2": ['get'],
+    "capture": [],
+    "generate": []
   }
 
   str = "read"
@@ -80,6 +82,14 @@ export class TestComponent {
         this.message = "BUTTON 2 is ";
         this.command = "BUTTON 2;"
         break;
+      case "capture":
+        this.command = "CAPTURE;"
+        this.message = "";
+        break; 
+      case "generate":
+        this.command = "GENERATOR;"
+        this.message = "";
+        break; 
     }   
 
     //Sends the command using http service and then listens to the test hub for results.
