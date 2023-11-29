@@ -12,6 +12,7 @@ import { CaptureService } from 'src/app/services/capture.service';
 })
 
 export class CaptureComponent implements OnDestroy {
+  //event to send capture status to dashboard component
   @Output() captureEvent: EventEmitter<boolean> = new EventEmitter()
 
   // start/stop button status
@@ -114,7 +115,7 @@ export class CaptureComponent implements OnDestroy {
 
   /**
    * sets the openAccordion variable to the id of accordian which is open
-   * @param accordionId name of the accordian
+   * @param accordionId id of the accordian whose state is to be toggled
    */
   toggleAccordion(accordionId: string): void {
     this.openAccordion = this.openAccordion === accordionId ? this.openAccordion : accordionId;

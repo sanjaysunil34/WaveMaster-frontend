@@ -9,6 +9,7 @@ import { ConnectionService } from 'src/app/services/connection.service';
 })
 export class ConfigurationComponent {
   connectionForm: FormGroup;
+  
   // port selected or not 
   portNameEmpty = false;
   errorMessage : string = "";
@@ -32,18 +33,20 @@ export class ConfigurationComponent {
     connectionService.getPortName().subscribe(data => data.forEach(d => this.portNames.push(d)));    
   }
   
+  /**
+   * click handler for the connect button. Sends request to open connection with serial port
+   */
   onSubmitConnectionForm(){    
     var connectionParams = this.connectionForm.value;   
-    if(this.connectionForm.value.portName === null){
-      this.portNameEmpty = true;
-    }else{
-      this.portNameEmpty = false;
+    this.portNameEmpty = (connectionParams.portName === null) ? true : false;
+      
+    if(!this.portNameEmpty){
       this.connectionService.connectSerialPort(connectionParams).subscribe(() => {
         localStorage.setItem("connectionStatus", "connected")
         location.reload();
       },error => {        
         this.errorMessage = error.split('.')[0];
       });
-    }    
+    } 
   }
 }
