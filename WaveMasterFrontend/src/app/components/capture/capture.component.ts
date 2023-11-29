@@ -107,6 +107,9 @@ export class CaptureComponent implements OnDestroy {
         this.captureService.plotCapture( "BOARD_STOP").subscribe();
         this.captureService.stopPlotDataListener();
         this.captureDataSubscription.unsubscribe();
+      } else if ( data == "DEVICE DISCONNECTED" ){
+        localStorage.removeItem("connectionStatus");
+        location.reload();
       }
       this.captureEvent.emit(this.isCaptureOn);
     })

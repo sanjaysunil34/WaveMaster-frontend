@@ -11,7 +11,7 @@ export function ConnectionGuard(): CanActivateFn {
         if(status == "connected"){
             return true;
         }
-        alert("Sorry no access...  ");
+        alert("Check serial port connection.");
         return false;
     };
 }
