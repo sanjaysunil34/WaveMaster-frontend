@@ -4,7 +4,7 @@ import { Observable, Subject, catchError, throwError } from 'rxjs';
 import { SignalData } from '../models/signal-data';
 import { ConnectionService } from './connection.service';
 import { httpError } from '../helpers/http-error';
-import { BaseUrl, httpHeader } from '../config/config';
+import { BASE_URL, httpHeader } from '../config/config';
 
 @Injectable({
   providedIn: 'root'
@@ -46,14 +46,14 @@ export class CaptureService {
   }
 
   plotCapture(command: string) : any {
-    return this.httpClient.post<any>(BaseUrl + "/capture/plotcommand",JSON.stringify(command),httpHeader())
+    return this.httpClient.post<any>(BASE_URL + "/capture/plotcommand",JSON.stringify(command),httpHeader())
     .pipe(
       catchError(err => (err))
     )
   }
 
   getSignalData() : Observable<SignalData> {
-    return this.httpClient.get<SignalData>(BaseUrl + "/capture/signaldata")
+    return this.httpClient.get<SignalData>(BASE_URL + "/capture/signaldata")
     .pipe(
       catchError(err => httpError(err))      
     )
@@ -74,7 +74,7 @@ export class CaptureService {
   }
 
   sendDataAcquisitionRate(rate : number) : any {       
-    return this.httpClient.post<any>(BaseUrl + "/capture/rate",JSON.stringify(rate),httpHeader())
+    return this.httpClient.post<any>(BASE_URL + "/capture/rate",JSON.stringify(rate),httpHeader())
     .pipe(
       catchError(err => httpError(err))
     )

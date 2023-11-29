@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject, catchError, throwError } from 'rxjs';
 import * as signalR from '@microsoft/signalr';
 import { httpError } from '../helpers/http-error';
-import { BaseUrl, httpHeader } from '../config/config';
+import { BASE_URL, httpHeader } from '../config/config';
 
 @Injectable({
   providedIn: 'root'
@@ -21,21 +21,21 @@ export class ConnectionService {
   }
 
   getPortName() : Observable<string[]>{
-    return this.httpClient.get<string[]>(BaseUrl + '/configuration')
+    return this.httpClient.get<string[]>(BASE_URL + '/configuration')
     .pipe(
       catchError(err => httpError(err))
     );
   }
 
   connectSerialPort(object: Object) : Observable<string>{
-    return this.httpClient.post<string>(BaseUrl + '/configuration/connect', JSON.stringify(object), httpHeader())
+    return this.httpClient.post<string>(BASE_URL + '/configuration/connect', JSON.stringify(object), httpHeader())
     .pipe(
       catchError(err => httpError(err))
     );
   }
 
   disconnectSerialPort() : Observable<Object>{
-    return  this.httpClient.post<Object>(BaseUrl + '/configuration/disconnect',{} ,httpHeader())
+    return  this.httpClient.post<Object>(BASE_URL + '/configuration/disconnect',{} ,httpHeader())
     .pipe(
       catchError(err => httpError(err))
     );
