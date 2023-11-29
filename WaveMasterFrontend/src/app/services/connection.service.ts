@@ -1,6 +1,6 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject, catchError, throwError } from 'rxjs';
+import { Observable, Subject, catchError } from 'rxjs';
 import * as signalR from '@microsoft/signalr';
 import { httpError } from '../helpers/http-error';
 import { BASE_URL, httpHeader } from '../config/config';
@@ -14,12 +14,17 @@ export class ConnectionService {
   private messageSubject: Subject<string> = new Subject<string>();
 
   constructor(private httpClient:HttpClient) { 
+    //Initialize signalR hub connection
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl("http://localhost:3000/plotValue", {skipNegotiation: true, transport: signalR.HttpTransportType.WebSockets})// Replace with your actual backend URL and hub route
+      .withUrl("http://localhost:3000/plotValue", {skipNegotiation: true, transport: signalR.HttpTransportType.WebSockets})
       .configureLogging(signalR.LogLevel.Information)
       .build();
   }
 
+  /**
+   * Retrieves all available port names
+   * @returns Observable of type string[]
+   */
   getPortName() : Observable<string[]>{
     return this.httpClient.get<string[]>(BASE_URL + '/configuration')
     .pipe(
@@ -27,6 +32,11 @@ export class ConnectionService {
     );
   }
 
+  /**
+   * Request to establish connection to serial port
+   * @param object object containing serial port connection params
+   * @returns Observable of type string
+   */
   connectSerialPort(object: Object) : Observable<string>{
     return this.httpClient.post<string>(BASE_URL + '/configuration/connect', JSON.stringify(object), httpHeader())
     .pipe(
@@ -34,29 +44,36 @@ export class ConnectionService {
     );
   }
 
+  /**
+   * Disconnect from the serial port
+   * @returns Observable of type Object
+   */
   disconnectSerialPort() : Observable<Object>{
     return  this.httpClient.post<Object>(BASE_URL + '/configuration/disconnect',{} ,httpHeader())
     .pipe(
       catchError(err => httpError(err))
     );
   }
-
-  public startHubConnection(): void {
+  
+  // Start the SignalR hub connection 
+  startHubConnection() {
     this.hubConnection
       .start()
       .then(() => {
-        console.log('SignalR connection started');
         this.registerEvents();
       })
-      .catch((err) => console.error(`Error while starting connection: ${err}`));
+      .catch((err) => 
+      console.error(`Error while starting connection: ${err}`)
+      );
   }
 
-  public endHubConnection() : void {
+  // End the SignalR hub connection
+  endHubConnection() {
     this.hubConnection.stop();
   }
 
+  // Register events for the SignalR hub
   private registerEvents(): void {
-    // Define your SignalR hub events here
     this.hubConnection.on('ReceiveMessage', (message: string) => {
       this.messageSubject.next(message);
     });

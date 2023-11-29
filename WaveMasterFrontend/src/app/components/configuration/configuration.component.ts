@@ -1,5 +1,6 @@
 import { Component} from '@angular/core';
 import { FormBuilder, FormGroup, Validators  } from '@angular/forms';
+import { ConnectionParams } from 'src/app/models/connection-params';
 import { ConnectionService } from 'src/app/services/connection.service';
 
 @Component({
