@@ -55,8 +55,7 @@ export class CaptureComponent implements OnDestroy {
       contentFormatter: function (e: any) {
         var content = " ";
         for (var i = 0; i < e.entries.length; i++) {
-          content += "Timestamp : " + new Date(e.entries[i].dataPoint.x) + "<br/>" + "Voltage : " + e.entries[i].dataPoint.y + " V";
-          content += "<br/>";
+          content += "Timestamp : " + new Date(e.entries[i].dataPoint.x) + "<br/>" + "Voltage : " + e.entries[i].dataPoint.y + " V<br/>";
         }
         return content;
       }
@@ -118,7 +117,7 @@ export class CaptureComponent implements OnDestroy {
    * @param accordionId id of the accordian whose state is to be toggled
    */
   toggleAccordion(accordionId: string): void {
-    this.openAccordion = this.openAccordion === accordionId ? this.openAccordion : accordionId;
+    this.openAccordion = (this.openAccordion === accordionId) ? this.openAccordion : accordionId;
   }
 
   /**
@@ -147,33 +146,14 @@ export class CaptureComponent implements OnDestroy {
   }
 
   /**
-   * sends START command 
-   */
-  handleStart() {
-    this.captureService.plotCapture("START").subscribe();
-  }
-
-  /**
-   * sends STOP command
-   */
-  handleStop() {
-    this.captureService.plotCapture("STOP").subscribe();
-  }
-
-  /**
    * handles start and stop of capture
    */
   toggleStartStop() {
     this.start = !this.start
-    if (!this.start) {
-      this.handleStart()
-    } else {
-      this.handleStop()
-    }
+    this.captureService.plotCapture( this.start ?  "STOP" : "START").subscribe();
   }
 
   onXScaleChange(event: any) {
-    this.chartOptions.axisX.labelFontSize = 13 * event.value;
     switch (event.value) {
       case "0.5": this.chartOptions.axisX.labelFontSize = 10;
         break;
@@ -187,7 +167,6 @@ export class CaptureComponent implements OnDestroy {
   
   onYScaleChange(event: any) {
     this.chartOptions.axisY.interval = 0.1 * event.value;
-    this.chartOptions.axisY.labelFontSize = 13 * event.value;
     switch (event.value) {
       case "0.5": this.chartOptions.axisY.labelFontSize = 10;
         break;
@@ -209,9 +188,9 @@ export class CaptureComponent implements OnDestroy {
    * @param data string containing frequency and peak to peak value in the format DATA{frequency};DATA{peaktopeak};
    */
   handleSignalData(data: string) {
-    data = data.substring(data.indexOf("DATA"));
-    this.frequency.setValue(parseFloat(data.split(";")[0].replace("DATA", "")))
-    this.peakToPeak.setValue(parseFloat(data.split(";")[1].replace("DATA", "")) * (3.3 / 4096))
+    var dataArray = data.substring(data.indexOf("DATA")).split(";");
+    this.frequency.setValue(parseFloat(dataArray[0].replace("DATA", "")))
+    this.peakToPeak.setValue(parseFloat(dataArray[1].replace("DATA", "")) * (3.3 / 4096))
   }
   
   /**

@@ -6,6 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./banner.component.scss']
 })
 
-export class BannerComponent {
-  constructor(){}  
+export class BannerComponent {  
 }
