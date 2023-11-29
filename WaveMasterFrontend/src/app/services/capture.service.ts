@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject, catchError, throwError } from 'rxjs';
-import { SignalData } from '../models/signal-data';
+import { SignalParams } from '../models/signal-params';
 import { ConnectionService } from './connection.service';
 import { httpError } from '../helpers/http-error';
 import { BASE_URL, httpHeader } from '../config/config';
@@ -52,8 +52,8 @@ export class CaptureService {
     )
   }
 
-  getSignalData() : Observable<SignalData> {
-    return this.httpClient.get<SignalData>(BASE_URL + "/capture/signaldata")
+  getSignalData() : Observable<SignalParams> {
+    return this.httpClient.get<SignalParams>(BASE_URL + "/capture/signaldata")
     .pipe(
       catchError(err => httpError(err))      
     )

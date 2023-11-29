@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SignalData } from 'src/app/models/signal-data';
+import { SignalParams } from 'src/app/models/signal-params';
 import { GenerateService } from 'src/app/services/generate.service';
 
 /**
@@ -48,7 +48,7 @@ export class GenerateComponent{
     // Toggle the display flag
     this.show = !this.show;
 
-    var sd = new SignalData(this.generateForm.value.frequencyValue,this.generateForm.value.peakValue)
+    var sd = new SignalParams(this.generateForm.value.frequencyValue,this.generateForm.value.peakValue)
     sd.signalType = this.generateForm.value.signalType
 
     this.generateService.generateWave(sd).subscribe();

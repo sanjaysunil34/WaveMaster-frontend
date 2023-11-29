@@ -1,9 +1,9 @@
+/**
+ * represents the data to be plotted on chart
+ */
 export class PlotData{
-    voltage: number
-    time: Date
-    constructor(voltage: number,timestamp: Date){
-        this.voltage = voltage
-        this.time = timestamp
-    }
-
+    constructor(
+        public voltage: number, //voltage of signal
+        public time: Date // timestamp
+    ) {}
 }
