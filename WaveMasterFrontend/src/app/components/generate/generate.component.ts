@@ -15,18 +15,8 @@ export class GenerateComponent{
   // Form group for signal generation parameters
   generateForm: FormGroup;
 
-  // Flag to track form submission status
-  submitted = false;
-
-  // Default frequency value
-  freqValue = 100;
-
-  // Default signal type
-  signalTypeReceived = "sine";  
-
   // Flag to control UI display
   show : boolean = false
-
 
   /**
    * Constructor for GenerateComponent.
