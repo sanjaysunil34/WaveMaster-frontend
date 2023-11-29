@@ -53,7 +53,8 @@ export class TestComponent {
   handleComponentChange(){
     var sel = this.testForm.value.component;    
     this.str = this.functionArr[sel as keyof typeof this.functionArr][0];
-    this.selectedFuncArr = this.functionArr[sel as keyof typeof this.functionArr];    
+    this.selectedFuncArr = this.functionArr[sel as keyof typeof this.functionArr];  
+    this.status.setValue("");
   }
 
   /**
@@ -61,34 +62,28 @@ export class TestComponent {
    * Receives the result obtained from the test hub.
    */
   onSubmitTestForm(){
+    this.message = "";
     switch(this.testForm.value.component){
-      case "ledRed" : 
-        this.message = "LED RED is turned ";
-        this.command = `LED ${this.testForm.value.function.toUpperCase()} 1;`;
+      case "ledRed" :         
+        this.command = `LED ${this.testForm.value.function.toUpperCase()} 2;`;
         break;
       case "ledGreen": 
-        this.message = "LED GREEN is turned ";
-        this.command = `LED ${this.testForm.value.function.toUpperCase()} 2;`
+        this.command = `LED ${this.testForm.value.function.toUpperCase()} 1;`
         break;
       case "eeprom":
-        this.message = "EEPROM is ";
         this.command = "EEPROM;";
         break;
       case "button1":
-        this.message = "BUTTON 1 is ";
         this.command = "BUTTON 1;"
         break;
       case "button2":
-        this.message = "BUTTON 2 is ";
         this.command = "BUTTON 2;"
         break;
       case "capture":
         this.command = "CAPTURE;"
-        this.message = "";
         break; 
       case "generate":
         this.command = "GENERATOR;"
-        this.message = "";
         break; 
     }   
 

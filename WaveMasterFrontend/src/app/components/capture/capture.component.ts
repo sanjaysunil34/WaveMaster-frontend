@@ -25,10 +25,11 @@ export class CaptureComponent implements OnDestroy {
   isCaptureOn: boolean = false;
 
   //chart controls
-  xAxisIncrement = 0;
+  xAxisIncrement = 0;  
   xAxisScale = new FormControl(1)
   yAxisScale = new FormControl(1)
   dataAcquisitionRate : FormControl
+  rateIncrement = 0;
 
   //signal controls
   frequency = new FormControl(0)
@@ -76,7 +77,7 @@ export class CaptureComponent implements OnDestroy {
       valueFormatString: "hh:mm:ss:ff",
       gridThickness: 0,
       titleFontSize: 25,
-      interval: 1,
+      //interval: 1,
       tickLength: 15,
       labelFontSize: 13,
     }
@@ -93,18 +94,18 @@ export class CaptureComponent implements OnDestroy {
     this.captureControlDataSubscription = captureService.getCaptureControlDataSubject().subscribe(data => {
       console.log(data);
       if (data == "START CAPTURE") {
-        this.start = !this.start
+        this.start = false;
         this.isCaptureOn = true;        
         this.captureService.addPlotDataListener();
         console.log("hello");
-        this.captureService.plotCapture( "BOARD_START").subscribe();
+        this.captureService.handleObservers( "BOARD_START").subscribe();
         this.captureDataSubscription = this.captureService.getPlotDataSubject().subscribe(data => {
           this.addData(data);
         });
       } else if (data == "STOP CAPTURE") {
-        this.start = !this.start
+        this.start = true;
         this.isCaptureOn = false;
-        this.captureService.plotCapture( "BOARD_STOP").subscribe();
+        this.captureService.handleObservers( "BOARD_STOP").subscribe();
         this.captureService.stopPlotDataListener();
         this.captureDataSubscription.unsubscribe();
       }
@@ -142,16 +143,19 @@ export class CaptureComponent implements OnDestroy {
    * @param data list of PlotData objects
    */
   addData = (data: PlotData[]) => {
-    console.log("Hii");
+    
     
     data.forEach(d => {
-      //if(new Date(d.time).getMilliseconds() % this.dataAcquisitionRate.value === 0){
-        this.dataPoints.push({ label: formatDate(new Date(d.time), "hh:mm:ss:SS", 'en-us'), y: d.voltage, x: this.xAxisIncrement + this.dataAcquisitionRate.value})
-        this.xAxisIncrement += this.dataAcquisitionRate.value
+      //console.log(new Date(d.time).getMilliseconds());
+      
+      if(this.rateIncrement % this.dataAcquisitionRate.value === 0){
+        this.dataPoints.push({ label: formatDate(new Date(d.time), "hh:mm:ss:SS", 'en-us'), y: d.voltage, x: ++this.xAxisIncrement})
+
         if (this.dataPoints.length > 100) {
           this.dataPoints.shift();
         }
-      //}
+      }
+      this.rateIncrement++;
     });
     this.chart.render();
   }

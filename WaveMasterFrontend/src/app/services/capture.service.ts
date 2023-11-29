@@ -68,7 +68,19 @@ export class CaptureService {
     )
   }
 
-  //Retrieves signal params of the captured signal
+  /**
+   * Sends command to subscribe or unsubscribe observers.
+   * @param command The command to subscribe or unsubscribe hub and db observers.
+   *                Can have values 'BOARD_START' or 'BOARD_STOP'. 
+   * @returns An observable of any type
+   */
+  handleObservers(command: string) : Observable<any> {
+    return this.httpClient.post<any>(BASE_URL + "/capture/observers",JSON.stringify(command),httpHeader())
+    .pipe(
+      catchError(err => (err))
+    )
+  }
+  
   
   /**
    * Retrieves signal params of the captured signal
