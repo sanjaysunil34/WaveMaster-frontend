@@ -39,7 +39,7 @@ export class TestService {
    * This method attatches a callback to the test event emitted by the hub connection.
    * When the event occurs, data is provided to the testDataSUbject.
    */
-  public addTestDataListener = () => {
+  addTestDataListener(){
     this.connectionService.hubConnection.on("test", (data) => {   
       this.testDataSubject.next(data);  
     })
@@ -48,7 +48,7 @@ export class TestService {
   /**
    * This method detatches the callback function from test event.
    */
-  public stopTestDataListener = () => {
+  stopTestDataListener(){
     this.connectionService.hubConnection.off("test");
   }   
 
@@ -58,7 +58,7 @@ export class TestService {
    * whenever new test data is emitted through the subject.
    * @returns The testDataSubject as an observable.
    */
-  getTestDataSubject() {
+  getTestDataSubject() : Observable<any> {
     return this.testDataSubject.asObservable();
   }
 
