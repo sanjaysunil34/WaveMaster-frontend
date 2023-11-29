@@ -28,7 +28,7 @@ export class CaptureComponent implements OnDestroy {
   xAxisIncrement = 0;
   xAxisScale = new FormControl(1)
   yAxisScale = new FormControl(1)
-  dataAcquisitionRate = new FormControl(1)
+  dataAcquisitionRate : FormControl
 
   //signal controls
   frequency = new FormControl(0)
@@ -87,6 +87,7 @@ export class CaptureComponent implements OnDestroy {
   captureControlDataSubscription: Subscription = new Subscription();
 
   constructor(private captureService: CaptureService) {
+    this.dataAcquisitionRate = new FormControl(1);
     captureService.addCaptureCommandsListener();
     this.captureControlDataSubscription = captureService.getCaptureControlDataSubject().subscribe(data => {
       console.log(data);
@@ -136,10 +137,11 @@ export class CaptureComponent implements OnDestroy {
    */
   addData = (data: PlotData[]) => {
     data.forEach(d => {
-      this.dataPoints.push({ label: formatDate(new Date(d.time), "hh:mm:ss:SS", 'en-us'), y: d.voltage, x: ++this.xAxisIncrement })
-      if (this.dataPoints.length > 100) {
-        this.dataPoints.shift();
-      }
+      if(d.time.getMilliseconds() % this.dataAcquisitionRate.value === 0)
+        this.dataPoints.push({ label: formatDate(new Date(d.time), "hh:mm:ss:SS", 'en-us'), y: d.voltage, x: ++this.xAxisIncrement })
+        if (this.dataPoints.length > 100) {
+          this.dataPoints.shift();
+        }
     });
 
     this.chart.render();
@@ -178,9 +180,11 @@ export class CaptureComponent implements OnDestroy {
     this.chart.render();
   }
 
+  //sets the value of data acquisition rate
   onRateChange(event: any) {
     console.log(event.value);
-    this.captureService.sendDataAcquisitionRate(event.value).subscribe()
+    this.dataAcquisitionRate.setValue( event.value )
+    //this.captureService.sendDataAcquisitionRate(event.value).subscribe()
   }
 
   /**
