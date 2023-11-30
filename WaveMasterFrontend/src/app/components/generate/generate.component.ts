@@ -37,7 +37,6 @@ export class GenerateComponent{
     
     // Restore wave settings from the service when the component is created    
     this.generateService.restoreWave().subscribe(data => {
-      console.log(data);
       this.generateForm.controls["signalType"].setValue(data.signalType );
       this.generateForm.controls["peakValue"].setValue(data.peakToPeak );
       this.generateForm.controls["frequencyValue"].setValue(data.frequency );
@@ -57,7 +56,6 @@ export class GenerateComponent{
     sd.signalType = this.generateForm.value.signalType
 
     this.generateService.generateWave(sd).subscribe(data => {
-      console.log(data.message);
       
       this.information = data.message
     });
@@ -78,7 +76,9 @@ export class GenerateComponent{
    * @param peak - Event containing the changed value.
    */
   handlePeakChange(peak : any){
-
+    if(this.show){
+      this.stopGenerate()
+    }
     peak.value = parseFloat(peak.value);
 
     if(peak.value > 3.3){
@@ -94,7 +94,9 @@ export class GenerateComponent{
    * @param frequency - Event containing the changed value.
    */
   handleFrequencyChange(frequency : any){
-
+    if(this.show){
+      this.stopGenerate()
+    }
     frequency.value = parseInt(frequency.value);
 
     if(frequency.value > 100){
@@ -106,6 +108,15 @@ export class GenerateComponent{
   }
 
   /**
+   * 
+   */
+  handleSignalChange(){
+    if(this.show){
+      this.stopGenerate()
+    }
+  }
+
+  /**
    * handler for the reset button.
    * It requests the backend to read settings from eeprom
    */
@@ -113,10 +124,9 @@ export class GenerateComponent{
     this.generateService.readFromEEPROM().subscribe(data => {      
       this.generateService.addDefaultDataListener();
       this.defaultDataSubscription = this.generateService.getDefaultDataSubject().subscribe(data => {
-        console.log(data);
 
-        var def = data.trim(';').split(" ");
-        switch (def[1])
+        var def = data.trim(';').replace("EEPROM","").split(" ");
+        switch (def[0])
         {
             case "1":
                 this.generateForm.controls["signalType"].setValue("sine");
@@ -132,8 +142,8 @@ export class GenerateComponent{
                 break;
         }
         
-        this.generateForm.controls["peakValue"].setValue(parseFloat(def[3]));
-        this.generateForm.controls["frequencyValue"].setValue(parseInt(def[2]));
+        this.generateForm.controls["peakValue"].setValue(parseFloat(def[2]));
+        this.generateForm.controls["frequencyValue"].setValue(parseInt(def[1]));
         this.defaultDataSubscription.unsubscribe();   
         this.generateService.stopDefaultDataListener();     
       });

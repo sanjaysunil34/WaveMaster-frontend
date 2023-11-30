@@ -91,13 +91,11 @@ export class GenerateService {
 
   // Stops the listener for fetching default data
   stopDefaultDataListener() {
-    console.log("Hub Off");
     this.connectionService.hubConnection.off("defaultData");
   }   
   
   // Returns observable for fetched default data
   getDefaultDataSubject() : Observable<any> {
-    console.log("Subject");
     return this.readDefaultSubject.asObservable();
   }
 }

@@ -92,12 +92,10 @@ export class CaptureComponent implements OnDestroy {
     this.dataAcquisitionRate = new FormControl(1);
     captureService.addCaptureCommandsListener();
     this.captureControlDataSubscription = captureService.getCaptureControlDataSubject().subscribe(data => {
-      console.log(data);
       if (data == "START CAPTURE") {
         this.start = false;
         this.isCaptureOn = true;        
         this.captureService.addPlotDataListener();
-        console.log("hello");
         this.captureService.handleObservers( "BOARD_START").subscribe();
         this.captureDataSubscription = this.captureService.getPlotDataSubject().subscribe(data => {
           this.addData(data);
@@ -149,7 +147,6 @@ export class CaptureComponent implements OnDestroy {
     
     
     data.forEach(d => {
-      //console.log(new Date(d.time).getMilliseconds());
       
       if(this.rateIncrement % this.dataAcquisitionRate.value === 0){
         this.dataPoints.push({ label: formatDate(new Date(d.time), "hh:mm:ss:SS", 'en-us'), y: d.voltage, x: ++this.xAxisIncrement})
@@ -197,7 +194,6 @@ export class CaptureComponent implements OnDestroy {
 
   //sets the value of data acquisition rate
   onRateChange(event: any) {
-    console.log(event.value);
     this.dataAcquisitionRate.setValue( event.value )
     //this.captureService.sendDataAcquisitionRate(event.value).subscribe()
   }
@@ -209,7 +205,8 @@ export class CaptureComponent implements OnDestroy {
   handleSignalData(data: string) {
     var dataArray = data.substring(data.indexOf("DATA")).split(";");
     this.frequency.setValue(parseFloat(dataArray[0].replace("DATA", "")))
-    this.peakToPeak.setValue(parseFloat(dataArray[1].replace("DATA", "")) * (3.3 / 4096))
+    var parsedPeakToPeak = parseFloat(dataArray[1].replace("DATA", "")) * (3.3 / 4096)
+    this.peakToPeak.setValue(parseFloat(parsedPeakToPeak.toFixed(2)))
   }
   
   /**

@@ -59,7 +59,6 @@ export class ConfigurationComponent {
       
     if(!this.portNameEmpty){
       this.connectionService.connectSerialPort(connectionParams).subscribe((data) => {
-        console.log(data.message);
         this.openSnackBar(data.message)
         localStorage.setItem("connectionStatus", "connected")
         
