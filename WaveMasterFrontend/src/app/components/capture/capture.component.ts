@@ -226,7 +226,7 @@ export class CaptureComponent implements OnDestroy {
   }
 
   /**
-   * Assigns a chart instance to the comeponents chart property.
+   * Assigns a chart instance to the components chart property.
    * Gets invoked when the chartInstance event is fired. 
    * @param chart The object instance to be assigned
    */
