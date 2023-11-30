@@ -1,4 +1,5 @@
-import { CanActivateFn } from "@angular/router";
+import { inject } from "@angular/core";
+import { CanActivateFn, Router } from "@angular/router";
 
 /**
  * Connection guard function to control access based on the connection status.
@@ -6,12 +7,14 @@ import { CanActivateFn } from "@angular/router";
  */
 export function ConnectionGuard(): CanActivateFn {
     let status = localStorage.getItem("connectionStatus")
-
+    
     return () => {
+        const router: Router = inject(Router);
         if(status == "connected"){
             return true;
         }
         alert("Check serial port connection.");
+        router.navigateByUrl("/");
         return false;
     };
 }

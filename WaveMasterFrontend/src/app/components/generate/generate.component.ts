@@ -125,8 +125,10 @@ export class GenerateComponent{
     this.generateService.readFromEEPROM().subscribe(data => {      
       this.generateService.addDefaultDataListener();
       this.defaultDataSubscription = this.generateService.getDefaultDataSubject().subscribe(data => {
-
+        data = data.substring(data.indexOf("EEPROM"));
+        
         var def = data.trim(';').replace("EEPROM","").split(" ");
+        
         switch (def[0])
         {
             case "1":
