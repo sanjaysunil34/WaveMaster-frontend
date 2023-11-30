@@ -22,6 +22,7 @@ export class TestComponent {
     "eeprom": ['read', 'write'],
     "ledRed": ['on', 'off'],
     "ledGreen": ['on', 'off'],
+    "ledBlue": ['on', 'off'],
     "button1": ['get'],
     "button2": ['get'],
     "capture": [],
@@ -64,11 +65,14 @@ export class TestComponent {
   onSubmitTestForm(){
     this.message = "";
     switch(this.testForm.value.component){
-      case "ledRed" :         
-        this.command = `LED ${this.testForm.value.function.toUpperCase()} 2;`;
-        break;
       case "ledGreen": 
         this.command = `LED ${this.testForm.value.function.toUpperCase()} 1;`
+        break;
+      case "ledRed" :         
+        this.command = `LED ${this.testForm.value.function.toUpperCase()} 2;`;
+        break;      
+      case "ledBlue": 
+        this.command = `LED ${this.testForm.value.function.toUpperCase()} 3;`
         break;
       case "eeprom":
         this.command = "EEPROM;";
