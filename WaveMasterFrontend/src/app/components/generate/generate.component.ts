@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { SignalParams } from 'src/app/models/signal-params';
 import { GenerateService } from 'src/app/services/generate.service';
 
@@ -15,9 +16,11 @@ import { GenerateService } from 'src/app/services/generate.service';
 export class GenerateComponent{
   // Form group for signal generation parameters
   generateForm: FormGroup;
-
+  information: string= " "
   // Flag to control UI display
   show : boolean = false
+
+  defaultDataSubscription: Subscription = new Subscription();
 
   /**
    * Constructor for GenerateComponent.
@@ -39,6 +42,8 @@ export class GenerateComponent{
       this.generateForm.controls["peakValue"].setValue(data.peakToPeak );
       this.generateForm.controls["frequencyValue"].setValue(data.frequency );
     });
+
+    
   }
 
   /**
@@ -51,7 +56,11 @@ export class GenerateComponent{
     var sd = new SignalParams(this.generateForm.value.frequencyValue,this.generateForm.value.peakValue)
     sd.signalType = this.generateForm.value.signalType
 
-    this.generateService.generateWave(sd).subscribe();
+    this.generateService.generateWave(sd).subscribe(data => {
+      console.log(data.message);
+      
+      this.information = data.message
+    });
   }
 
   /**
@@ -60,6 +69,7 @@ export class GenerateComponent{
   stopGenerate(){
     // Toggle the display flag
     this.show = !this.show;
+    this.information = " "
     this.generateService.stopGenerateWave().subscribe();
   }
 
@@ -93,5 +103,50 @@ export class GenerateComponent{
       frequency.value = 0;
     }
     this.generateForm.value.frequencyValue = parseInt(frequency.value);
+  }
+
+  /**
+   * handler for the reset button.
+   * It requests the backend to read settings from eeprom
+   */
+  resetToDefault() {
+    this.generateService.readFromEEPROM().subscribe(data => {      
+      this.generateService.addDefaultDataListener();
+      this.defaultDataSubscription = this.generateService.getDefaultDataSubject().subscribe(data => {
+        console.log(data);
+
+        var def = data.trim(';').split(" ");
+        switch (def[1])
+        {
+            case "1":
+                this.generateForm.controls["signalType"].setValue("sine");
+                break;
+            case "2":
+                this.generateForm.controls["signalType"].setValue("square");
+                break;
+            case "3":
+                this.generateForm.controls["signalType"].setValue("triangle");
+                break;
+            case "4":
+                this.generateForm.controls["signalType"].setValue("sawtooth");
+                break;
+        }
+        
+        this.generateForm.controls["peakValue"].setValue(parseFloat(def[3]));
+        this.generateForm.controls["frequencyValue"].setValue(parseInt(def[2]));
+        this.defaultDataSubscription.unsubscribe();   
+        this.generateService.stopDefaultDataListener();     
+      });
+      
+    })
+  }
+  /**
+   * To save signal params to eeprom 
+   */
+  saveToEEPROM(){
+    var sd = new SignalParams(this.generateForm.value.frequencyValue,this.generateForm.value.peakValue)
+    sd.signalType = this.generateForm.value.signalType
+
+    this.generateService.saveToEEPROM(sd).subscribe()
   }
 }

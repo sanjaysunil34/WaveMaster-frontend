@@ -123,6 +123,7 @@
     display: flex;
     justify-content: center;    
     margin-bottom: 10px;
+    margin-right: 10px;
 }
 
 .generate-submit-button{
@@ -130,7 +131,7 @@
     border-radius: 50px;
     color: white;
     height: 50px;
-    width: 165px;
+    width: 180px;
     font-size: 18px;
     font-weight: 500;
 }
@@ -138,4 +139,9 @@
 .btn-danger{
     background-color: #FF5757 !important;
     border: 1px solid #FF5757 !important;   
+}
+.generate-information{
+    text-align: center;
+    padding: 20px;
+    width: fit-content;
 }
