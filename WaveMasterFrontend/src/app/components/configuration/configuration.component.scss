@@ -17,7 +17,6 @@
     width: 60vw;
     background-color: white;
     border-radius: 25px;
-    //box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     padding-bottom: 20px;
     display: flex;
     flex-direction: column;
@@ -50,7 +49,6 @@
     border-color: rgb(173, 173, 173);
     appearance: menulist;
     background-image: none;
-    //padding-right: 12px;
 }
 
 .connection-input-field:focus{    
@@ -92,4 +90,17 @@
 .error-text{
     text-align: center;
     color: red;
+}
+
+.connection-error-container{
+    padding: 20px 70px 0px 70px;
+}
+
+.connection-error-message{
+    color: red;
+    text-align: center;
+}
+::ng-deep .config-snackbar{
+    background-color: #5375C7 !important;
+    color: #5375C7 !important;
 }

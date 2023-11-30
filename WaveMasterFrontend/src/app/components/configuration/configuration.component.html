@@ -6,7 +6,6 @@
                 <div class="connection-input-rows row">
                     <div class="connection-inputs col-md-12">
                         <label for="portNameInput" class="connection-input-label form-label" >PORT NAME</label>
-                        <!-- <input type="text" class="connection-input-field form-control" id="portNameFormControl" formControlName="portName"> -->
                         <select type="text" class="form-select connection-input-field form-control" id="portNameFormControl" formControlName="portName">
                             <option *ngFor="let port of portNames" class="connection-input-option" value={{port}}>{{port}}</option>
                         </select>                        
@@ -23,41 +22,34 @@
                     <div class="connection-inputs col-md-12">
                         <label for="startBitInput" class="connection-input-label form-label" >DATA BIT</label>
                         <select type="text" class="form-select connection-input-field form-control" id="dataBitFormControl" formControlName="dataBit">
-                            <option class="connection-input-option" value="5">5</option>
-                            <option class="connection-input-option" value="6">6</option>
-                            <option class="connection-input-option" value="7">7</option>
-                            <option class="connection-input-option" value="8">8</option>
+                            <option *ngFor="let data of dataBitValues" class="connection-input-option" value="{{data}}">{{data}}</option>
                         </select>
                     </div>                    
 
                     <div class="connection-inputs col-md-12">
                         <label for="stopBitInput" class="connection-input-label form-label" >STOP BIT</label>
-                        <!-- <input type="text" class="connection-input-field form-control" id="stopBitFormControl" formControlName="stopBit"> -->
                         <select type="text" class="form-select connection-input-field form-control" id="stopBitFormControl" formControlName="stopBit">
-                            <option class="connection-input-option" value="1">1</option>
-                            <option class="connection-input-option" value="1.5">1.5</option>
-                            <option class="connection-input-option" value="2">2</option>
+                            <option *ngFor="let data of stopBitValues" class="connection-input-option" value="{{data}}">{{data}}</option>
                         </select>
                     </div>
 
                     <div class="connection-inputs col-md-12">
                         <label for="parityInput" class="connection-input-label form-label" >PARITY</label>
-                        <!-- <input type="text" class="connection-input-field form-control" id="parityFormControl" formControlName="parity"> -->
                         <select type="text" class="form-select connection-input-field form-control" id="parityFormControl" formControlName="parity">
-                            <option class="connection-input-option" value="even">Even</option>
-                            <option class="connection-input-option" value="mark">Mark</option>
-                            <option class="connection-input-option" value="none">None</option>
-                            <option class="connection-input-option" value="odd">Odd</option>
-                            <option class="connection-input-option" value="space">Space</option>
+                            <option *ngFor="let parity of parityValues" class="connection-input-option" value={{parity}}>{{parity.toUpperCase()}}</option>
                         </select>
                     </div>
-
 
                     <div class="config-submit-button-container">
                         <button type="submit" class="btn config-submit-button">
                             CONNECT
-                        </button>
+                        </button>                        
                     </div>
+                    <div class="connection-error-container" *ngIf="errorMessage.length != 0">
+                        <div class="connection-error-message">
+                            {{errorMessage}}
+                        </div>
+                    </div>                    
                 </div>
             </form>
         </div>

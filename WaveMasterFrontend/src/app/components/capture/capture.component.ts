@@ -1,10 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { formatDate } from '@angular/common';
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { PlotData } from 'src/app/models/plotData';
-import { CaptureService } from 'src/app/services/capture-service.service';
-
+import { PlotData } from 'src/app/models/plot-data';
+import { CaptureService } from 'src/app/services/capture.service';
 
 @Component({
   selector: 'app-capture',
@@ -12,200 +11,227 @@ import { CaptureService } from 'src/app/services/capture-service.service';
   styleUrls: ['./capture.component.scss']
 })
 
-export class CaptureComponent implements OnDestroy{    
-    start: boolean = true
-    openAccordion: string = 'collapseOne';
-    isCaptureOn : boolean = false;
+export class CaptureComponent implements OnDestroy {
+  //event to send capture status to dashboard component
+  @Output() captureEvent: EventEmitter<boolean> = new EventEmitter()
 
-    xAxisScale = new FormControl(1)
-    yAxisScale = new FormControl(1) 
-    dataAcquisitionRate = new FormControl(1)
+  // start/stop button status
+  start: boolean = true
 
-    @Output() captureEvent: EventEmitter<boolean> = new EventEmitter()
+  //store id of the open accordion
+  openAccordion: string = 'collapseOne';
 
-    public messages: string[] = [];
-    public newMessage: string = '';
+  //status of capturing
+  isCaptureOn: boolean = false;
 
-    frequency = new FormControl(0)
-    peakToPeak = new FormControl(0)
-    dataPoints:any[] = [];
-    timeout:any = null;
-    xValue:number = 1;
-    yValue:number = 10;
-    newDataCount:number = 10;
-    chart: any;
-   
-    chartOptions = {
-      theme: "light2",
-      zoomEnabled: true,
-      title: {
-        text: "Signal Data",
-        fontColor: "#5375C7",
-        fontSize: 25
-      },
-      data: [{
-        type: "line",
-        xValueType: "dateTime",
-        dataPoints: this.dataPoints,
-        
-      }],
-      toolTip: {
-        contentFormatter: function (e : any) {
-          var content = " ";
-          for (var i = 0; i < e.entries.length; i++) {
-            content += "Timestamp : " + new Date(e.entries[i].dataPoint.x) + "<br/>" + "Voltage : " + e.entries[i].dataPoint.y + " V";
-            content += "<br/>";
-          }
-          return content;
+  //chart controls
+  xAxisIncrement = 0;  
+  xAxisScale = new FormControl(1)
+  yAxisScale = new FormControl(1)
+  dataAcquisitionRate : FormControl
+  rateIncrement = 0;
+
+  //signal controls
+  frequency = new FormControl(0)
+  peakToPeak = new FormControl(0)
+
+  //chart parameters
+  dataPoints: any[] = [];
+  chart: any;
+  chartOptions = {
+    theme: "light2",
+    zoomEnabled: true,
+    title: {
+      text: "Signal Data",
+      fontColor: "#5375C7",
+      fontSize: 25
+    },
+    data: [{
+      type: "line",
+      xValueType: "dateTime",
+      dataPoints: this.dataPoints,
+
+    }],
+    toolTip: {
+      contentFormatter: function (e: any) {
+        var content = " ";
+        for (var i = 0; i < e.entries.length; i++) {
+          content += "Timestamp : " + new Date(e.entries[i].dataPoint.x) + "<br/>" + "Voltage : " + e.entries[i].dataPoint.y + " V<br/>";
         }
-      },
-      axisY: {
-        title: "Voltage ( Volt )",
-        minimum: 0, 
-        maximum: 3.3, 
-        interval: 0.1,
-        tickLength: 15,
-        labelFontSize: 13,
-        titleFontSize: 25,
-       
-      },
-      axisX: {
-        title: "Time",
-        valueFormatString: "hh:mm:ss:ff",
-        gridThickness: 0,
-        titleFontSize: 25,
-        interval: 1,
-        tickLength: 15,
-        labelFontSize: 13,
+        return content;
       }
+    },
+    axisY: {
+      title: "Voltage ( Volt )",
+      minimum: 0,
+      maximum: 3.3,
+      interval: 0.1,
+      tickLength: 15,
+      tickColor: "#dcebf2",
+      labelFontSize: 13,
+      titleFontSize: 25,
+      gridColor: "#dcebf2"
+    },
+    axisX: {
+      title: "Time",
+      valueFormatString: "hh:mm:ss:ff",
+      gridThickness: 0,
+      titleFontSize: 25,
+      //interval: 1,
+      tickLength: 15,
+      labelFontSize: 13,
     }
+  }
+  
+  //subscription details
+  captureDataSubscription: Subscription = new Subscription();
+  fetchDataSubscription: Subscription = new Subscription();
+  captureControlDataSubscription: Subscription = new Subscription();
 
-    captureDataSubscription : Subscription = new Subscription();
-    fetchDataSubscription : Subscription = new Subscription();
-    captureControlDataSubscription : Subscription = new Subscription();
-
-    constructor(private http : HttpClient, private captureService: CaptureService) { 
-    }
-    // Toggle accordion items
-    toggleAccordion(accordionId: string): void {
-      this.openAccordion = this.openAccordion === accordionId ? this.openAccordion : accordionId;
-    }
-    // Check if an accordion item is open
-    isAccordionOpen(accordionId: string): boolean {
-      return this.openAccordion === accordionId;
-    }
-
-    toggleStartStop(){
-      this.start = !this.start
-
-      if(this.start == false){        
-        this.isCaptureOn = true;
-        this.captureService.plotCapture("START").subscribe();
-        this.captureService.addTransferPlotDataListener();  
-        this. captureDataSubscription = this.captureService.getCaptureDataSubject().subscribe(data => {
-          console.log(data);                    
+  constructor(private captureService: CaptureService) {
+    this.dataAcquisitionRate = new FormControl(1);
+    captureService.addCaptureCommandsListener();
+    this.captureControlDataSubscription = captureService.getCaptureControlDataSubject().subscribe(data => {
+      console.log(data);
+      if (data == "START CAPTURE") {
+        this.start = false;
+        this.isCaptureOn = true;        
+        this.captureService.addPlotDataListener();
+        console.log("hello");
+        this.captureService.handleObservers( "BOARD_START").subscribe();
+        this.captureDataSubscription = this.captureService.getPlotDataSubject().subscribe(data => {
           this.addData(data);
-        });      
-        this.captureControlDataSubscription = this.captureService.getCaptureControlDataSubject().subscribe(data => {
-          console.log(data);
-          if(data == "STOP CAPTURE"){
-            this.start = !this.start;
-            //this.captureService.plotCapture("STOP").subscribe();
-            this.isCaptureOn = false;
-            this.captureService.stopTransferPlotDataListener();
-            this.captureDataSubscription.unsubscribe();
-            this.captureControlDataSubscription.unsubscribe();
-          }
-        })
-      }else{
-
+        });
+      } else if (data == "STOP CAPTURE") {
+        this.start = true;
         this.isCaptureOn = false;
-        this.captureService.plotCapture("STOP").subscribe();
-
-        this.captureService.stopTransferPlotDataListener();
+        this.captureService.handleObservers( "BOARD_STOP").subscribe();
+        this.captureService.stopPlotDataListener();
         this.captureDataSubscription.unsubscribe();
-        this.captureControlDataSubscription.unsubscribe();
+      } else if ( data == "DEVICE DISCONNECTED" ){
+        localStorage.removeItem("connectionStatus");
+        location.reload();
       }
-      
-    }
+      this.captureEvent.emit(this.isCaptureOn);
+    })
+  }
 
-    onXScaleChange(event: any){
-      console.log(this.xAxisScale.value)
-      //this.chartOptions.axisX.interval = 1 * event.value;
-      this.chartOptions.axisX.labelFontSize = 13 * event.value;
-      switch(event.value){
-        case "0.5": this.chartOptions.axisX.labelFontSize = 10 ;
-        break;
-        case "1": this.chartOptions.axisX.labelFontSize = 13 ;
-        break;
-        case "2": this.chartOptions.axisX.labelFontSize = 15 ;
-        break;
-      }
-    }
+  ngOnDestroy() {
+    this.captureControlDataSubscription.unsubscribe();
+    this.captureService.stopCaptureCommandsListener();
+    this.captureService.stopPlotDataListener();
+    this.captureService.stopFetchDataListener();
+  }
 
-    onYScaleChange(event: any){
-      this.chartOptions.axisY.interval = 0.1 * event.value;
-      this.chartOptions.axisY.labelFontSize = 13 * event.value;
-      switch(event.value){
-        case "0.5": this.chartOptions.axisY.labelFontSize = 10 ;
-        break;
-        case "1": this.chartOptions.axisY.labelFontSize = 13 ;
-        break;
-        case "2": this.chartOptions.axisY.labelFontSize = 15 ;
-        break;
-      }
-      this.chart.render();
-    }
+  /**
+   * sets the openAccordion variable to the id of accordian which is open
+   * @param accordionId id of the accordian whose state is to be toggled
+   */
+  toggleAccordion(accordionId: string): void {
+    this.openAccordion = (this.openAccordion === accordionId) ? this.openAccordion : accordionId;
+  }
 
-    onRateChange(event : any){
-      console.log(event.value);
-      this.captureService.sendDataAcquisitionRate(event.value).subscribe()
-    }
+  /**
+   * Check if an accordion item is open
+   * @param accordionId name of the accordian
+   * @returns if open returns true, otherwise returns false
+   */
+  isAccordionOpen(accordionId: string): boolean {
+    return this.openAccordion === accordionId;
+  }
 
-    fetchData(){
-      //fetch data from hardware
-      this.captureService.getSignalData().subscribe();
-      this.captureService.addFetchDataListener();
-      this.fetchDataSubscription = this.captureService.getFetchDataSubject().subscribe(data => {
-        console.log(data);
-        this.captureService.stopFetchDataListener();
-        this.fetchDataSubscription.unsubscribe();
-      });
-      
-      //this.captureService.stopTransferPlotDataListener();
-    }
-
-    getChartInstance(chart: object) {
-      this.chart = chart;                
-    }
+  /**
+   * format each of the PlotData objects and pushes into the chart dataPoints array and re-render the chart.
+   * It also handles shifting the chart if number of points rendered is greater than hundred.
+   * @param data list of PlotData objects
+   */
+  addData = (data: PlotData[]) => {
     
-    ngOnDestroy() {
-      clearTimeout(this.timeout);
-      this.captureService.stopTransferPlotDataListener();
-      this.captureService.stopFetchDataListener();
-      // this.captureService.endConnection();
-      //this.captureDataSubscription.unsubscribe();
-      //this.fetchDataSubscription.unsubscribe();
-    }
+    
+    data.forEach(d => {
+      //console.log(new Date(d.time).getMilliseconds());
+      
+      if(this.rateIncrement % this.dataAcquisitionRate.value === 0){
+        this.dataPoints.push({ label: formatDate(new Date(d.time), "hh:mm:ss:SS", 'en-us'), y: d.voltage, x: ++this.xAxisIncrement})
 
-   
-    addData = (data: PlotData[]) => {
-      data.forEach(d => {
-        this.dataPoints.push({x: new Date(d.time).getTime(), y: d.voltage})  
-                
-        if(this.dataPoints.length > 100){
+        if (this.dataPoints.length > 100) {
           this.dataPoints.shift();
         }
-      });
+      }
+      this.rateIncrement++;
+    });
+    this.chart.render();
+  }
 
-      this.chart.render();
-      this.timeout = setTimeout(() => {
-        if(this.start == false){
-          //this.updateData()
-        }else{
-          console.log(this.start)
-          clearTimeout(this.timeout);
-        }
-      }, 1);
+  /**
+   * handles start and stop of capture
+   */
+  captureButtonHandler() {    
+    this.captureService.plotCapture( !this.start ?  "STOP" : "START").subscribe();
+  }
+
+  onXScaleChange(event: any) {
+    switch (event.value) {
+      case "0.5": this.chartOptions.axisX.labelFontSize = 10;
+        break;
+      case "1": this.chartOptions.axisX.labelFontSize = 13;
+        break;
+      case "2": this.chartOptions.axisX.labelFontSize = 15;
+        break;
     }
+    this.chart.render();
+  }
+  
+  onYScaleChange(event: any) {
+    this.chartOptions.axisY.interval = 0.1 * parseFloat(event.value);
+    switch (event.value) {
+      case "0.5": this.chartOptions.axisY.labelFontSize = 10;
+        break;
+      case "1": this.chartOptions.axisY.labelFontSize = 13;
+        break;
+      case "2": this.chartOptions.axisY.labelFontSize = 15;
+        break;
+    }
+    this.chart.render();
+  }
+
+  //sets the value of data acquisition rate
+  onRateChange(event: any) {
+    console.log(event.value);
+    this.dataAcquisitionRate.setValue( event.value )
+    //this.captureService.sendDataAcquisitionRate(event.value).subscribe()
+  }
+
+  /**
+   * Extracts values of frequency and peak to peak from the response received and updates ui
+   * @param data string containing frequency and peak to peak value in the format DATA{frequency};DATA{peaktopeak};
+   */
+  handleSignalData(data: string) {
+    var dataArray = data.substring(data.indexOf("DATA")).split(";");
+    this.frequency.setValue(parseFloat(dataArray[0].replace("DATA", "")))
+    this.peakToPeak.setValue(parseFloat(dataArray[1].replace("DATA", "")) * (3.3 / 4096))
+  }
+  
+  /**
+   * Request frequency and peak to peak of the captured signal and update the ui
+   */
+  fetchSignalData() {
+    this.captureService.getSignalData().subscribe();
+    this.captureService.addFetchDataListener();
+    this.fetchDataSubscription = this.captureService.getFetchDataSubject().subscribe(data => {
+      this.handleSignalData(data)
+      this.captureService.stopFetchDataListener();
+      this.fetchDataSubscription.unsubscribe();
+    });
+  }
+
+  /**
+   * Assigns a chart instance to the components chart property.
+   * Gets invoked when the chartInstance event is fired. 
+   * @param chart The object instance to be assigned
+   */
+  getChartInstance(chart: object) {
+    this.chart = chart;
+  }  
+
 }

@@ -1,9 +1,9 @@
 <div class="container-fluid" id="dashboard-div">
-    <mat-tab-group mat-stretch-tabs="true" mat-align-tabs="start">
+    <mat-tab-group mat-stretch-tabs="true" mat-align-tabs="start" (selectedTabChange)="onTabSelected($event)">
         <mat-tab label="Capture">            
             <app-capture (captureEvent)="captureToggler($event)"></app-capture>
         </mat-tab>
-        <mat-tab label="Generate" [disabled]="isCaptureOn">
+        <mat-tab label="Generate">
             <app-generate/>
         </mat-tab>
         <mat-tab label="Test" [disabled]="isCaptureOn">

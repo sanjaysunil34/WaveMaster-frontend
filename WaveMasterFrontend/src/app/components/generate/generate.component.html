@@ -1,8 +1,11 @@
 <div class="generate-page">
     <div class="content-container">
+        
         <div class="generate-page-contents shadow">
+            
             <form [formGroup]="generateForm"
                 (ngSubmit)="onSubmitGenerateForm()">
+                <div class="generate-information m-auto mb-5" >{{information}}</div>
                 <div class="generate-input-rows row">
                     <div class="generate-inputs col-md-12 input-padding">
                         <label for="signalTypeInput" class="generate-input-label form-label">SIGNAL TYPE</label>
@@ -19,11 +22,12 @@
                         <div class="generate-input-field-slider row">
                             <div class="generate-slider-container col-sm-12 col-md-6 col-lg-8">
                                 <mat-slider class="generate-slider" min=0 max=3.3 step=0.01>
-                                    <input matSliderThumb formControlName="peakValue">
+                                    <input matSliderThumb formControlName="peakValue" [(ngModel)]="this.generateForm.value.peakValue">
                                 </mat-slider>
                             </div>
                             <div class="col-sm-12 col-md-6 col-lg-4">
-                                <input type="text" class="form-control" value="{{this.generateForm.value.peakValue}} V" (change)="handlePeakChange($event.target)">
+                                <input type="text" class="form-control" 
+                                value="{{this.generateForm.value.peakValue}} V" (change)="handlePeakChange($event.target)">
                             </div>
                         </div>                            
                     </div>
@@ -33,7 +37,7 @@
                         <div class="generate-input-field-slider row">
                             <div class="generate-slider-container col-sm-12 col-md-6 col-lg-8">
                                 <mat-slider class="generate-slider" min=0 max=100 step=1>
-                                    <input matSliderThumb formControlName="frequencyValue">
+                                    <input matSliderThumb formControlName="frequencyValue" [(ngModel)]="this.generateForm.value.frequencyValue">
                                 </mat-slider>
                             </div>
                             <div class="col-sm-12 col-md-6 col-lg-4">
@@ -44,7 +48,12 @@
 
                     <div class="generate-button-group">
                         <div class="generate-submit-buttons-container">
-
+                            <div class="generate-single-button-container" >
+                                <button type="button"  (click)="saveToEEPROM()" class="btn generate-submit-button">SET AS DEFAULT</button>
+                            </div>
+                            <div class="generate-single-button-container" >
+                                <button type="button"  (click)="resetToDefault()" class="btn generate-submit-button">RESET</button>
+                            </div>
                             <div class="generate-single-button-container" *ngIf="show">
                                 <button (click)="stopGenerate()" class="btn generate-submit-button btn-danger">STOP</button>
                             </div>
@@ -53,7 +62,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </form>
         </div>

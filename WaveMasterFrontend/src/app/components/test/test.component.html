@@ -9,11 +9,12 @@
                         <select type="text" class="form-select test-input-field form-control" id="componentFormControl" formControlName="component"
                             (change)="handleComponentChange()">
                             <option class="generate-input-option" value="eeprom">EEPROM</option>
-                            <option class="generate-input-option" value="ledRed">LED RED</option>
                             <option class="generate-input-option" value="ledGreen">LED GREEN</option>
+                            <option class="generate-input-option" value="ledRed">LED RED</option>
                             <option class="generate-input-option" value="button1">BUTTON 1</option>
                             <option class="generate-input-option" value="button2">BUTTON 2</option>
-
+                            <option class="generate-input-option" value="capture">CATURE</option>
+                            <option class="generate-input-option" value="generate">GENERATE</option>
                         </select>
                     </div>
 
@@ -22,6 +23,11 @@
                         <select type="text" [(ngModel)] ="str" class="form-select test-input-field form-control" id="functionFormControl" formControlName="function">
                             <option *ngFor="let opt of selectedFuncArr"  class="test-input-option" value={{opt}}>{{opt}}</option>
                         </select>
+                    </div>
+
+                    <div class="test-inputs col-md-12">
+                        <label for="statusInput" class="test-input-label form-label">STATUS</label>
+                        <input type="text" class="test-input-field form-control" id="status" [formControl]="status" readonly/>
                     </div>
 
                     <div class="test-button-container">

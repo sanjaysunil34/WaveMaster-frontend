@@ -1,3 +1,4 @@
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -9,6 +10,8 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatSliderModule} from '@angular/material/slider';
 import { FormsModule } from '@angular/forms';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatToolbarModule} from '@angular/material/toolbar';
 
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FooterComponent } from './components/footer/footer.component';
@@ -33,7 +36,8 @@ import { TestComponent } from './components/test/test.component';
     FooterComponent,
     ContentComponent,
     GenerateComponent,
-    TestComponent
+    TestComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +50,9 @@ import { TestComponent } from './components/test/test.component';
     ReactiveFormsModule,
     CanvasJSAngularChartsModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    MatSnackBarModule,
+    MatToolbarModule
   ],
   providers: [],
   bootstrap: [AppComponent]
