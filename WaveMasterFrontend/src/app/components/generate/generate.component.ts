@@ -121,6 +121,7 @@ export class GenerateComponent{
    * It requests the backend to read settings from eeprom
    */
   resetToDefault() {
+    this.handleSignalChange()
     this.generateService.readFromEEPROM().subscribe(data => {      
       this.generateService.addDefaultDataListener();
       this.defaultDataSubscription = this.generateService.getDefaultDataSubject().subscribe(data => {
