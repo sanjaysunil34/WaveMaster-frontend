@@ -37,3 +37,7 @@ $WaveMasterFrontend-theme: mat.define-light-theme((
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+::ng-deep .config-snackbar{
+  background-color: #5375C7 !important;
+  color: #5375C7 !important;
+}

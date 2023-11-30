@@ -37,8 +37,8 @@ export class ConnectionService {
    * @param object object containing serial port connection params
    * @returns Observable of type string
    */
-  connectSerialPort(object: Object) : Observable<string>{
-    return this.httpClient.post<string>(BASE_URL + '/configuration/connect', JSON.stringify(object), httpHeader())
+  connectSerialPort(object: Object) : Observable<any>{
+    return this.httpClient.post<any>(BASE_URL + '/configuration/connect', JSON.stringify(object), httpHeader())
     .pipe(
       catchError(err => httpError(err))
     );

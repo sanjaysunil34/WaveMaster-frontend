@@ -1,5 +1,6 @@
 import { Component} from '@angular/core';
 import { FormBuilder, FormGroup, Validators  } from '@angular/forms';
+import { MatSnackBar, MatSnackBarConfig, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { ConnectionParams } from 'src/app/models/connection-params';
 import { ConnectionService } from 'src/app/services/connection.service';
 
@@ -22,7 +23,12 @@ export class ConfigurationComponent {
   parityValues = ["even","mark","none","odd","space"]
   portNames : string[] = [];
 
-  constructor(fb: FormBuilder, private connectionService: ConnectionService){
+  //snackbar position config
+  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
+  verticalPosition: MatSnackBarVerticalPosition = 'top';
+  
+  constructor(fb: FormBuilder, private connectionService: ConnectionService,
+    private _snackBar: MatSnackBar){
     this.connectionForm = fb.group({
       'portName' : [this.portNames[0], Validators.required],
       'stopBit' : [ 1, Validators.required],
@@ -33,6 +39,16 @@ export class ConfigurationComponent {
 
     connectionService.getPortName().subscribe(data => data.forEach(d => this.portNames.push(d)));    
   }
+
+  openSnackBar(message : string) {
+
+    this._snackBar.open(message, '', {
+      horizontalPosition: this.horizontalPosition,
+      verticalPosition: this.verticalPosition,
+      panelClass : ['config-snackbar'],
+      
+    });
+  }
   
   /**
    * click handler for the connect button. Sends request to open connection with serial port
@@ -42,11 +58,14 @@ export class ConfigurationComponent {
     this.portNameEmpty = (connectionParams.portName === null) ? true : false;
       
     if(!this.portNameEmpty){
-      this.connectionService.connectSerialPort(connectionParams).subscribe(() => {
+      this.connectionService.connectSerialPort(connectionParams).subscribe((data) => {
+        console.log(data.message);
+        this.openSnackBar(data.message)
         localStorage.setItem("connectionStatus", "connected")
+        
         location.reload();
       },error => {        
-        this.errorMessage = error.split('.')[0];
+        this.errorMessage = error;
       });
     } 
   }
