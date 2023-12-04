@@ -4,6 +4,7 @@ import { Observable, Subject, catchError } from 'rxjs';
 import { ConnectionService } from './connection.service';
 import { httpError } from '../helpers/http-error';
 import { BASE_URL, httpHeader } from '../config/config';
+import { TEST, TEST_HUB } from '../helpers/endpoints';
 
 /**
  * Injectible service that performs test mode related functions.
@@ -29,7 +30,7 @@ export class TestService {
    *          If an error occurs, it is caught and handled.
    */
   testComponent(command: string) : Observable<string>{
-    return this.httpClient.post<string>(BASE_URL + '/test', JSON.stringify(command), httpHeader())
+    return this.httpClient.post<string>(BASE_URL + TEST, JSON.stringify(command), httpHeader())
     .pipe(
       catchError(err => httpError(err))
     );
@@ -40,7 +41,7 @@ export class TestService {
    * When the event occurs, data is provided to the testDataSUbject.
    */
   addTestDataListener(){
-    this.connectionService.hubConnection.on("test", (data) => {   
+    this.connectionService.hubConnection.on(TEST_HUB, (data) => {   
       this.testDataSubject.next(data);  
     })
   }  
@@ -49,7 +50,7 @@ export class TestService {
    * This method detatches the callback function from test event.
    */
   stopTestDataListener(){
-    this.connectionService.hubConnection.off("test");
+    this.connectionService.hubConnection.off(TEST_HUB);
   }   
 
   /**

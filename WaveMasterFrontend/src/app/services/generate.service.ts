@@ -5,6 +5,14 @@ import { Observable, Subject, catchError } from 'rxjs';
 import { httpError } from '../helpers/http-error';
 import { BASE_URL, httpHeader } from '../config/config';
 import { ConnectionService } from './connection.service';
+import { 
+  GENERATE_DEFAULT_DATA,
+  GENERATE_READ_EEPROM,
+  GENERATE_RESTORE,
+  GENERATE_SAVE_EEPROM,
+  GENERATE_START,
+  GENERATE_STOP
+ } from '../helpers/endpoints';
 
 /**
  * Injectible service that performs the generate functions.
@@ -29,7 +37,7 @@ export class GenerateService {
    *          If an error occurs, it is caught and handled.
    */
   generateWave(signalData : SignalParams) : Observable<any>{    
-    return this.httpClient.post<any>(BASE_URL + "/generate/start",JSON.stringify(signalData),httpHeader())
+    return this.httpClient.post<any>(BASE_URL + GENERATE_START,JSON.stringify(signalData),httpHeader())
     .pipe(
       catchError(err => httpError(err))
     );
@@ -41,7 +49,7 @@ export class GenerateService {
    *          If an error occurs, it is caught and handled.
    */
   stopGenerateWave() : Observable<any>{      
-    return this.httpClient.post<any>(BASE_URL + "/generate/stop",{},httpHeader())
+    return this.httpClient.post<any>(BASE_URL + GENERATE_STOP,{},httpHeader())
     .pipe(
       catchError(err => httpError(err))
     );
@@ -52,7 +60,7 @@ export class GenerateService {
    * @returns An observable containing the signal data.
    */
   restoreWave() : Observable<SignalParams>{
-    return this.httpClient.get<SignalParams>(BASE_URL + "/generate")
+    return this.httpClient.get<SignalParams>(BASE_URL + GENERATE_RESTORE)
     .pipe(
       catchError(err => httpError(err))
     );
@@ -65,7 +73,7 @@ export class GenerateService {
    *          If an error occurs, it is caught and handled.
    */
   saveToEEPROM(signalData : SignalParams) : Observable<string>{
-    return this.httpClient.post<any>(BASE_URL + "/generate/eepromsave",JSON.stringify(signalData),httpHeader())
+    return this.httpClient.post<any>(BASE_URL + GENERATE_SAVE_EEPROM, JSON.stringify(signalData),httpHeader())
     .pipe(
       catchError(err => httpError(err))
     );
@@ -76,7 +84,7 @@ export class GenerateService {
    * @returns An observable containing the signal data.
    */
   readFromEEPROM() : Observable<SignalParams>{
-    return this.httpClient.get<SignalParams>(BASE_URL + "/generate/eepromread")
+    return this.httpClient.get<SignalParams>(BASE_URL + GENERATE_READ_EEPROM)
     .pipe(
       catchError(err => httpError(err))
     );
@@ -84,14 +92,14 @@ export class GenerateService {
 
   // Adds a listener for fetching default data
   addDefaultDataListener() {
-    this.connectionService.hubConnection.on("defaultData", (data) => {   
+    this.connectionService.hubConnection.on(GENERATE_DEFAULT_DATA, (data) => {   
       this.readDefaultSubject.next(data);  
     })
   }  
 
   // Stops the listener for fetching default data
   stopDefaultDataListener() {
-    this.connectionService.hubConnection.off("defaultData");
+    this.connectionService.hubConnection.off(GENERATE_DEFAULT_DATA);
   }   
   
   // Returns observable for fetched default data

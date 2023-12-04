@@ -4,6 +4,7 @@ import { Observable, Subject, catchError } from 'rxjs';
 import * as signalR from '@microsoft/signalr';
 import { httpError } from '../helpers/http-error';
 import { BASE_URL, httpHeader } from '../config/config';
+import { CONFIGURATION_CONNECT, CONFIGURATION_DISCONNECT, CONFIGURATION_PORTS, HUB_URL } from '../helpers/endpoints';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class ConnectionService {
   constructor(private httpClient:HttpClient) { 
     //Initialize signalR hub connection
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl("http://localhost:3000/plotValue", {skipNegotiation: true, transport: signalR.HttpTransportType.WebSockets})
+      .withUrl(HUB_URL, {skipNegotiation: true, transport: signalR.HttpTransportType.WebSockets})
       .configureLogging(signalR.LogLevel.Information)
       .build();
   }
@@ -26,7 +27,7 @@ export class ConnectionService {
    * @returns Observable of type string[]
    */
   getPortName() : Observable<string[]>{
-    return this.httpClient.get<string[]>(BASE_URL + '/configuration')
+    return this.httpClient.get<string[]>(BASE_URL + CONFIGURATION_PORTS)
     .pipe(
       catchError(err => httpError(err))
     );
@@ -38,7 +39,7 @@ export class ConnectionService {
    * @returns Observable of type string
    */
   connectSerialPort(object: Object) : Observable<any>{
-    return this.httpClient.post<any>(BASE_URL + '/configuration/connect', JSON.stringify(object), httpHeader())
+    return this.httpClient.post<any>(BASE_URL + CONFIGURATION_CONNECT, JSON.stringify(object), httpHeader())
     .pipe(
       catchError(err => httpError(err))
     );
@@ -49,7 +50,7 @@ export class ConnectionService {
    * @returns Observable of type Object
    */
   disconnectSerialPort() : Observable<Object>{
-    return  this.httpClient.post<Object>(BASE_URL + '/configuration/disconnect',{} ,httpHeader())
+    return  this.httpClient.post<Object>(BASE_URL + CONFIGURATION_DISCONNECT,{} ,httpHeader())
     .pipe(
       catchError(err => httpError(err))
     );

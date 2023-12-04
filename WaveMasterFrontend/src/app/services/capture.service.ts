@@ -5,6 +5,15 @@ import { SignalParams } from '../models/signal-params';
 import { ConnectionService } from './connection.service';
 import { httpError } from '../helpers/http-error';
 import { BASE_URL, httpHeader } from '../config/config';
+import { 
+  CAPTURE_CONTROL,
+  CAPTURE_FETCH_DATA,
+  CAPTURE_OBSERSERS,
+  CAPTURE_PLOT_COMMAND,
+  CAPTURE_PLOT_DATA,
+  CAPTURE_RATE,
+  CAPTURE_SIGNAL_DATA
+} from '../helpers/endpoints';
 
 @Injectable({
   providedIn: 'root'
@@ -23,14 +32,14 @@ export class CaptureService {
 
   // Adds listener for receiving plot data
   addPlotDataListener() {
-    this.connectionService.hubConnection.on("transferPlotData", (data) => {   
+    this.connectionService.hubConnection.on(CAPTURE_PLOT_DATA, (data) => {   
       this.captureDataSubject.next(data);  
     })
   }    
 
   //Stops the listener for plot data
   stopPlotDataListener() {
-    this.connectionService.hubConnection.off("transferPlotData");    
+    this.connectionService.hubConnection.off(CAPTURE_PLOT_DATA);    
   }    
 
   //Returns observable for capturing plot data
@@ -40,14 +49,14 @@ export class CaptureService {
 
   //Adds a listener for receiving capture control commands
   addCaptureCommandsListener() {
-    this.connectionService.hubConnection.on("captureControl", (data) => {
+    this.connectionService.hubConnection.on(CAPTURE_CONTROL, (data) => {
       this.captureControlDataSubject.next(data); 
     })
   }    
 
   // Stops the listener for capture control commands
   stopCaptureCommandsListener() {
-    this.connectionService.hubConnection.off("captureControl");
+    this.connectionService.hubConnection.off(CAPTURE_CONTROL);
   }
 
   // Returns observable for capture control data
@@ -62,7 +71,7 @@ export class CaptureService {
    * @returns An observable of any type
    */
   plotCapture(command: string) : Observable<any> {
-    return this.httpClient.post<any>(BASE_URL + "/capture/plotcommand",JSON.stringify(command),httpHeader())
+    return this.httpClient.post<any>(BASE_URL + CAPTURE_PLOT_COMMAND ,JSON.stringify(command),httpHeader())
     .pipe(
       catchError(err => (err))
     )
@@ -75,7 +84,7 @@ export class CaptureService {
    * @returns An observable of any type
    */
   handleObservers(command: string) : Observable<any> {
-    return this.httpClient.post<any>(BASE_URL + "/capture/observers",JSON.stringify(command),httpHeader())
+    return this.httpClient.post<any>(BASE_URL + CAPTURE_OBSERSERS ,JSON.stringify(command),httpHeader())
     .pipe(
       catchError(err => (err))
     )
@@ -87,7 +96,7 @@ export class CaptureService {
    * @returns An observable of type SignalParams
    */
   getSignalData() : Observable<SignalParams> {
-    return this.httpClient.get<SignalParams>(BASE_URL + "/capture/signaldata")
+    return this.httpClient.get<SignalParams>(BASE_URL + CAPTURE_SIGNAL_DATA)
     .pipe(
       catchError(err => httpError(err))      
     )
@@ -95,14 +104,14 @@ export class CaptureService {
 
   // Adds a listener for fetching data
   addFetchDataListener() {
-    this.connectionService.hubConnection.on("fetchData", (data) => {   
+    this.connectionService.hubConnection.on(CAPTURE_FETCH_DATA, (data) => {   
       this.readDataSubject.next(data);  
     })
   }  
 
   // Stops the listener for fetching data
   stopFetchDataListener() {
-    this.connectionService.hubConnection.off("fetchData");
+    this.connectionService.hubConnection.off(CAPTURE_FETCH_DATA);
   }   
   
   // Returns observable for fetched data
@@ -116,7 +125,7 @@ export class CaptureService {
    * @returns An observable of any type.
    */
   sendDataAcquisitionRate(rate : number) : Observable<any> {       
-    return this.httpClient.post<any>(BASE_URL + "/capture/rate",JSON.stringify(rate),httpHeader())
+    return this.httpClient.post<any>(BASE_URL + CAPTURE_RATE, JSON.stringify(rate),httpHeader())
     .pipe(
       catchError(err => httpError(err))
     )
