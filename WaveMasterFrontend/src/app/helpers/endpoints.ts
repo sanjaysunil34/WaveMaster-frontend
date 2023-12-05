@@ -14,7 +14,7 @@ export const CAPTURE_FETCH_DATA = "fetchData";
 export const HUB_URL = "http://localhost:3000/plotValue";
 export const CONFIGURATION_PORTS = "/configuration";
 export const CONFIGURATION_CONNECT = "/configuration/connect";
-export const CONFIGURATION_DISCONNECT = "/configuration/connect";
+export const CONFIGURATION_DISCONNECT = "/configuration/disconnect";
 
 
 
